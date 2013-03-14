@@ -25,7 +25,7 @@ public class RestaurantSystem {
 	
 	public void updateTablesFromDB()
 	{
-		//some functionality to just update the tables
+		DBInteractor.getTables(menu)
 	}
 	
 	public void getTableStatusFromDatabase()

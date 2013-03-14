@@ -173,5 +173,10 @@ public Menu getMenuFromDB()
 	return null;
 }
 
+public HashMap<Integer,Boolean> getTableStatusIfUpdated()
+{
+	//returns a hashmap of true false 
+}
+
 
 }
