@@ -26,6 +26,19 @@ public class TableInfo {
 		return tableNumber;
 	}
 	
+	public void setTableToOccupied()
+	{
+		isOccupied = true;
+		DBInteractor.updateTableStatus(tableNumber, "True");
+		
+	}
+	
+	public void setTableToEmpty()
+	{
+		isOccupied = false;
+		DBInteractor.updateTableStatus(tableNumber, "False");
+	}
+	
 	public boolean isTableOccupied()
 	{
 		return isOccupied;
