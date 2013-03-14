@@ -17,8 +17,8 @@ public class DatabaseInteractorTest {
 
 		  try {
 		    while (rs.next()) {
-		        System.out.println("Here's the result of row " + index++ + ":");
-		        System.out.println(rs.getString(1));
+		        //System.out.println("Here's the result of row1 " + index++ + ":");
+		        //System.out.println(rs.getString(1));
 		    }
 		  } catch (SQLException se) {
 		    System.out.println("We got an exception while getting a result:this " +
@@ -27,10 +27,9 @@ public class DatabaseInteractorTest {
 		    System.exit(1);
 		  }
 		  
-		  for(Entry<Integer, TableInfo> tables : toTest.getTables().entrySet()) {
-			  System.out.println(tables.getKey());
+		  for(Entry<Integer, TableInfo> tables : toTest.getTables(null).entrySet()) {
+			  System.out.println("Table #"+tables.getValue().getTableNumber()+", \""+tables.getValue().tablename+"\"");
 		  }
-		fail("Not yet implemented");
 	}
 
 }

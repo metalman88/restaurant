@@ -64,7 +64,10 @@ public class DatabaseInteractor {
 		    // respectively. They should be whatever is necessary to connect
 		    // to the database.
 		    databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
-		                                    "postgres", "sflhdl");
+		                                    "postgres", "ounhuoead");
+		    
+		    // My home database: ounhuoead
+		    // Laptop database: sflhdl
 		  } catch (SQLException se) {
 		    System.out.println("Couldn't connect: print out a stack trace and exit.");
 		    se.printStackTrace();
@@ -142,9 +145,10 @@ public HashMap<Integer, TableInfo> getTables(Menu menu) {
 
 	  try {
 	    while (rs.next()) {
-	        System.out.println("Here's the result of row " + index++ + ":");
-	        System.out.println(rs.getString(1));
-	        result.put(Integer.parseInt(rs.getString(1)), new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), ZONEENUMS.valueOf(rs.getString(6)), this, menu));
+	       // System.out.println("Here's the result of row " + index++ + ":");
+	       // System.out.println(rs.getString(1));
+	    	// ZONEENUMS.valueOf(rs.getString(6))
+	        result.put(Integer.parseInt(rs.getString(1)), new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), ZONEENUMS.BLUE, this, menu));
 	    }
 	  } catch (SQLException se) {
 	    System.out.println("We got an exception while getting a result:this " +
