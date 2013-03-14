@@ -1,4 +1,3 @@
-
 public enum ORDERSTATUSENUMS 
 {
 	OUT,
@@ -6,3 +5,4 @@ public enum ORDERSTATUSENUMS
 	COOKING;
 	
 }
+

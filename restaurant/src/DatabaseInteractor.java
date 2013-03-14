@@ -163,4 +163,14 @@ public void updateTableStatus(int tableNumber, String occupied)
 {	
 }
 
+  
+public Menu getMenuFromDB()
+{
+	// if you create get all the information and store it in variables i can create the objects.
+	// whatever you want to do
+	
+	//menu needs many menuItems, and each menuItem needs nutrition info.
+}
+
+
 }
