@@ -4,7 +4,7 @@ import java.util.ArrayList;
 public class TableInfo {
 
 	
-	public TableInfo(String tableName,int tableNumber,int maxOcc, String zone,
+	public TableInfo(String tableName,int tableNumber,int maxOcc, ZONEENUMS zone,
 					 DatabaseInteractor DBInteractor, Menu menu)
 	{
 		this.tablename = tableName;
@@ -16,7 +16,7 @@ public class TableInfo {
 		isOccupied = false;
 	}
 	
-	public String getZone()
+	public ZONEENUMS getZone()
 	{
 		return zone;
 	}
@@ -34,7 +34,7 @@ public class TableInfo {
 	public String tablename;
 	public int tableNumber;
 	public int maxOcc;
-	public String zone;
+	public ZONEENUMS zone;
 	private DatabaseInteractor DBInteractor;
 	private Menu menu;
 	private boolean isOccupied;
