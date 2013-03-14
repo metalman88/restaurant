@@ -1,6 +1,8 @@
 import java.sql.DriverManager;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 
 /*
@@ -56,7 +58,7 @@ public class DatabaseInteractor {
 		    // The second and third arguments are the username and password,
 		    // respectively. They should be whatever is necessary to connect
 		    // to the database.
-		    databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/",
+		    databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
 		                                    "postgres", "sflhdl");
 		  } catch (SQLException se) {
 		    System.out.println("Couldn't connect: print out a stack trace and exit.");
@@ -99,6 +101,42 @@ public class DatabaseInteractor {
     System.out.println("Hooray! We connected to the database!");
   else
     System.out.println("We should never get here.");
+  }
+  
+  void selectCommand(String What) {
+	  Statement s = null;
+	  try {
+	    s = databaseConnection.createStatement();
+	  } catch (SQLException se) {
+	    System.out.println("We got an exception while creating a statement:" +
+	                       "that probably means we're no longer connected.");
+	    se.printStackTrace();
+	    System.exit(1);
+	  }
+	  ResultSet rs = null;
+	  try {
+	    rs = s.executeQuery("SELECT * FROM tableInfo;");
+	  } catch (SQLException se) {
+	    System.out.println("We got an exception while executing our query:" +
+	                       "that probably means our SQL is invalid");
+	    se.printStackTrace();
+	    System.exit(1);
+	  }
+
+	  int index = 0;
+
+	  try {
+	    while (rs.next()) {
+	        System.out.println("Here's the result of row " + index++ + ":");
+	        System.out.println(rs.getString(1));
+	    }
+	  } catch (SQLException se) {
+	    System.out.println("We got an exception while getting a result:this " +
+	                       "shouldn't happen: we've done something really bad.");
+	    se.printStackTrace();
+	    System.exit(1);
+	  }
+	  
   }
   
   Connection databaseConnection = null;
