@@ -15,18 +15,7 @@ public class MenuItem {
 		
 	}
 	
-	public int getID()
-	{
-		
-	}
-	
-	public String getName()
-	{
-		
-	}
-	
-	public String getCategory()
-	{
-		
-	}
+	public int getID(){return itemID;}
+	public String getName()	{return itemName;}
+	public String getCategory(){return category;}
 }

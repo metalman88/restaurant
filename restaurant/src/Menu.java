@@ -22,8 +22,13 @@ public class Menu {
 		while(keySetIterator.hasNext())
 		{
 			MenuItem curItem = (MenuItem) keySetIterator.next();
-			if(curItem.)
+			if(curItem.getCategory().equals(CATEGORYENUM))
+			{
+				returnList.add(curItem);
+			}
 		}
+		
+		return returnList;
 	}
 	
 	public HashMap<Integer,MenuItem> getAllItems()
