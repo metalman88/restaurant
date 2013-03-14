@@ -24,7 +24,8 @@ public class RestaurantSystem {
 	public void getTablesFromDB()
 	{
 		tableHash = DBInteractor.getTables();
-		
 	}
+	
+	
 	
 }

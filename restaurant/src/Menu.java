@@ -13,7 +13,13 @@ public class Menu {
 	
 	public ArrayList<MenuItem>  getCategoryItems(String CATEGORYENUM)
 	{
-		
-		
+						
 	}
+	
+	public HashMap<Integer,MenuItem> getAllItems()
+	{
+		return menuList;
+	}
+	
+	public MenuItem getItem
 }
