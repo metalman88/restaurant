@@ -134,7 +134,7 @@ public class DatabaseInteractor {
   
   Connection databaseConnection = null;
 
-public HashMap<Integer, TableInfo> getTables() {
+public HashMap<Integer, TableInfo> getTables(Menu menu) {
 	// TODO Auto-generated method stub
 	ResultSet rs = selectCommand("*", "tableInfo");
 	HashMap<Integer, TableInfo> result = new HashMap<Integer, TableInfo>();
@@ -144,7 +144,7 @@ public HashMap<Integer, TableInfo> getTables() {
 	    while (rs.next()) {
 	        System.out.println("Here's the result of row " + index++ + ":");
 	        System.out.println(rs.getString(1));
-	        result.put(Integer.parseInt(rs.getString(1)), new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), rs.getString(6), this, null));
+	        result.put(Integer.parseInt(rs.getString(1)), new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), ZONEENUMS.valueOf(rs.getString(6)), this, menu));
 	    }
 	  } catch (SQLException se) {
 	    System.out.println("We got an exception while getting a result:this " +
@@ -170,6 +170,13 @@ public Menu getMenuFromDB()
 	// whatever you want to do, i know database interaction stuff too. so no worries
 	
 	//menu needs many menuItems, and each menuItem needs nutrition info.
+	return null;
+}
+
+public HashMap<Integer,Boolean> getTableStatusIfUpdated()
+{
+	//HashMap<TableNumber,true if occupied>
+	//returns a hashmap of true false 
 	return null;
 }
 
