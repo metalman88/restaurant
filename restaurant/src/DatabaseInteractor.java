@@ -163,9 +163,10 @@ public void addOrderToDB(OrderChunk curOrder)
 public Menu getMenuFromDB()
 {
 	// if you create get all the information and store it in variables i can create the objects.
-	// whatever you want to do
+	// whatever you want to do, i know database interaction stuff too. so no worries
 	
 	//menu needs many menuItems, and each menuItem needs nutrition info.
+	return null;
 }
 
 
