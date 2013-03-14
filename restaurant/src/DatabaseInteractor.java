@@ -167,6 +167,30 @@ public void addOrderToDB(OrderChunk curOrder)
  
 public void updateTableStatus(int tableNumber, String occupied)
 {	
+	int newStatus = Integer.parseInt(occupied);
+	Statement s = null;
+	try {
+	  s = databaseConnection.createStatement();
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while creating a statement:" +
+	                     "that probably means we're no longer connected.");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	int m = 0;
+
+	try {
+	  m = s.executeUpdate("UPDATE tableInfo SET " +
+	                      "tabletTake="+newStatus+" WHERE table_id="+tableNumber+";");
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while executing our query:" +
+	                     "that probably means our SQL is invalid");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	System.out.println("Successfully modified " + m + " rows.\n");
 }
 
   
