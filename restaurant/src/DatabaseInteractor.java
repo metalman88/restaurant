@@ -157,8 +157,12 @@ public HashMap<Integer, TableInfo> getTables() {
 
 public void addOrderToDB(OrderChunk curOrder)
 {
-	
 }
+ 
+public void updateTableStatus(int tableNumber, String occupied)
+{	
+}
+
   
 public Menu getMenuFromDB()
 {
