@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 
 public class TableInfo {
 
@@ -11,7 +13,23 @@ public class TableInfo {
 		this.zone = zone;
 		this.DBInteractor = DBInteractor;
 		this.menu = menu;
-		}
+		isOccupied = false;
+	}
+	
+	public String getZone()
+	{
+		return zone;
+	}
+	
+	public int getTableNumber()
+	{
+		return tableNumber;
+	}
+	
+	public boolean isTableOccupied()
+	{
+		return isOccupied;
+	}
 	
 	public String tablename;
 	public int tableNumber;
@@ -19,4 +37,5 @@ public class TableInfo {
 	public String zone;
 	private DatabaseInteractor DBInteractor;
 	private Menu menu;
+	private boolean isOccupied;
 }

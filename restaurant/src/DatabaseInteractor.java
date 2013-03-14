@@ -154,5 +154,10 @@ public HashMap<Integer, TableInfo> getTables() {
 	  }
 	return result;
 }
+
+public void addOrderToDB(OrderChunk curOrder)
+{
+	
+}
   
 }
