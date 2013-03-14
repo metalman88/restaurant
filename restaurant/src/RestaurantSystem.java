@@ -17,7 +17,7 @@ public class RestaurantSystem {
 	
 	public Menu getMenuFromDB()
 	{
-		//DBInteractor.getMenu();
+		//use db command
 		return null;
 	}
 	
