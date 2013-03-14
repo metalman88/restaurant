@@ -12,6 +12,7 @@ public class RestaurantSystem {
 	public RestaurantSystem()
 	{
 		DBInteractor = new DatabaseInteractor();
+		tableHash = DBInteractor.getTables();
 		
 	}
 	
@@ -20,9 +21,9 @@ public class RestaurantSystem {
 		menu = DBInteractor.getMenuFromDB();
 	}
 	
-	public void getTablesFromDB()
+	public void updateTablesFromDB()
 	{
-		tableHash = DBInteractor.getTables();
+		//some functionality to just update the tables
 	}
 	
 	public void getTableStatusFromDatabase()
