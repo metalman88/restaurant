@@ -15,10 +15,9 @@ public class RestaurantSystem {
 		
 	}
 	
-	public Menu getMenuFromDB()
+	public void getMenuFromDB()
 	{
-		//use db command
-		return null;
+		menu = DBInteractor.getMenuFromDB();
 	}
 	
 	public void getTablesFromDB()
@@ -29,6 +28,11 @@ public class RestaurantSystem {
 	public void getTableStatusFromDatabase()
 	{
 		//will update the tableHash, occupied Unoccupied exter
+	}
+	
+	public void getOrderStatusFromDatabase()
+	{
+		// will update the order chunks, calls d
 	}
 	
 }
