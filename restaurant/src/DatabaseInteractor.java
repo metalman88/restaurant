@@ -175,7 +175,9 @@ public Menu getMenuFromDB()
 
 public HashMap<Integer,Boolean> getTableStatusIfUpdated()
 {
+	//HashMap<TableNumber,true if occupied>
 	//returns a hashmap of true false 
+	return null;
 }
 
 
