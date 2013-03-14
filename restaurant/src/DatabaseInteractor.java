@@ -3,11 +3,16 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 
 
 /*
  * 
  * 
+
+These commands based off of examples at http://www.faqs.org/docs/ppbook/x20921.htm
+
+Thanks to them, it was incredibly easy to write this
 
 CREATE TABLE kitchen (
     order_id    integer CONSTRAINT firstkey1 PRIMARY KEY,
@@ -103,7 +108,7 @@ public class DatabaseInteractor {
     System.out.println("We should never get here.");
   }
   
-  void selectCommand(String What) {
+  ResultSet selectCommand(String What, String Where) {
 	  Statement s = null;
 	  try {
 	    s = databaseConnection.createStatement();
@@ -115,20 +120,31 @@ public class DatabaseInteractor {
 	  }
 	  ResultSet rs = null;
 	  try {
-	    rs = s.executeQuery("SELECT * FROM tableInfo;");
+	    rs = s.executeQuery("SELECT "+What+" FROM "+Where+" ;");
 	  } catch (SQLException se) {
 	    System.out.println("We got an exception while executing our query:" +
 	                       "that probably means our SQL is invalid");
 	    se.printStackTrace();
 	    System.exit(1);
 	  }
+	  return rs;
+	  
+	  
+  }
+  
+  Connection databaseConnection = null;
 
-	  int index = 0;
+public HashMap<Integer, TableInfo> getTables() {
+	// TODO Auto-generated method stub
+	ResultSet rs = selectCommand("*", "tableInfo");
+	HashMap<Integer, TableInfo> result = new HashMap<Integer, TableInfo>();
+	int index = 0;
 
 	  try {
 	    while (rs.next()) {
 	        System.out.println("Here's the result of row " + index++ + ":");
 	        System.out.println(rs.getString(1));
+	        result.put(Integer.parseInt(rs.getString(1)), new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), rs.getString(6), this, null));
 	    }
 	  } catch (SQLException se) {
 	    System.out.println("We got an exception while getting a result:this " +
@@ -136,9 +152,7 @@ public class DatabaseInteractor {
 	    se.printStackTrace();
 	    System.exit(1);
 	  }
-	  
-  }
-  
-  Connection databaseConnection = null;
+	return result;
+}
   
 }
