@@ -15,7 +15,15 @@ public class Menu {
 	
 	public ArrayList<MenuItem>  getCategoryItems(String CATEGORYENUM)
 	{
-						
+		ArrayList<MenuItem> returnList = new ArrayList<MenuItem>();
+		Set<Integer> keySet = menuList.keySet();
+		Iterator keySetIterator = keySet.iterator();
+		
+		while(keySetIterator.hasNext())
+		{
+			MenuItem curItem = (MenuItem) keySetIterator.next();
+			if(curItem.)
+		}
 	}
 	
 	public HashMap<Integer,MenuItem> getAllItems()
@@ -33,8 +41,13 @@ public class Menu {
 		while(keySetIterator.hasNext())
 		{
 			MenuItem curItem = (MenuItem) keySetIterator.next();
-			if(curItem.)
+			if(curItem.getName().equals(name))
+			{
+				returnList.add(curItem);
+			}
 		}
+		
+		return returnList;
 	}
 	
 	public MenuItem getItem(int ItemID)

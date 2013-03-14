@@ -7,7 +7,7 @@ public class RestaurantSystem {
 	public HashMap<Integer,TableInfo> tableHash;
 	public DatabaseInteractor DBInteractor;
 	public Menu menu;
-	//public ArrayList<Party> waitList;
+	public ArrayList<Party> waitList;
 	
 	public RestaurantSystem()
 	{
@@ -26,6 +26,9 @@ public class RestaurantSystem {
 		tableHash = DBInteractor.getTables();
 	}
 	
-	
+	public void getTableStatusFromDatabase()
+	{
+		//will update the tableHash, occupied Unoccupied exter
+	}
 	
 }
