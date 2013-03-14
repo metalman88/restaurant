@@ -148,7 +148,9 @@ public HashMap<Integer, TableInfo> getTables(Menu menu) {
 	       // System.out.println("Here's the result of row " + index++ + ":");
 	       // System.out.println(rs.getString(1));
 	    	// ZONEENUMS.valueOf(rs.getString(6))
-	        result.put(Integer.parseInt(rs.getString(1)), new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), ZONEENUMS.BLUE, this, menu));
+	    	boolean isTaken = false;
+	    	if(Integer.parseInt(rs.getString(4)) == 1) isTaken = true;
+	        result.put(Integer.parseInt(rs.getString(1)), new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), ZONEENUMS.BLUE, this, menu, isTaken));
 	    }
 	  } catch (SQLException se) {
 	    System.out.println("We got an exception while getting a result:this " +

@@ -25,12 +25,18 @@ public class RestaurantSystem {
 	
 	public void updateTablesFromDB()
 	{
-		DBInteractor.getTables(menu);
+		tableHash = DBInteractor.getTables(menu);
 	}
 	
-	public void getTableStatusFromDatabase()
+	public void getTableStatusFromDatabase(int key)
 	{
 		//will update the tableHash, occupied Unoccupied exter
+		updateTablesFromDB();
+		if(tableHash.get(key).isTableOccupied())
+		System.out.println("Table occupied");
+		else
+			System.out.println("Table not occupied");
+		
 	}
 	
 	public void getOrderStatusFromDatabase()

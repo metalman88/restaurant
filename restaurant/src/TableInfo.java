@@ -5,7 +5,7 @@ public class TableInfo {
 
 	
 	public TableInfo(String tableName,int tableNumber,int maxOcc, ZONEENUMS zone,
-					 DatabaseInteractor DBInteractor, Menu menu)
+					 DatabaseInteractor DBInteractor, Menu menu, boolean isTaken)
 	{
 		this.tablename = tableName;
 		this.tableNumber = tableNumber;
@@ -13,7 +13,7 @@ public class TableInfo {
 		this.zone = zone;
 		this.DBInteractor = DBInteractor;
 		this.menu = menu;
-		isOccupied = false;
+		isOccupied = isTaken;
 	}
 	
 	public ZONEENUMS getZone()
