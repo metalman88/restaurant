@@ -7,12 +7,18 @@ public class MenuItem {
 	private String description;
 	private double price;
 	private double cookingTimeMinutes;
-	private NutritionInfo nurition;
+	private NutritionInfo nutrition;
 	
 	public MenuItem(int itemID, String itemName, String category, String description,
-				    Double price, Double cookTimeMinutes,NutritionInfo nutrition)
+				    Double price, Double cookingTimeMinutes,NutritionInfo nutrition)
 	{
-		
+		this.itemID = itemID;
+		this.itemName = itemName;
+		this.category = category;
+		this.description = description;
+		this.price = price;
+		this.cookingTimeMinutes = cookingTimeMinutes;
+		this.nutrition = nutrition;
 	}
 	
 	public int getID(){return itemID;}
