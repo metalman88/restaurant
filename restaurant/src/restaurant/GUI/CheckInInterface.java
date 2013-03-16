@@ -17,7 +17,7 @@ public class CheckInInterface {
 	  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	  JPanel panel = new JPanel();
-	  frame.add(panel);
+	  frame.getContentPane().add(panel);
 	  JButton button = new JButton("Waitlist for Tables");
 	  panel.add(button);
 	  button.addActionListener(new showOrderList());
@@ -76,7 +76,7 @@ public class CheckInInterface {
         */
        
         //Add the scroll pane to this panel.
-        frame2.add(topPanel);
+        frame2.getContentPane().add(topPanel);
         topPanel.add(scrollPane);
         topPanel.add(CustomerName);
         topPanel.add(customerName);
@@ -148,7 +148,7 @@ public class CheckInInterface {
         JScrollPane scrollPane = new JScrollPane(orders);
 
         //Add the scroll pane to this panel.
-        frame3.add(scrollPane);
+        frame3.getContentPane().add(scrollPane);
         scrollPane.add(label);
 	  }
 	}   
