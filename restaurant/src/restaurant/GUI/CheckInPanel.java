@@ -4,6 +4,8 @@ import javax.swing.JPanel;
 
 import restaurant.system.RestaurantSystem;
 
+// I'll work on this class. Please let me know if this would conflict with 
+// any one's work. Tai Bo
 public class CheckInPanel extends JPanel {
 	
 	private RestaurantSystem restaurantSystem;
