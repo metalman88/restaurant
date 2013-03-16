@@ -42,6 +42,12 @@ public class RestaurantSystem {
 		
 	}
 	
+	public boolean loginUser(String tableNumberOrName)
+	{
+		
+		return false;
+	}
+	
 	public void getOrderStatusFromDatabase()
 	{
 		// will update the order chunks, calls d

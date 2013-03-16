@@ -24,14 +24,20 @@ import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+
+import restaurant.system.RestaurantSystem;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class WelcomeScreen extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField tableNumberField;
 	private JTextField tableNameField;
+	private static RestaurantSystem restaurantSystem;
 
 	/**
 	 * Launch the application.
@@ -40,6 +46,7 @@ public class WelcomeScreen extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
+					restaurantSystem = null;// new RestaurantSystem();
 					WelcomeScreen frame = new WelcomeScreen();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -64,66 +71,13 @@ public class WelcomeScreen extends JFrame {
 		tabbedPane.setBounds(0, 0, 1008, 682);
 		contentPane.add(tabbedPane);
 		
-		JPanel customerPanel = new JPanel();
-		tabbedPane.addTab("Customer", null, customerPanel, null);
-		customerPanel.setLayout(null);
 		
-		JLabel lblNewLabel = new JLabel("Table Number:                          -or-                          Table Name:");
-		lblNewLabel.setBounds(346, 234, 310, 14);
-		customerPanel.add(lblNewLabel);
-		
-		tableNameField = new JTextField();
-		tableNameField.setColumns(10);
-		tableNameField.setBounds(573, 259, 93, 20);
-		customerPanel.add(tableNameField);
-		
-		tableNumberField = new JTextField();
-		tableNumberField.setBounds(339, 259, 93, 20);
-		customerPanel.add(tableNumberField);
-		tableNumberField.setColumns(10);
-		
-		JButton loginButton = new JButton("Login");
-		loginButton.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				loginCustomer(tableNumber);
-			}
-		});
-		loginButton.setBounds(457, 328, 89, 23);
-		customerPanel.add(loginButton);
-		
-		JLabel lblNewLabel_1 = new JLabel("Error Label, No Such Table");
-		lblNewLabel_1.setForeground(Color.RED);
-		lblNewLabel_1.setBounds(435, 303, 133, 14);
-		customerPanel.add(lblNewLabel_1);
-		
-		String[] intList= new String[200];
-		for(int i = 0 ; i < 200;i++){
-			intList[i] = String.valueOf(i+1);
-			
-		}
-		
-		JPanel checkInPanel = new JPanel();
-		tabbedPane.addTab("Check In", null, checkInPanel, null);
-		
-		JPanel serverPanel = new JPanel();
-		tabbedPane.addTab("Server", null, serverPanel, null);
-		
-		JPanel kitchPanel = new JPanel();
-		tabbedPane.addTab("Kitchen", null, kitchPanel, null);
-		
-	}
 
-	protected boolean loginCustomer(String tableNumber) {
+		tabbedPane.addTab("Customer", null, new CustomerLoginPanel(restaurantSystem), null);
+		tabbedPane.addTab("Check In", null, new CheckInPanel(restaurantSystem), null);
+		tabbedPane.addTab("Server", null, new ServerPanel(restaurantSystem), null);
+		tabbedPane.addTab("Kitchen", null, new KitchenPanel(restaurantSystem), null);
+
 		
-		try
-		{
-			Integer.parseInt(tableNumber.trim());
-			//this will create objects based on tableNumber
-		}
-		catch(NumberFormatException e)
-		{
-			//should be a table name and not number
-		}
 	}
 }
