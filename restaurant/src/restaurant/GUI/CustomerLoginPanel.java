@@ -29,30 +29,51 @@ public class CustomerLoginPanel extends JPanel {
 		setLayout(null);
 		
 		JLabel lblNewLabel = new JLabel("Table Number:                          -or-                          Table Name:");
-		lblNewLabel.setBounds(346, 234, 310, 14);
+		lblNewLabel.setBounds(346, 234, 410, 14);
 		add(lblNewLabel);
 		
 		final JTextField tableNameField = new JTextField();
 		tableNameField.setColumns(10);
-		tableNameField.setBounds(573, 259, 93, 20);
+		tableNameField.setBounds(589, 259, 93, 20);
 		add(tableNameField);
-		
-		final JTextField tableNumberField = new JTextField();
-		tableNumberField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
-				tableNameField.setEditable(false);
-				
-			}
-		});
 
+		final JTextField tableNumberField = new JTextField();
 		tableNumberField.setBounds(339, 259, 93, 20);
 		add(tableNumberField);
 		tableNumberField.setColumns(10);
 		
-		final JLabel errorLabel = new JLabel("No Such Customer Tabel Exist");
+		tableNameField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(!tableNameField.getText().isEmpty())
+				{
+					tableNumberField.setEditable(false);
+				}
+				else
+				{
+					tableNumberField.setEditable(true);
+				}
+			}
+		});
+		
+		tableNumberField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+				if(!tableNumberField.getText().isEmpty())
+				{
+					tableNameField.setEditable(false);
+				}
+				else
+				{
+					tableNameField.setEditable(true);
+				}
+				
+			}
+		});
+		
+		final JLabel errorLabel = new JLabel("");
 		errorLabel.setForeground(Color.RED);
-		errorLabel.setBounds(427, 303, 148, 14);
+		errorLabel.setBounds(427, 303, 309, 14);
 		add(errorLabel);
 		
 		JButton loginButton = new JButton("Login");
@@ -69,7 +90,7 @@ public class CustomerLoginPanel extends JPanel {
 					}
 					else
 					{
-						errorLabel.setText("No Such Customer Tabel Exist");
+						errorLabel.setText("No Such Customer Table Exist");
 					}
 				}
 				else if(!tableNumberField.getText().isEmpty()&&tableNameField.getText().isEmpty())
@@ -82,12 +103,12 @@ public class CustomerLoginPanel extends JPanel {
 					}
 					else
 					{
-						errorLabel.setText("No Such Customer Tabel Exist");
+						errorLabel.setText("");
 					}
 				}
 				else
 				{
-					errorLabel.setText("No Such Customer Tabel Exist");
+					errorLabel.setText("Please Enter Table Number Or Name");
 				}
 			}
 		});
