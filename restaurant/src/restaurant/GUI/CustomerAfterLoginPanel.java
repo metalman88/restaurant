@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 
 import restaurant.system.RestaurantSystem;
 
+//Jesse working on this class
 public class CustomerAfterLoginPanel extends JPanel{
 	
 	private RestaurantSystem restaurantSystem;

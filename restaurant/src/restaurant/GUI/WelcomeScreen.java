@@ -34,9 +34,7 @@ import java.awt.event.KeyEvent;
 
 public class WelcomeScreen extends JFrame {
 
-	private JPanel contentPane;
-	private JTextField tableNumberField;
-	private JTextField tableNameField;
+	private JPanel contentPane;	
 	private static RestaurantSystem restaurantSystem;
 
 	/**
@@ -60,6 +58,7 @@ public class WelcomeScreen extends JFrame {
 	 * Create the frame.
 	 */
 	public WelcomeScreen() {
+		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1024, 720);
 		contentPane = new JPanel();

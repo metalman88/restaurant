@@ -13,6 +13,7 @@ import javax.swing.JTextField;
 
 import restaurant.system.RestaurantSystem;
 
+//Jesse working on this class
 public class CustomerLoginPanel extends JPanel {
 	
 	RestaurantSystem restaurantSystem;
@@ -39,13 +40,12 @@ public class CustomerLoginPanel extends JPanel {
 		final JTextField tableNumberField = new JTextField();
 		tableNumberField.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent arg0) {
-				if(!tableNumberField.getText().isEmpty())
-				{
-					tableNameField.setEditable(false);
-				}
+			public void keyReleased(KeyEvent e) {
+				tableNameField.setEditable(false);
+				
 			}
 		});
+
 		tableNumberField.setBounds(339, 259, 93, 20);
 		add(tableNumberField);
 		tableNumberField.setColumns(10);
