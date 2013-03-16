@@ -1,3 +1,4 @@
+package restaurant.system;
 
 public class Party 
 {

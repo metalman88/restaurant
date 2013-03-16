@@ -1,3 +1,4 @@
+package restaurant.database;
 import static org.junit.Assert.*;
 
 import java.sql.ResultSet;
@@ -5,6 +6,8 @@ import java.sql.SQLException;
 import java.util.Map.Entry;
 
 import org.junit.Test;
+
+import restaurant.system.TableInfo;
 
 
 public class DatabaseInteractorTest {

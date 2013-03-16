@@ -1,4 +1,8 @@
+package restaurant.system;
 import java.util.ArrayList;
+
+import restaurant.database.DatabaseInteractor;
+import restuarant.enums.ZONEENUMS;
 
 
 public class TableInfo {

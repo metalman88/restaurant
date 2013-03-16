@@ -1,3 +1,4 @@
+package restaurant.GUI;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 

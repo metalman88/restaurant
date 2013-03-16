@@ -1,3 +1,4 @@
+package restuarant.enums;
 public enum ORDERSTATUSENUMS 
 {
 	OUT,

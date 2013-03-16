@@ -1,5 +1,8 @@
+package restaurant.system;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import restaurant.database.DatabaseInteractor;
 
 
 public class RestaurantSystem {

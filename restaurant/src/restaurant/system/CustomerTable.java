@@ -1,4 +1,7 @@
+package restaurant.system;
 import java.util.ArrayList;
+
+import restaurant.database.DatabaseInteractor;
 
 
 public class CustomerTable 
