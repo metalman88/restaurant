@@ -24,6 +24,8 @@ import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import javax.swing.JComboBox;
 import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class WelcomeScreen extends JFrame {
 
@@ -81,6 +83,12 @@ public class WelcomeScreen extends JFrame {
 		tableNumberField.setColumns(10);
 		
 		JButton loginButton = new JButton("Login");
+		loginButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				loginCustomer(tableNumber);
+			}
+		});
 		loginButton.setBounds(457, 328, 89, 23);
 		customerPanel.add(loginButton);
 		
@@ -104,5 +112,18 @@ public class WelcomeScreen extends JFrame {
 		JPanel kitchPanel = new JPanel();
 		tabbedPane.addTab("Kitchen", null, kitchPanel, null);
 		
+	}
+
+	protected boolean loginCustomer(String tableNumber) {
+		
+		try
+		{
+			Integer.parseInt(tableNumber.trim());
+			//this will create objects based on tableNumber
+		}
+		catch(NumberFormatException e)
+		{
+			//should be a table name and not number
+		}
 	}
 }
