@@ -95,7 +95,7 @@ public class CustomerLoginPanel extends JPanel {
 				if(!tableNameField.getText().isEmpty()&&tableNumberField.getText().isEmpty())
 				{
 					//must be checking by table name
-					if(restaurantSystem.loginUser(tableNameField.getText().trim()))
+					if(restaurantSystem.loginTablet(tableNameField.getText().trim()))
 					{
 						errorLabel.setText("");
 						welcomeScreen.swapLoginCustomerPanel();
@@ -109,7 +109,7 @@ public class CustomerLoginPanel extends JPanel {
 				else if(!tableNumberField.getText().isEmpty()&&tableNameField.getText().isEmpty())
 				{
 					//must be checking by table number
-					if(restaurantSystem.loginUser(tableNumberField.getText().trim()))
+					if(restaurantSystem.loginTablet(tableNumberField.getText().trim()))
 					{
 						errorLabel.setText("");
 						welcomeScreen.swapLoginCustomerPanel();
