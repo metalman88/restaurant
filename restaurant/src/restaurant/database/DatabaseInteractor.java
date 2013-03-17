@@ -168,9 +168,6 @@ public HashMap<Integer, TableInfo> getTables(Menu menu) {
 	return result;
 }
 
-public void addOrderToDB(OrderChunk curOrder)
-{
-}
  
 public void updateTableStatus(int tableNumber, String occupied)
 {	
@@ -200,7 +197,11 @@ public void updateTableStatus(int tableNumber, String occupied)
 	System.out.println("Successfully modified " + m + " rows.\n");
 }
 
-  
+public void addOrderToDB(OrderChunk curOrder)
+{
+	
+}
+
 public Menu getMenuFromDB()
 {
 	// if you create get all the information and store it in variables i can create the objects.
@@ -213,8 +214,29 @@ public Menu getMenuFromDB()
 public HashMap<Integer,Boolean> getTableStatusIfUpdated()
 {
 	//HashMap<TableNumber,true if occupied>
-	//returns a hashmap of true false 
+	//returns a hashmap of true or false (occupied, unoccupied) 
 	return null;
+}
+
+public boolean loginTablet(int tableNumber,String tableName)
+{
+	if(tableNumber == -1)
+	{
+		//query by tableName
+		//if the table name exists, and DB.tableInfo.tablettake is false return true
+		// then set tablettake to true
+		return null;
+	}
+	else if(tableName.isEmpty())
+	{
+		//query by tableNumber
+		//if the table number exists, and DB.tableInfo.tablettake is false, return true
+		// then set tablettake to true
+		return null;
+	}
+	
+	return false;
+	
 }
 
 

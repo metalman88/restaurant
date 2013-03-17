@@ -103,7 +103,7 @@ public class CustomerLoginPanel extends JPanel {
 					}
 					else
 					{
-						errorLabel.setText("No Such Customer Table Exist");
+						errorLabel.setText("No Such Customer Table # Exist");
 					}
 				}
 				else if(!tableNumberField.getText().isEmpty()&&tableNameField.getText().isEmpty())
