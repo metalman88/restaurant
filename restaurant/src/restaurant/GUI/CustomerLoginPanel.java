@@ -88,6 +88,7 @@ public class CustomerLoginPanel extends JPanel {
 		errorLabel.setBounds(427, 303, 309, 14);
 		add(errorLabel);
 		
+		//mouse adapter for button click on login button
 		MouseAdapter mouseAdapter = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -97,7 +98,8 @@ public class CustomerLoginPanel extends JPanel {
 					if(restaurantSystem.loginUser(tableNameField.getText().trim()))
 					{
 						errorLabel.setText("");
-						switchPanel();
+						welcomeScreen.swapLoginCustomerPanel();
+						welcomeScreen.switchToFullScreen();
 					}
 					else
 					{
@@ -110,7 +112,8 @@ public class CustomerLoginPanel extends JPanel {
 					if(restaurantSystem.loginUser(tableNumberField.getText().trim()))
 					{
 						errorLabel.setText("");
-						switchPanel();
+						welcomeScreen.swapLoginCustomerPanel();
+						welcomeScreen.switchToFullScreen();
 					}
 					else
 					{
@@ -126,11 +129,6 @@ public class CustomerLoginPanel extends JPanel {
 		loginButton.addMouseListener(mouseAdapter);
 		loginButton.setBounds(457, 328, 89, 23);
 		add(loginButton);
-	}
-	
-	public void switchPanel()
-	{
-		welcomeScreen.presentCustomerLogin();
 	}
 
 }

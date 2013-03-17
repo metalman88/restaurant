@@ -86,7 +86,6 @@ public class WelcomeScreen extends JFrame {
 		tabbedPane.addTab("Check In", null, new CheckInPanel(restaurantSystem), null);
 		tabbedPane.addTab("Server", null, new ServerPanel(restaurantSystem), null);
 		tabbedPane.addTab("Kitchen", null, new KitchenPanel(restaurantSystem), null);
-		//presentCustomerLogin();
 
 		
 	}
