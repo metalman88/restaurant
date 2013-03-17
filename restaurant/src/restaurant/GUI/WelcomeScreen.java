@@ -19,7 +19,7 @@ import javax.swing.JMenu;
 import java.awt.Canvas;
 import javax.swing.JTabbedPane;
 import java.awt.GridLayout;
-import net.miginfocom.swing.MigLayout;
+import net.miginfocom.swing.MigLayout; 
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import javax.swing.JComboBox;
