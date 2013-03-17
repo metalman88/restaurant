@@ -19,6 +19,8 @@ public class CustomerAfterLoginPanel extends JPanel{
 	
 	public void  setUpPanel()
 	{
+		//keep in mind that this panel will exist inside full screen panel
+		
 		//Do everything here (look at CustomerLoginPanel.java as example)
 		//Set up your JPanel, and interact with the restuarantSystem accordingling
 		//this class is a JPanel class so do stuff like add(new JTextField())

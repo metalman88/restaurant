@@ -13,7 +13,7 @@ public class RestaurantSystem {
 	public DatabaseInteractor DBInteractor;
 	public Menu menu;
 	public ArrayList<Party> waitList;
-	public int tableNumberLoggedIntoThisTablet;
+	private int tableNumberLoggedIntoThisTablet;
 	
 	public RestaurantSystem()
 	{
