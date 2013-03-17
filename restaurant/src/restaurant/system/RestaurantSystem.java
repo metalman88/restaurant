@@ -13,7 +13,7 @@ public class RestaurantSystem {
 	public DatabaseInteractor DBInteractor;
 	public Menu menu;
 	public ArrayList<Party> waitList;
-	public int curTableNumber;
+	public int tableNumberLoggedIntoThisTablet;
 	
 	public RestaurantSystem()
 	{
@@ -90,13 +90,44 @@ public class RestaurantSystem {
 		try
 		{
 			int tableNumber = Integer.parseInt(tableNumberOrName);
-			return DBInteractor.loginTablet(tableNumber, "") ;
+			Boolean wasAbleToLogin = DBInteractor.loginTablet(tableNumber, "") ;
+			if(wasAbleToLogin)
+			{
+				tableNumberLoggedIntoThisTablet = tableNumber;
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+			
 			
 		}
 		catch(NumberFormatException e)
 		{
-			return DBInteractor.loginTablet(-1, tableNumberOrName);
+			Boolean wasAbleToLogin = DBInteractor.loginTablet(-1, tableNumberOrName);
+			if(wasAbleToLogin)
+			{
+				Iterator tableHashIterator = tableHash.keySet().iterator(); 
+				while(tableHashIterator.hasNext())
+				{
+					int curKey = (int) tableHashIterator.next();
+					if(tableHash.get(curKey).getTableName().equals(tableNumberOrName))
+					{
+						tableNumberLoggedIntoThisTablet = tableHash.get(curKey).getTableNumber();
+						return true;
+					}
+				}
+			}
+			else
+			{
+				return false;
+			}
+			
 		}
+		
+		System.err.println("Should not have reached this line error in loginTablet()");
+		return false;
 	}
 	
 	public void getOrderStatusFromDatabase()
@@ -106,7 +137,7 @@ public class RestaurantSystem {
 	
 	public TableInfo getCurTable()
 	{
-		return tableHash.get(curTableNumber);
+		return tableHash.get(tableNumberLoggedIntoThisTablet);
 	}
 	
 }

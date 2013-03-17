@@ -30,6 +30,11 @@ public class TableInfo {
 		return tableNumber;
 	}
 	
+	public String getTableName()
+	{
+		return tablename;
+	}
+	
 	public void setTableToOccupied()
 	{
 		isOccupied = true;
