@@ -8,10 +8,12 @@ import restaurant.system.RestaurantSystem;
 public class CustomerAfterLoginPanel extends JPanel{
 	
 	private RestaurantSystem restaurantSystem;
+	private WelcomeScreen welcomeScreen;
 	
-	public CustomerAfterLoginPanel(RestaurantSystem restaurantSystem)
+	public CustomerAfterLoginPanel(RestaurantSystem restaurantSystem,WelcomeScreen welcomeScreen)
 	{
 		this.restaurantSystem = restaurantSystem;
+		this.welcomeScreen = welcomeScreen;
 		setUpPanel();
 	}
 	

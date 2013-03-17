@@ -17,16 +17,20 @@ import restaurant.system.RestaurantSystem;
 public class CustomerLoginPanel extends JPanel {
 	
 	RestaurantSystem restaurantSystem;
+	WelcomeScreen welcomeScreen;
 	
-	public CustomerLoginPanel(RestaurantSystem restaurantSystem)
+	public CustomerLoginPanel(RestaurantSystem restaurantSystem,WelcomeScreen welcomeScreen)
 	{
 		this.restaurantSystem = restaurantSystem;
+		this.welcomeScreen = welcomeScreen;
 		setUpPanel();
 	}
 	
 	public void setUpPanel()
 	{
 		setLayout(null);
+		
+		final JButton loginButton = new JButton("Login");
 		
 		JLabel lblNewLabel = new JLabel("Table Number:                          -or-                          Table Name:");
 		lblNewLabel.setBounds(346, 234, 410, 14);
@@ -49,6 +53,10 @@ public class CustomerLoginPanel extends JPanel {
 				{
 					tableNumberField.setEditable(false);
 				}
+				else if(e.getKeyCode()==e.VK_ENTER)
+				{
+					loginButton.doClick();
+				}
 				else
 				{
 					tableNumberField.setEditable(true);
@@ -63,6 +71,10 @@ public class CustomerLoginPanel extends JPanel {
 				{
 					tableNameField.setEditable(false);
 				}
+				else if(e.getKeyCode() == e.VK_ENTER)
+				{
+					loginButton.doClick();
+				}
 				else
 				{
 					tableNameField.setEditable(true);
@@ -76,17 +88,16 @@ public class CustomerLoginPanel extends JPanel {
 		errorLabel.setBounds(427, 303, 309, 14);
 		add(errorLabel);
 		
-		JButton loginButton = new JButton("Login");
-		loginButton.addMouseListener(new MouseAdapter() {
+		MouseAdapter mouseAdapter = new MouseAdapter() {
 			@Override
-			public void mouseReleased(MouseEvent e) {
+			public void mouseClicked(MouseEvent e) {
 				if(!tableNameField.getText().isEmpty()&&tableNumberField.getText().isEmpty())
 				{
 					//must be checking by table name
 					if(restaurantSystem.loginUser(tableNameField.getText().trim()))
 					{
 						errorLabel.setText("");
-						//need to change the panel
+						switchPanel();
 					}
 					else
 					{
@@ -99,7 +110,7 @@ public class CustomerLoginPanel extends JPanel {
 					if(restaurantSystem.loginUser(tableNumberField.getText().trim()))
 					{
 						errorLabel.setText("");
-						//need to change the panel
+						switchPanel();
 					}
 					else
 					{
@@ -111,9 +122,15 @@ public class CustomerLoginPanel extends JPanel {
 					errorLabel.setText("Please Enter Table Number Or Name");
 				}
 			}
-		});
+		};
+		loginButton.addMouseListener(mouseAdapter);
 		loginButton.setBounds(457, 328, 89, 23);
 		add(loginButton);
+	}
+	
+	public void switchPanel()
+	{
+		welcomeScreen.presentCustomerLogin();
 	}
 
 }

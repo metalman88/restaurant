@@ -36,6 +36,7 @@ public class WelcomeScreen extends JFrame {
 
 	private JPanel contentPane;	
 	private static RestaurantSystem restaurantSystem;
+	JTabbedPane tabbedPane;
 
 	/**
 	 * Launch the application.
@@ -66,17 +67,24 @@ public class WelcomeScreen extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
+		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(0, 0, 1008, 682);
 		contentPane.add(tabbedPane);
 		
 		
 
-		tabbedPane.addTab("Customer", null, new CustomerLoginPanel(restaurantSystem), null);
+		tabbedPane.addTab("Customer", null, new CustomerLoginPanel(restaurantSystem,this), null);
 		tabbedPane.addTab("Check In", null, new CheckInPanel(restaurantSystem), null);
 		tabbedPane.addTab("Server", null, new ServerPanel(restaurantSystem), null);
 		tabbedPane.addTab("Kitchen", null, new KitchenPanel(restaurantSystem), null);
 
+		
+	}
+	
+	public void presentCustomerLogin()
+	{
+		contentPane.remove(tabbedPane);
+		CustomerAfterLoginPanel CALP = new CustomerAfterLoginPanel(restaurantSystem,this);
 		
 	}
 }
