@@ -20,6 +20,8 @@ import javax.swing.AbstractListModel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 //Jesse working on this class
 public class CustomerAfterLoginPanel extends JPanel{
@@ -38,7 +40,14 @@ public class CustomerAfterLoginPanel extends JPanel{
 		this.restaurantSystem = restaurantSystem;
 		this.welcomeScreen = welcomeScreen;
 		setLayout(null);
+		setUpPanel();
 		
+	
+	}
+	
+	public void  setUpPanel()
+	{
+
 		JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
 		tabbedPane.setBounds(59, 116, 240, 490);
 		add(tabbedPane);
@@ -210,6 +219,13 @@ public class CustomerAfterLoginPanel extends JPanel{
 		add(paybillButton);
 		
 		JButton logoutButton = new JButton("Logout");
+		logoutButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				welcomeScreen.swapLoginCustomerPanel();
+				welcomeScreen.switchToRegularSizeScreen();
+			}
+		});
 		logoutButton.setBounds(911, 0, 89, 23);
 		add(logoutButton);
 		
@@ -264,18 +280,5 @@ public class CustomerAfterLoginPanel extends JPanel{
 		JButton nutritionInfoButton = new JButton("Nutrition Info");
 		nutritionInfoButton.setBounds(124, 617, 107, 23);
 		add(nutritionInfoButton);
-		setUpPanel();
-	}
-	
-	public void  setUpPanel()
-	{
-		//keep in mind that this panel will exist inside full screen panel
-		
-		//Do everything here (look at CustomerLoginPanel.java as example)
-		//Set up your JPanel, and interact with the restuarantSystem accordingling
-		//this class is a JPanel class so do stuff like add(new JTextField())
-		//or right click on this class and open with WindowBuilder if installed.
-		//
-		//User the restaurantSystem variable to interact with the class
 	}
 }
