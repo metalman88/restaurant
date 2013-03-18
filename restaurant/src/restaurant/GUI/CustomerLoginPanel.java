@@ -46,9 +46,12 @@ public class CustomerLoginPanel extends JPanel {
 		add(tableNumberField);
 		tableNumberField.setColumns(10);
 		
-		tableNameField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
+		tableNameField.addKeyListener(
+		new KeyAdapter() 
+		{
+			
+			public void keyReleased(KeyEvent e) 
+			{
 				if(!tableNameField.getText().isEmpty())
 				{
 					tableNumberField.setEditable(false);
