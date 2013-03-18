@@ -59,10 +59,34 @@ public class CustomerAfterLoginPanel extends JPanel{
 		JScrollPane scrollPane_1 = new JScrollPane();
 		drinksTab.add(scrollPane_1, BorderLayout.CENTER);
 		
+		orderTable = new JTable();
+		orderTable.setModel(new DefaultTableModel(
+			new Object[][] {
+				{null, null},
+				{null, null},
+			},
+			new String[] {
+				"Item", "Price"
+			}
+		) {
+			Class[] columnTypes = new Class[] {
+				Object.class, String.class
+			};
+			public Class getColumnClass(int columnIndex) {
+				return columnTypes[columnIndex];
+			}
+			boolean[] columnEditables = new boolean[] {
+				false, true
+			};
+			public boolean isCellEditable(int row, int column) {
+				return columnEditables[column];
+			}
+		});
+		
 		drinksTable = new JTable();
 		drinksTable.setModel(new DefaultTableModel(
 			new Object[][] {
-				{null, null},
+				{"Strawberry Blast", "$11.500"},
 				{null, null},
 				{null, null},
 				{null, null},
@@ -109,9 +133,11 @@ public class CustomerAfterLoginPanel extends JPanel{
 				{null, null},
 			},
 			new String[] {
-				"New column", "New column"
+				"Item", "price"
 			}
 		));
+		drinksTable.getColumnModel().getColumn(1).setPreferredWidth(45);
+		drinksTable.getColumnModel().getColumn(1).setMaxWidth(45);
 		scrollPane_1.setViewportView(drinksTable);
 		
 		JPanel appetizerTab = new JPanel();
@@ -131,9 +157,10 @@ public class CustomerAfterLoginPanel extends JPanel{
 				{null, null},
 			},
 			new String[] {
-				"New column", "New column"
+				"Item", "Price"
 			}
 		));
+		appetizerTable.getColumnModel().getColumn(1).setMaxWidth(45);
 		scrollPane_2.setViewportView(appetizerTable);
 		
 		JPanel entreeTab = new JPanel();
@@ -150,9 +177,10 @@ public class CustomerAfterLoginPanel extends JPanel{
 				{null, null},
 			},
 			new String[] {
-				"New column", "New column"
+				"Item", "Price"
 			}
 		));
+		entreeTable.getColumnModel().getColumn(1).setMaxWidth(45);
 		scrollPane_3.setViewportView(entreeTable);
 		
 		JPanel dessertTab = new JPanel();
@@ -170,9 +198,10 @@ public class CustomerAfterLoginPanel extends JPanel{
 				{null, null},
 			},
 			new String[] {
-				"New column", "New column"
+				"Item", "Price"
 			}
 		));
+		dessertTable.getColumnModel().getColumn(1).setMaxWidth(45);
 		scrollPane_4.setViewportView(dessertTable);
 		
 		JPanel otherTab = new JPanel();
@@ -190,9 +219,10 @@ public class CustomerAfterLoginPanel extends JPanel{
 				{null, null},
 			},
 			new String[] {
-				"New column", "New column"
+				"Item", "Price"
 			}
 		));
+		otherTable.getColumnModel().getColumn(1).setMaxWidth(45);
 		scrollPane_5.setViewportView(otherTable);
 		
 		JLabel billLabel = new JLabel("Bill");
@@ -222,6 +252,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 		logoutButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				
 				welcomeScreen.swapLoginCustomerPanel();
 				welcomeScreen.switchToRegularSizeScreen();
 			}
@@ -230,6 +261,16 @@ public class CustomerAfterLoginPanel extends JPanel{
 		add(logoutButton);
 		
 		JButton addButton = new JButton("Add >>");
+		addButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// -1 means no row was selected
+				if(drinksTable.getSelectedRow()!=-1)
+				{
+					orderTable.add(drinksTable.get)
+				}
+			}
+		});
 		addButton.setBounds(309, 336, 81, 23);
 		add(addButton);
 		
@@ -241,29 +282,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 		JScrollPane scrollPane_6 = new JScrollPane();
 		panel.add(scrollPane_6, BorderLayout.CENTER);
 		
-		orderTable = new JTable();
-		orderTable.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null},
-				{null, null},
-			},
-			new String[] {
-				"Item", "Price"
-			}
-		) {
-			Class[] columnTypes = new Class[] {
-				Object.class, String.class
-			};
-			public Class getColumnClass(int columnIndex) {
-				return columnTypes[columnIndex];
-			}
-			boolean[] columnEditables = new boolean[] {
-				false, true
-			};
-			public boolean isCellEditable(int row, int column) {
-				return columnEditables[column];
-			}
-		});
+		
 		orderTable.getColumnModel().getColumn(0).setResizable(false);
 		orderTable.getColumnModel().getColumn(1).setResizable(false);
 		orderTable.getColumnModel().getColumn(1).setPreferredWidth(45);

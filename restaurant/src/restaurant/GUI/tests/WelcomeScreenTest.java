@@ -11,8 +11,10 @@ public class WelcomeScreenTest {
 	@Test
 	public void testFullScreen() {
 		WelcomeScreen WS = new WelcomeScreen();
+		WS.setVisible(true);
 		WS.swapLoginCustomerPanel();
 		WS.switchToFullScreen();
+		
 	}
 
 }
