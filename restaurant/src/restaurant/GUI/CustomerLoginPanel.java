@@ -116,6 +116,9 @@ public class CustomerLoginPanel extends JPanel {
 				else if(!tableNumberField.getText().isEmpty()&&tableNameField.getText().isEmpty())
 				{
 					//must be checking by table number
+					if(restaurantSystem == null) {
+						restaurantSystem = new RestaurantSystem();
+					}
 					if(restaurantSystem.loginTablet(tableNumberField.getText().trim()))
 					{
 						errorLabel.setText("");

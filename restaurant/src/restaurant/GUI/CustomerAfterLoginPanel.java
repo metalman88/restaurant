@@ -267,7 +267,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 				// -1 means no row was selected
 				if(drinksTable.getSelectedRow()!=-1)
 				{
-					orderTable.add(drinksTable.get)
+					//orderTable.add(drinksTable.get());
 				}
 			}
 		});

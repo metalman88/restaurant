@@ -168,6 +168,8 @@ public HashMap<Integer, TableInfo> getTables(Menu menu) {
 	return result;
 }
 
+
+
  
 public void updateTableStatus(int tableNumber, String occupied)
 {	
@@ -225,14 +227,36 @@ public boolean loginTablet(int tableNumber,String tableName)
 		//query by tableName
 		//if the table name exists, and DB.tableInfo.tablettake is false return true
 		// then set tablettake to true
-		return null;
+		return false;
 	}
 	else if(tableName.isEmpty())
 	{
+		ResultSet rs = selectCommand("tabletTake", "tableInfo WHERE table_id="+tableNumber);
+		boolean isTaken = true;
+		try {
+		    while (rs.next()) {
+		       // System.out.println("Here's the result of row " + index++ + ":");
+		       // System.out.println(rs.getString(1));
+		    	// ZONEENUMS.valueOf(rs.getString(6))
+		    	isTaken = rs.getBoolean(1);
+		    	System.out.println("The tablet taken status is"+rs.getString(1));
+		    }
+		  } catch (SQLException se) {
+		    System.out.println("We got an exception while getting a result:this " +
+		                       "shouldn't happen: we've done something really bad.");
+		    se.printStackTrace();
+		    System.exit(1);
+		  }
+		
+		if(!isTaken)
+		{
+			
+			updateTableStatus(tableNumber, "1");
+		}
 		//query by tableNumber
 		//if the table number exists, and DB.tableInfo.tablettake is false, return true
 		// then set tablettake to true
-		return null;
+		return isTaken;
 	}
 	
 	return false;
