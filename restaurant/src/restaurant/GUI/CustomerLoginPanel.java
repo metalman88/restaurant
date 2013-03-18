@@ -92,6 +92,9 @@ public class CustomerLoginPanel extends JPanel {
 		add(errorLabel);
 		
 		//mouse adapter for button click on login button
+		//checks to see if only one text box is filled
+		// then trys to login, if login is successfull will 
+		// present the customer view in full screen.
 		MouseAdapter mouseAdapter = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -101,6 +104,7 @@ public class CustomerLoginPanel extends JPanel {
 					if(restaurantSystem.loginTablet(tableNameField.getText().trim()))
 					{
 						errorLabel.setText("");
+						//
 						welcomeScreen.swapLoginCustomerPanel();
 						welcomeScreen.switchToFullScreen();
 					}

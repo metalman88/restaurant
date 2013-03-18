@@ -86,7 +86,7 @@ public class RestaurantSystem {
 	public boolean loginTablet(String tableNumberOrName)
 	{
 		//the exception catch tells whether tableNumberOrName is a string or an int
-		//this helps me query the database accordingly
+		//this helps me query the database accordingly(by name or number)
 		try
 		{
 			int tableNumber = Integer.parseInt(tableNumberOrName);
@@ -105,6 +105,9 @@ public class RestaurantSystem {
 		}
 		catch(NumberFormatException e)
 		{
+			//searches through the table hash to find a table with the name specified
+			//if there is such a table the tablenumber is logged so we can easily get
+			//the table for the current tablet associated with the system.
 			Boolean wasAbleToLogin = DBInteractor.loginTablet(-1, tableNumberOrName);
 			if(wasAbleToLogin)
 			{
