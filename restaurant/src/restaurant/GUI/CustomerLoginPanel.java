@@ -46,9 +46,12 @@ public class CustomerLoginPanel extends JPanel {
 		add(tableNumberField);
 		tableNumberField.setColumns(10);
 		
-		tableNameField.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyReleased(KeyEvent e) {
+		tableNameField.addKeyListener(
+		new KeyAdapter() 
+		{
+			
+			public void keyReleased(KeyEvent e) 
+			{
 				if(!tableNameField.getText().isEmpty())
 				{
 					tableNumberField.setEditable(false);
@@ -89,15 +92,22 @@ public class CustomerLoginPanel extends JPanel {
 		add(errorLabel);
 		
 		//mouse adapter for button click on login button
+		//checks to see if only one text box is filled
+		// then trys to login, if login is successfull will 
+		// present the customer view in full screen.
 		MouseAdapter mouseAdapter = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if(restaurantSystem == null) {
+					restaurantSystem = new RestaurantSystem();
+				}
 				if(!tableNameField.getText().isEmpty()&&tableNumberField.getText().isEmpty())
 				{
 					//must be checking by table name
 					if(restaurantSystem.loginTablet(tableNameField.getText().trim()))
 					{
 						errorLabel.setText("");
+						//
 						welcomeScreen.swapLoginCustomerPanel();
 						welcomeScreen.switchToFullScreen();
 					}
@@ -109,6 +119,7 @@ public class CustomerLoginPanel extends JPanel {
 				else if(!tableNumberField.getText().isEmpty()&&tableNameField.getText().isEmpty())
 				{
 					//must be checking by table number
+					
 					if(restaurantSystem.loginTablet(tableNumberField.getText().trim()))
 					{
 						errorLabel.setText("");

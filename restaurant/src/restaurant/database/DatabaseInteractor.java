@@ -66,24 +66,34 @@ CREATE TABLE tableInfo (
 public class DatabaseInteractor {
 	public DatabaseInteractor() {
 	
-		try {
+		
+	}
+  public static void main(String[] argv) {
+	  testDB();
+  }
+  
+  public boolean connect() {
+	  try {
 		    // The second and third arguments are the username and password,
 		    // respectively. They should be whatever is necessary to connect
 		    // to the database.
 		    databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
 		                                    "postgres", "ounhuoead");
+		    return true;
 		    
 		    // My home database: ounhuoead
 		    // Laptop database: sflhdl
 		  } catch (SQLException se) {
 		    System.out.println("Couldn't connect: print out a stack trace and exit.");
 		    se.printStackTrace();
-		    System.exit(1);
+		   	return false;
 		  }
-	}
-  public static void main(String[] argv) {
-	  testDB();
   }
+  
+  public void setServerInfo(String host, String name, String pass) {
+	  
+  }
+  
   public static void testDB() {
   System.out.println("Checking if Driver is registered with DriverManager.");
   
@@ -168,6 +178,8 @@ public HashMap<Integer, TableInfo> getTables(Menu menu) {
 	return result;
 }
 
+
+
  
 public void updateTableStatus(int tableNumber, String occupied)
 {	
@@ -225,14 +237,63 @@ public boolean loginTablet(int tableNumber,String tableName)
 		//query by tableName
 		//if the table name exists, and DB.tableInfo.tablettake is false return true
 		// then set tablettake to true
-		return null;
-	}
-	else if(tableName.isEmpty())
-	{
+		ResultSet rs = selectCommand("tabletTake, table_id", "tableInfo WHERE name='"+tableName+"'");
+		String tableId = "0";
+		boolean isTaken = true;
+		try {
+		    while (rs.next()) {
+		       // System.out.println("Here's the result of row " + index++ + ":");
+		       // System.out.println(rs.getString(1));
+		    	// ZONEENUMS.valueOf(rs.getString(6))
+		    	isTaken = rs.getBoolean(1);
+		    	tableId = rs.getString(2);
+		    	System.out.println("The tablet taken status is"+rs.getString(1));
+		    }
+		  } catch (SQLException se) {
+		    System.out.println("We got an exception while getting a result:this " +
+		                       "shouldn't happen: we've done something really bad.");
+		    se.printStackTrace();
+		    System.exit(1);
+		  }
+		
+		if(!isTaken)
+		{
+			
+			updateTableStatus(tableNumber, tableId);
+		}
 		//query by tableNumber
 		//if the table number exists, and DB.tableInfo.tablettake is false, return true
 		// then set tablettake to true
-		return null;
+		return isTaken;
+	}
+	else if(tableName.isEmpty())
+	{
+		ResultSet rs = selectCommand("tabletTake", "tableInfo WHERE table_id="+tableNumber);
+		boolean isTaken = true;
+		try {
+		    while (rs.next()) {
+		       // System.out.println("Here's the result of row " + index++ + ":");
+		       // System.out.println(rs.getString(1));
+		    	// ZONEENUMS.valueOf(rs.getString(6))
+		    	isTaken = rs.getBoolean(1);
+		    	System.out.println("The tablet taken status is"+rs.getString(1));
+		    }
+		  } catch (SQLException se) {
+		    System.out.println("We got an exception while getting a result:this " +
+		                       "shouldn't happen: we've done something really bad.");
+		    se.printStackTrace();
+		    System.exit(1);
+		  }
+		
+		if(!isTaken)
+		{
+			
+			updateTableStatus(tableNumber, "1");
+		}
+		//query by tableNumber
+		//if the table number exists, and DB.tableInfo.tablettake is false, return true
+		// then set tablettake to true
+		return isTaken;
 	}
 	
 	return false;

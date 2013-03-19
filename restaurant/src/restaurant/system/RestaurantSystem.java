@@ -14,21 +14,30 @@ public class RestaurantSystem {
 	public Menu menu;
 	public ArrayList<Party> waitList;
 	private int tableNumberLoggedIntoThisTablet;
-	
+	private boolean debug = true;
+
 	public RestaurantSystem()
 	{
-		
+
 		DBInteractor = new DatabaseInteractor();
-		menu = DBInteractor.getMenuFromDB();
-		tableHash = DBInteractor.getTables(menu);
-		
+		DBInteractor.setServerInfo("server", "username", "password");
+		if (!debug)
+		{
+			if (DBInteractor.connect()) {
+				menu = DBInteractor.getMenuFromDB();
+				tableHash = DBInteractor.getTables(menu);
+			}
+			else {
+				System.exit(1);
+			}
+		}
 	}
-	
+
 	public void getMenuFromDB()
 	{
 		menu = DBInteractor.getMenuFromDB();
 	}
-	
+
 	public void updateTablesFromDB()
 	{
 		tableHash = DBInteractor.getTables(menu);
@@ -36,7 +45,7 @@ public class RestaurantSystem {
 		//above code query's the all tables and their info.
 		//updateTablesStatusFromDB();
 	}
-	
+
 	public void getTableStatusFromDatabase(int key)
 	{
 		//will update the tableHash, occupied Unoccupied exter
@@ -45,9 +54,9 @@ public class RestaurantSystem {
 			System.out.println("Table occupied");
 		else
 			System.out.println("Table not occupied");
-		
+
 	}
-	
+
 	/**
 	 * Updates the states of each table in the tableHash
 	 * this is to be used by updateTablesFromDB if we ever decided to
@@ -58,7 +67,7 @@ public class RestaurantSystem {
 		HashMap<Integer,Boolean> occupiedHash =  DBInteractor.getTableStatusIfUpdated();
 		Set<Integer> occupiedHashSet = occupiedHash.keySet();
 		Iterator occupiedHashIterator = occupiedHashSet.iterator();
-		
+
 		while(occupiedHashIterator.hasNext())
 		{
 			int curKey = (int) occupiedHashIterator.next();
@@ -73,12 +82,12 @@ public class RestaurantSystem {
 				{
 					tableHash.get(curKey).setTableToEmpty();
 				}
-				
+
 			}
 		}
-		
+
 	}
-	
+
 	/**
 	 * this will log a tablet into the database,
 	 * returns true if login was successful
@@ -86,7 +95,7 @@ public class RestaurantSystem {
 	public boolean loginTablet(String tableNumberOrName)
 	{
 		//the exception catch tells whether tableNumberOrName is a string or an int
-		//this helps me query the database accordingly
+		//this helps me query the database accordingly(by name or number)
 		try
 		{
 			int tableNumber = Integer.parseInt(tableNumberOrName);
@@ -100,11 +109,14 @@ public class RestaurantSystem {
 			{
 				return false;
 			}
-			
-			
+
+
 		}
 		catch(NumberFormatException e)
 		{
+			//searches through the table hash to find a table with the name specified
+			//if there is such a table the tablenumber is logged so we can easily get
+			//the table for the current tablet associated with the system.
 			Boolean wasAbleToLogin = DBInteractor.loginTablet(-1, tableNumberOrName);
 			if(wasAbleToLogin)
 			{
@@ -123,21 +135,21 @@ public class RestaurantSystem {
 			{
 				return false;
 			}
-			
+
 		}
-		
+
 		System.err.println("Should not have reached this line error in loginTablet()");
 		return false;
 	}
-	
+
 	public void getOrderStatusFromDatabase()
 	{
-		
+
 	}
-	
+
 	public TableInfo getCurTable()
 	{
 		return tableHash.get(tableNumberLoggedIntoThisTablet);
 	}
-	
+
 }

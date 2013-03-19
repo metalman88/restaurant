@@ -1,4 +1,4 @@
-package restaurant.GUI.test;
+package restaurant.GUI.tests;
 
 import java.util.HashMap;
 
@@ -40,8 +40,6 @@ public class CheckInPanelTest extends TestCase
 		restaurantSystem.updateTablesFromDB();	// call this to do the trick
 		// of initialiing tablesHash
 		assertTrue(restaurantSystem.tableHash.values().size() == 1);
-
-
 
 		checkinPanel = new Panel(new CheckInPanel(restaurantSystem));
 		assertFalse(checkinPanel == null);

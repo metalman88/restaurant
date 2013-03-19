@@ -45,6 +45,7 @@ public class WelcomeScreen extends JFrame {
 	private static final int SCREEN_SIZE_X = 1024;
 	private static final int SCREEN_SIZE_Y = 720;
 	JTabbedPane tabbedPane;
+	Point originalPosition;
 
 	/**
 	 * Launch the application.
@@ -74,10 +75,9 @@ public class WelcomeScreen extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+		contentPane.setLayout(new BorderLayout(0, 0));
 		
 		tabbedPane = new JTabbedPane(JTabbedPane.TOP);
-		tabbedPane.setBounds(0, 0, SCREEN_SIZE_X-10, SCREEN_SIZE_Y-10);
 		contentPane.add(tabbedPane);
 		
 		
@@ -86,6 +86,7 @@ public class WelcomeScreen extends JFrame {
 		tabbedPane.addTab("Check In", null, new CheckInPanel(restaurantSystem), null);
 		tabbedPane.addTab("Server", null, new ServerPanel(restaurantSystem), null);
 		tabbedPane.addTab("Kitchen", null, new KitchenPanel(restaurantSystem), null);
+	
 
 		
 	}
@@ -102,7 +103,8 @@ public class WelcomeScreen extends JFrame {
 	      {
 	        Point p = new Point(0, 0);
 	        SwingUtilities.convertPointToScreen(p, getContentPane());
-	        Point l = getLocation();
+	        originalPosition = getLocation();
+	        Point l = (Point) originalPosition.clone();
 	        l.x -= p.x;
 	        l.y -= p.y;
 	        setLocation(l);
@@ -123,10 +125,7 @@ public class WelcomeScreen extends JFrame {
 		      {
 		        Point p = new Point(0, 0);
 		        SwingUtilities.convertPointToScreen(p, getContentPane());
-		        Point l = getLocation();
-		        l.x += p.x;
-		        l.y += p.y;
-		        setLocation(l);
+		        setLocation(originalPosition);
 		      }
 		    });
 		
