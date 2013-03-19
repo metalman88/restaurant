@@ -234,6 +234,33 @@ public void updateTableStatus(int tableNumber, String occupied)
 	System.out.println("Successfully modified " + m + " rows.\n");
 }
 
+public void serviceRequested(int tableNumber)
+{	
+	Statement s = null;
+	try {
+	  s = databaseConnection.createStatement();
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while creating a statement:" +
+	                     "that probably means we're no longer connected.");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	int m = 0;
+
+	try {
+	  m = s.executeUpdate("UPDATE tableInfo SET " +
+	                      "status=1 WHERE table_id="+tableNumber+";");
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while executing our query:" +
+	                     "that probably means our SQL is invalid");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	System.out.println("Successfully modified " + m + " rows.\n");
+}
+
 public void addOrderToDB(OrderChunk curOrder)
 {
 	
