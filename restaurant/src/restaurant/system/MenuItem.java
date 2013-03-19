@@ -6,7 +6,7 @@ public class MenuItem {
 
 	private int itemID;
 	private String itemName;
-	private String category;
+	private CATEGORYENUMS category;
 	private String description;
 	private double price;
 	private double cookingTimeMinutes;
