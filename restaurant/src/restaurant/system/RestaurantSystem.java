@@ -19,9 +19,15 @@ public class RestaurantSystem {
 	{
 		
 		DBInteractor = new DatabaseInteractor();
-		menu = DBInteractor.getMenuFromDB();
-		tableHash = DBInteractor.getTables(menu);
+		DBInteractor.setServerInfo("server", "username", "password");
 		
+		if (DBInteractor.connect()) {
+			menu = DBInteractor.getMenuFromDB();
+			tableHash = DBInteractor.getTables(menu);
+		}
+		else {
+			System.exit(1);
+		}
 	}
 	
 	public void getMenuFromDB()
