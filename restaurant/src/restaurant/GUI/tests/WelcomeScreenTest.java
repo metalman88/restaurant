@@ -4,16 +4,14 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import restaurant.GUI.CustomerAfterLoginPanel;
 import restaurant.GUI.WelcomeScreen;
 
 public class WelcomeScreenTest {
 
 	@Test
 	public void testFullScreen() {
-		WelcomeScreen WS = new WelcomeScreen();
-		WS.setVisible(true);
-		WS.swapLoginCustomerPanel();
-		WS.switchToFullScreen();
+		CustomerAfterLoginPanel CALP = new CustomerAfterLoginPanel(null, null);
 		
 	}
 

@@ -26,4 +26,15 @@ public class CustomerTable
 		curChunk = new OrderChunk();
 	}
 	
+	public ArrayList<OrderChunk> getListOfOrderChunks()
+	{
+		return listOfOrders;
+	}
+	
+	public OrderChunk getCurrentOrderChunk()
+	{
+		return curChunk;
+	}
+	
+	
 }
