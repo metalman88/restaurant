@@ -64,9 +64,20 @@ CREATE TABLE tableInfo (
  */
 
 public class DatabaseInteractor {
-	public DatabaseInteractor() {
 	
-		try {
+	private String server;
+	private String username;
+	private String password;
+
+
+	/**
+		Ideally, I think the constructor should not be incharge of the connection.
+		GOTO: line 90-118 to see my alternative.
+		@author Taylor Kisor-Smith
+		**/
+	public DatabaseInteractor() {
+
+	/*	try {
 		    // The second and third arguments are the username and password,
 		    // respectively. They should be whatever is necessary to connect
 		    // to the database.
@@ -79,189 +90,217 @@ public class DatabaseInteractor {
 		    System.out.println("Couldn't connect: print out a stack trace and exit.");
 		    se.printStackTrace();
 		    System.exit(1);
-		  }
+		} */
 	}
-  public static void main(String[] argv) {
-	  testDB();
-  }
-  public static void testDB() {
-  System.out.println("Checking if Driver is registered with DriverManager.");
-  
-  try {
-    Class.forName("org.postgresql.Driver");
-  } catch (ClassNotFoundException cnfe) {
-    System.out.println("Couldn't find the driver!");
-    System.out.println("Let's print a stack trace, and exit.");
-    cnfe.printStackTrace();
-    System.exit(1);
-  }
-  
-  System.out.println("Registered the driver ok, so let's make a connection.");
-  
-  Connection c = null;
-  
-  try {
+	
+	/** 
+	making the way in which a connection occures more module
+	 consists of methods Connect, setServerInfo, and the fields server, 
+	 username, password 
+	 @author Taylor Kisor-Smith
+	 **/
+
+	 public boolean Connect() {
+	 	try {
+	 		databaseConnection = DriverManager.getConnection("jdbc:postgresql://" + server, username, password);
+
+	 		return true;
+	 	} catch (SQLException se) {
+	 		System.out.println("Couldn't connect: print out a stack trace and exit.");
+	 		se.printStackTrace();
+	 		return false;
+	 	}
+	 }
+
+	 public void setServerInfo(String server, String username, String password) {
+	 	this.server = server;
+	 	this.username = username;
+	 	this.password = password;
+	 }
+
+	 /******/
+
+	 public static void main(String[] argv) {
+	 	testDB();
+	 }
+
+
+	 public static void testDB() {
+	 	System.out.println("Checking if Driver is registered with DriverManager.");
+
+	 	try {
+	 		Class.forName("org.postgresql.Driver");
+	 	} catch (ClassNotFoundException cnfe) {
+	 		System.out.println("Couldn't find the driver!");
+	 		System.out.println("Let's print a stack trace, and exit.");
+	 		cnfe.printStackTrace();
+	 		System.exit(1);
+	 	}
+
+	 	System.out.println("Registered the driver ok, so let's make a connection.");
+
+	 	Connection c = null;
+
+	 	try {
     // The second and third arguments are the username and password,
     // respectively. They should be whatever is necessary to connect
     // to the database.
-    c = DriverManager.getConnection("jdbc:postgresql://localhost/",
-                                    "postgres", "sflhdl");
-  } catch (SQLException se) {
-    System.out.println("Couldn't connect: print out a stack trace and exit.");
-    se.printStackTrace();
-    System.exit(1);
-  }
-  
-  if (c != null)
-    System.out.println("Hooray! We connected to the database!");
-  else
-    System.out.println("We should never get here.");
-  }
-  
-  ResultSet selectCommand(String What, String Where) {
-	  Statement s = null;
-	  try {
-	    s = databaseConnection.createStatement();
-	  } catch (SQLException se) {
-	    System.out.println("We got an exception while creating a statement:" +
-	                       "that probably means we're no longer connected.");
-	    se.printStackTrace();
-	    System.exit(1);
-	  }
-	  ResultSet rs = null;
-	  try {
-	    rs = s.executeQuery("SELECT "+What+" FROM "+Where+" ;");
-	  } catch (SQLException se) {
-	    System.out.println("We got an exception while executing our query:" +
-	                       "that probably means our SQL is invalid");
-	    se.printStackTrace();
-	    System.exit(1);
-	  }
-	  return rs;
-	  
-	  
-  }
-  
-  Connection databaseConnection = null;
+	 		c = DriverManager.getConnection("jdbc:postgresql://localhost/",
+	 			"postgres", "sflhdl");
+	 	} catch (SQLException se) {
+	 		System.out.println("Couldn't connect: print out a stack trace and exit.");
+	 		se.printStackTrace();
+	 		System.exit(1);
+	 	}
 
-public HashMap<Integer, TableInfo> getTables(Menu menu) {
+	 	if (c != null)
+	 		System.out.println("Hooray! We connected to the database!");
+	 	else
+	 		System.out.println("We should never get here.");
+	 }
+
+	 ResultSet selectCommand(String What, String Where) {
+	 	Statement s = null;
+	 	try {
+	 		s = databaseConnection.createStatement();
+	 	} catch (SQLException se) {
+	 		System.out.println("We got an exception while creating a statement:" +
+	 			"that probably means we're no longer connected.");
+	 		se.printStackTrace();
+	 		System.exit(1);
+	 	}
+	 	ResultSet rs = null;
+	 	try {
+	 		rs = s.executeQuery("SELECT "+What+" FROM "+Where+" ;");
+	 	} catch (SQLException se) {
+	 		System.out.println("We got an exception while executing our query:" +
+	 			"that probably means our SQL is invalid");
+	 		se.printStackTrace();
+	 		System.exit(1);
+	 	}
+	 	return rs;
+
+
+	 }
+
+	 Connection databaseConnection = null;
+
+	 public HashMap<Integer, TableInfo> getTables(Menu menu) {
 	// TODO Auto-generated method stub
-	ResultSet rs = selectCommand("*", "tableInfo");
-	HashMap<Integer, TableInfo> result = new HashMap<Integer, TableInfo>();
-	int index = 0;
+	 	ResultSet rs = selectCommand("*", "tableInfo");
+	 	HashMap<Integer, TableInfo> result = new HashMap<Integer, TableInfo>();
+	 	int index = 0;
 
-	  try {
-	    while (rs.next()) {
+	 	try {
+	 		while (rs.next()) {
 	       // System.out.println("Here's the result of row " + index++ + ":");
 	       // System.out.println(rs.getString(1));
 	    	// ZONEENUMS.valueOf(rs.getString(6))
-	    	boolean isTaken = false;
-	    	if(Integer.parseInt(rs.getString(4)) == 1) isTaken = true;
-	        result.put(Integer.parseInt(rs.getString(1)), new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), ZONEENUMS.BLUE, this, menu, isTaken));
-	    }
-	  } catch (SQLException se) {
-	    System.out.println("We got an exception while getting a result:this " +
-	                       "shouldn't happen: we've done something really bad.");
-	    se.printStackTrace();
-	    System.exit(1);
-	  }
-	return result;
-}
+	 			boolean isTaken = false;
+	 			if(Integer.parseInt(rs.getString(4)) == 1) isTaken = true;
+	 			result.put(Integer.parseInt(rs.getString(1)), new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), ZONEENUMS.BLUE, this, menu, isTaken));
+	 		}
+	 	} catch (SQLException se) {
+	 		System.out.println("We got an exception while getting a result:this " +
+	 			"shouldn't happen: we've done something really bad.");
+	 		se.printStackTrace();
+	 		System.exit(1);
+	 	}
+	 	return result;
+	 }
 
 
 
- 
-public void updateTableStatus(int tableNumber, String occupied)
-{	
-	int newStatus = Integer.parseInt(occupied);
-	Statement s = null;
-	try {
-	  s = databaseConnection.createStatement();
-	} catch (SQLException se) {
-	  System.out.println("We got an exception while creating a statement:" +
-	                     "that probably means we're no longer connected.");
-	  se.printStackTrace();
-	  System.exit(1);
-	}
 
-	int m = 0;
+	 public void updateTableStatus(int tableNumber, String occupied)
+	 {	
+	 	int newStatus = Integer.parseInt(occupied);
+	 	Statement s = null;
+	 	try {
+	 		s = databaseConnection.createStatement();
+	 	} catch (SQLException se) {
+	 		System.out.println("We got an exception while creating a statement:" +
+	 			"that probably means we're no longer connected.");
+	 		se.printStackTrace();
+	 		System.exit(1);
+	 	}
 
-	try {
-	  m = s.executeUpdate("UPDATE tableInfo SET " +
-	                      "tabletTake="+newStatus+" WHERE table_id="+tableNumber+";");
-	} catch (SQLException se) {
-	  System.out.println("We got an exception while executing our query:" +
-	                     "that probably means our SQL is invalid");
-	  se.printStackTrace();
-	  System.exit(1);
-	}
+	 	int m = 0;
 
-	System.out.println("Successfully modified " + m + " rows.\n");
-}
+	 	try {
+	 		m = s.executeUpdate("UPDATE tableInfo SET " +
+	 			"tabletTake="+newStatus+" WHERE table_id="+tableNumber+";");
+	 	} catch (SQLException se) {
+	 		System.out.println("We got an exception while executing our query:" +
+	 			"that probably means our SQL is invalid");
+	 		se.printStackTrace();
+	 		System.exit(1);
+	 	}
 
-public void addOrderToDB(OrderChunk curOrder)
-{
-	
-}
+	 	System.out.println("Successfully modified " + m + " rows.\n");
+	 }
 
-public Menu getMenuFromDB()
-{
+	 public void addOrderToDB(OrderChunk curOrder)
+	 {
+
+	 }
+
+	 public Menu getMenuFromDB()
+	 {
 	// if you create get all the information and store it in variables i can create the objects.
 	// whatever you want to do, i know database interaction stuff too. so no worries
-	
-	//menu needs many menuItems, and each menuItem needs nutrition info.
-	return null;
-}
 
-public HashMap<Integer,Boolean> getTableStatusIfUpdated()
-{
+	//menu needs many menuItems, and each menuItem needs nutrition info.
+	 	return null;
+	 }
+
+	 public HashMap<Integer,Boolean> getTableStatusIfUpdated()
+	 {
 	//HashMap<TableNumber,true if occupied>
 	//returns a hashmap of true or false (occupied, unoccupied) 
-	return null;
-}
+	 	return null;
+	 }
 
-public boolean loginTablet(int tableNumber,String tableName)
-{
-	if(tableNumber == -1)
-	{
+	 public boolean loginTablet(int tableNumber,String tableName)
+	 {
+	 	if(tableNumber == -1)
+	 	{
 		//query by tableName
 		//if the table name exists, and DB.tableInfo.tablettake is false return true
 		// then set tablettake to true
-		return false;
-	}
-	else if(tableName.isEmpty())
-	{
-		ResultSet rs = selectCommand("tabletTake", "tableInfo WHERE table_id="+tableNumber);
-		boolean isTaken = true;
-		try {
-		    while (rs.next()) {
+	 		return false;
+	 	}
+	 	else if(tableName.isEmpty())
+	 	{
+	 		ResultSet rs = selectCommand("tabletTake", "tableInfo WHERE table_id="+tableNumber);
+	 		boolean isTaken = true;
+	 		try {
+	 			while (rs.next()) {
 		       // System.out.println("Here's the result of row " + index++ + ":");
 		       // System.out.println(rs.getString(1));
 		    	// ZONEENUMS.valueOf(rs.getString(6))
-		    	isTaken = rs.getBoolean(1);
-		    	System.out.println("The tablet taken status is"+rs.getString(1));
-		    }
-		  } catch (SQLException se) {
-		    System.out.println("We got an exception while getting a result:this " +
-		                       "shouldn't happen: we've done something really bad.");
-		    se.printStackTrace();
-		    System.exit(1);
-		  }
-		
-		if(!isTaken)
-		{
-			
-			updateTableStatus(tableNumber, "1");
-		}
+	 				isTaken = rs.getBoolean(1);
+	 				System.out.println("The tablet taken status is"+rs.getString(1));
+	 			}
+	 		} catch (SQLException se) {
+	 			System.out.println("We got an exception while getting a result:this " +
+	 				"shouldn't happen: we've done something really bad.");
+	 			se.printStackTrace();
+	 			System.exit(1);
+	 		}
+
+	 		if(!isTaken)
+	 		{
+
+	 			updateTableStatus(tableNumber, "1");
+	 		}
 		//query by tableNumber
 		//if the table number exists, and DB.tableInfo.tablettake is false, return true
 		// then set tablettake to true
-		return isTaken;
-	}
-	
-	return false;
-	
-}
+	 		return isTaken;
+	 	}
 
+	 	return false;
 
+	 }
 }
