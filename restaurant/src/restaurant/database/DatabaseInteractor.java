@@ -227,7 +227,34 @@ public boolean loginTablet(int tableNumber,String tableName)
 		//query by tableName
 		//if the table name exists, and DB.tableInfo.tablettake is false return true
 		// then set tablettake to true
-		return false;
+		ResultSet rs = selectCommand("tabletTake, table_id", "tableInfo WHERE name='"+tableName+"'");
+		String tableId = "0";
+		boolean isTaken = true;
+		try {
+		    while (rs.next()) {
+		       // System.out.println("Here's the result of row " + index++ + ":");
+		       // System.out.println(rs.getString(1));
+		    	// ZONEENUMS.valueOf(rs.getString(6))
+		    	isTaken = rs.getBoolean(1);
+		    	tableId = rs.getString(2);
+		    	System.out.println("The tablet taken status is"+rs.getString(1));
+		    }
+		  } catch (SQLException se) {
+		    System.out.println("We got an exception while getting a result:this " +
+		                       "shouldn't happen: we've done something really bad.");
+		    se.printStackTrace();
+		    System.exit(1);
+		  }
+		
+		if(!isTaken)
+		{
+			
+			updateTableStatus(tableNumber, tableId);
+		}
+		//query by tableNumber
+		//if the table number exists, and DB.tableInfo.tablettake is false, return true
+		// then set tablettake to true
+		return isTaken;
 	}
 	else if(tableName.isEmpty())
 	{

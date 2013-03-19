@@ -98,6 +98,9 @@ public class CustomerLoginPanel extends JPanel {
 		MouseAdapter mouseAdapter = new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if(restaurantSystem == null) {
+					restaurantSystem = new RestaurantSystem();
+				}
 				if(!tableNameField.getText().isEmpty()&&tableNumberField.getText().isEmpty())
 				{
 					//must be checking by table name
@@ -116,9 +119,7 @@ public class CustomerLoginPanel extends JPanel {
 				else if(!tableNumberField.getText().isEmpty()&&tableNameField.getText().isEmpty())
 				{
 					//must be checking by table number
-					if(restaurantSystem == null) {
-						restaurantSystem = new RestaurantSystem();
-					}
+					
 					if(restaurantSystem.loginTablet(tableNumberField.getText().trim()))
 					{
 						errorLabel.setText("");
