@@ -69,7 +69,6 @@ public class WelcomeScreen extends JFrame {
 	 */
 	public WelcomeScreen() {
 		
-		customerContentPane = new CustomerAfterLoginPanel(restaurantSystem,this);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, SCREEN_SIZE_X, SCREEN_SIZE_Y);
 		contentPane = new JPanel();
@@ -135,6 +134,8 @@ public class WelcomeScreen extends JFrame {
 	{
 		if(getContentPane() == contentPane)
 		{
+
+			customerContentPane = new CustomerAfterLoginPanel(restaurantSystem,this,restaurantSystem.getCurTable().getCustomerTable());
 			setContentPane(customerContentPane);
 		}
 		else if(getContentPane() == customerContentPane)

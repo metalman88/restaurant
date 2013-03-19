@@ -29,6 +29,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Vector;
+import javax.swing.JTextField;
 
 //Jesse working on this class
 public class CustomerAfterLoginPanel extends JPanel{
@@ -173,6 +174,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				
+				restaurantSystem.logoutTablet();
 				welcomeScreen.swapLoginCustomerPanel();
 				welcomeScreen.switchToRegularSizeScreen();
 			}
@@ -209,7 +211,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 				//
 			}
 		});
-		confirmButton.setBounds(613, 336, 89, 23);
+		confirmButton.setBounds(613, 336, 99, 23);
 		add(confirmButton);
 		
 		JButton requestServiceButton = new JButton("Request Service");
@@ -219,6 +221,14 @@ public class CustomerAfterLoginPanel extends JPanel{
 		JButton nutritionInfoButton = new JButton("Nutrition Info");
 		nutritionInfoButton.setBounds(124, 617, 107, 23);
 		add(nutritionInfoButton);
+		
+		JLabel lblNotesForChef = new JLabel("Notes for Chef");
+		lblNotesForChef.setBounds(309, 621, 110, 14);
+		add(lblNotesForChef);
+		
+		JTextPane textPane = new JTextPane();
+		textPane.setBounds(272, 642, 152, 104);
+		add(textPane);
 	}
 	
 	public DefaultTableModel createDefaultTableModel(ArrayList<MenuItem> menuItems,JTable tableToAttachTo)
@@ -235,6 +245,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 		
 		return tableModel;
 	}
+	
 	private void addSelectedRowToOrderTable()
 	{
 		
@@ -245,6 +256,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 			String name = (String) appetizerTable.getValueAt(appetizerTable.getSelectedRow(), 0);
 			String price = (String) appetizerTable.getValueAt(appetizerTable.getSelectedRow(), 1);
 			orderTableModel.addRow(new Object[]{name,price});
+			customerTable.
 		}
 		else if(currentTabName.equals("Entree"))
 		{

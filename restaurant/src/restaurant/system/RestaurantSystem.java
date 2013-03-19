@@ -148,5 +148,12 @@ public class RestaurantSystem {
 	{
 		return tableHash.get(tableNumberLoggedIntoThisTablet);
 	}
+
+	public void logoutTablet() {
+		DBInteractor.logoutTablet(tableNumberLoggedIntoThisTablet);
+		tableNumberLoggedIntoThisTablet = -1;
+		
+		
+	}
 	
 }
