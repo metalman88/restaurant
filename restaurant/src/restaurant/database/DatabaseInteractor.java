@@ -5,7 +5,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import restaurant.system.Menu;
 import restaurant.system.MenuItem;
@@ -354,7 +356,61 @@ public boolean loginTablet(int tableNumber,String tableName)
 	
 }
 
+public int primaryKeyGenerator(String where)
+{
+	if (dbPrimaryKeys.containsKey(where)) {
+		String primaryKey = dbPrimaryKeys.get(where);
+		int largestId = 0;
+		int countId = 0;
+		
+		ResultSet count = this.selectCommand("COUNT(" + primaryKey + ")", where);
+		
+		try {
+			
+			countId = count.getInt(1);
+			
+		} catch (SQLException e) {
+			
+			e.printStackTrace();
+			
+		}
+		
+		if (countId == 0) {
+			return 1;
+		}
+		
+		ResultSet max = this.selectCommand("MAX(" + primaryKey + ")", where);
+		try {
+			largestId = max.getInt(1);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.out.println("Could not select from database");
+			e.printStackTrace();
+		}
+		
+		if (largestId != 0) {
+			return ++largestId;
+		}
+		
+	}
+	
+	return -1;
+}
 
+static 
+{
+	Map<String, String> primaryKeys = new HashMap<String,String>();
+	
+	primaryKeys.put("kitchen", "order_id");
+	primaryKeys.put("orderInfo", "order_id");
+	primaryKeys.put("menuItem", "menu_id");
+	primaryKeys.put("nutritionInfo", "nutrition_id");
+	primaryKeys.put("tableInfo", "table_id");
+	
+	dbPrimaryKeys = Collections.unmodifiableMap(primaryKeys);
+}
+
+private static Map<String,String> dbPrimaryKeys;
 
  private String host;
  private String name;
