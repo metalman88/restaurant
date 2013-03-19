@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import restuarant.enums.CATEGORYENUMS;
+
 
 public class Menu {
 
@@ -14,7 +16,7 @@ public class Menu {
 		this.menuList = menuList;
 	}
 	
-	public ArrayList<MenuItem>  getCategoryItems(String CATEGORYENUM)
+	public ArrayList<MenuItem>  getCategoryItems(CATEGORYENUMS categoryEnum)
 	{
 		ArrayList<MenuItem> returnList = new ArrayList<MenuItem>();
 		Set<Integer> keySet = menuList.keySet();
@@ -23,7 +25,7 @@ public class Menu {
 		while(keySetIterator.hasNext())
 		{
 			MenuItem curItem = (MenuItem) keySetIterator.next();
-			if(curItem.getCategory().equals(CATEGORYENUM))
+			if(curItem.getCategory().equals(categoryEnum))
 			{
 				returnList.add(curItem);
 			}

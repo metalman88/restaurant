@@ -1,5 +1,7 @@
 package restaurant.system;
 
+import restuarant.enums.CATEGORYENUMS;
+
 public class MenuItem {
 
 	private int itemID;
@@ -10,7 +12,7 @@ public class MenuItem {
 	private double cookingTimeMinutes;
 	private NutritionInfo nutrition;
 	
-	public MenuItem(int itemID, String itemName, String category, String description,
+	public MenuItem(int itemID, String itemName, CATEGORYENUMS category, String description,
 				    Double price, Double cookingTimeMinutes,NutritionInfo nutrition)
 	{
 		this.itemID = itemID;
