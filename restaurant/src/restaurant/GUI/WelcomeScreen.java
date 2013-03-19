@@ -54,7 +54,7 @@ public class WelcomeScreen extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					restaurantSystem = null;// new RestaurantSystem();
+					restaurantSystem = new RestaurantSystem();
 					WelcomeScreen frame = new WelcomeScreen();
 					frame.setVisible(true);
 				} catch (Exception e) {
@@ -87,7 +87,7 @@ public class WelcomeScreen extends JFrame {
 		tabbedPane.addTab("Server", null, new ServerPanel(restaurantSystem), null);
 		tabbedPane.addTab("Kitchen", null, new KitchenPanel(restaurantSystem), null);
 	
-
+		swapLoginCustomerPanel();
 		
 	}
 	
