@@ -86,7 +86,6 @@ public class WelcomeScreen extends JFrame {
 		tabbedPane.addTab("Server", null, new ServerPanel(restaurantSystem), null);
 		tabbedPane.addTab("Kitchen", null, new KitchenPanel(restaurantSystem), null);
 	
-		swapLoginCustomerPanel();
 		
 	}
 	
@@ -117,7 +116,7 @@ public class WelcomeScreen extends JFrame {
 		setResizable(true);
 		getContentPane().setPreferredSize(new Dimension(SCREEN_SIZE_X, SCREEN_SIZE_Y));
 		pack();
-		show();
+		setVisible(true);
 		
 	    SwingUtilities.invokeLater(new Runnable() {
 		      public void run()
