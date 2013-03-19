@@ -1,6 +1,12 @@
 package restaurant.GUI;
 
+import javax.swing.AbstractListModel;
+import javax.swing.JTable;
+
+import com.google.inject.ProvidedBy;
+
 import restaurant.system.RestaurantSystem;
+import restaurant.system.TableInfo;
 
 /**
  *
@@ -8,21 +14,50 @@ import restaurant.system.RestaurantSystem;
  */
 public class CheckInPanel extends javax.swing.JPanel {
 
-
+	
     public CheckInPanel(RestaurantSystem restaurantSystem) 
     {
-    	this.restaurantSytem = restaurantSytem;
+    	this.restaurantSytem = restaurantSystem;
         setUpPanel();
-        addItemsToTableList();
+        configureTableList();
     }
     
-    private void addItemsToTableList()
+    private void configureTableList()
     {
-        tableList.add(new javax.swing.JLabel("test"));
-        tableList.remove(0);
-        tableList.removeAll();
-
    }
+    
+    private class TableListModel extends AbstractListModel
+    {
+    	private TableInfo[] tablesInfo;
+    	
+    	public TableListModel()
+    	{
+    		tablesInfo = (TableInfo[]) 
+    				restaurantSytem.tableHash.values().toArray();
+    	}
+    	
+		@Override
+		public int getSize() 
+		{
+			// TODO Auto-generated method stub
+			return 20;//tablesInfo.length;
+		}
+
+		@Override
+		public Object getElementAt(int index) 
+		{
+			// TODO Auto-generated method stub
+			return String.format("Name: %s \t\t"
+					+ "Number: %d \t\t "
+					+ "Zone: %s \t\t"
+					+ "Cap: %d\t\t",
+					tablesInfo[index].getTableName(),
+					tablesInfo[index].getTableNumber(),
+					tablesInfo[index].getZone().name(),
+					tablesInfo[index].maxOcc);
+		}
+    	
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,7 +75,6 @@ public class CheckInPanel extends javax.swing.JPanel {
         tabelListPanel = new java.awt.Panel();
         tableControlPanel = new java.awt.Panel();
         tableListScrollPane = new javax.swing.JScrollPane();
-        tableList = new javax.swing.JList();
         setOccupiiedJBut = new javax.swing.JButton();
         occupiedSizeSpinner = new javax.swing.JSpinner();
         setUnoccupiedJBut = new javax.swing.JButton();
@@ -81,15 +115,8 @@ public class CheckInPanel extends javax.swing.JPanel {
             .addGap(0, 87, Short.MAX_VALUE)
         );
 
-        tableList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        tableList.setVisibleRowCount(-1);
-        tableListScrollPane.setViewportView(tableList);
-
         setOccupiiedJBut.setText("Set occupied");
+        setOccupiiedJBut.setName("Set Occupied But");
 
         setUnoccupiedJBut.setText("Set unoccupied");
         setUnoccupiedJBut.setToolTipText("");
@@ -128,6 +155,9 @@ public class CheckInPanel extends javax.swing.JPanel {
                         .addComponent(setUnoccupiedJBut)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+        
+        table = new JTable();
+        tableListScrollPane.setViewportView(table);
 
         javax.swing.GroupLayout tableInfoLayout = new javax.swing.GroupLayout(tableInfo);
         tableInfo.setLayout(tableInfoLayout);
@@ -338,7 +368,6 @@ public class CheckInPanel extends javax.swing.JPanel {
     private java.awt.Label tableCapLabel;
     private java.awt.Panel tableControlPanel;
     private javax.swing.JPanel tableInfo;
-    private javax.swing.JList tableList;
     private javax.swing.JScrollPane tableListScrollPane;
     private java.awt.Label tableNameLabel;
     private java.awt.Label tableOccupiedLabel;
@@ -349,5 +378,6 @@ public class CheckInPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane waitListScrollPane;
     
     private RestaurantSystem restaurantSytem;
+    private JTable table;
 }
 ////////
