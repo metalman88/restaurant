@@ -18,8 +18,12 @@ public class TableInfo {
 		this.DBInteractor = DBInteractor;
 		this.menu = menu;
 		isOccupied = isTaken;
+		customerTable = new CustomerTable(menu,DBInteractor);
 	}
-	
+	public CustomerTable getCustomerTable()
+	{
+		return customerTable;
+	}
 	public ZONEENUMS getZone()
 	{
 		return zone;
@@ -60,4 +64,5 @@ public class TableInfo {
 	private DatabaseInteractor DBInteractor;
 	private Menu menu;
 	private boolean isOccupied;
+	private CustomerTable customerTable;
 }

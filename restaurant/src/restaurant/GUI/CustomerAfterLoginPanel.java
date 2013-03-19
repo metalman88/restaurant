@@ -2,8 +2,10 @@ package restaurant.GUI;
 
 import javax.swing.JPanel;
 
+import restaurant.system.CustomerTable;
 import restaurant.system.MenuItem;
 import restaurant.system.RestaurantSystem;
+import restaurant.system.SingleItemWithNote;
 import restuarant.enums.CATEGORYENUMS;
 
 import javax.swing.JTabbedPane;
@@ -37,12 +39,14 @@ public class CustomerAfterLoginPanel extends JPanel{
 	private DefaultTableModel drinksTableModel,appetizerTableModel,entreeTableModel,
 							  dessertTableModel,otherTableModel,orderTableModel;
 	JTabbedPane tabbedPane;
+	CustomerTable customerTable;
 	
 	
-	public CustomerAfterLoginPanel(RestaurantSystem restaurantSystem,WelcomeScreen welcomeScreen)
+	public CustomerAfterLoginPanel(RestaurantSystem restaurantSystem,WelcomeScreen welcomeScreen,CustomerTable customerTable)
 	{
 		this.restaurantSystem = restaurantSystem;
 		this.welcomeScreen = welcomeScreen;
+		this.customerTable = customerTable;
 		setLayout(null);
 		//create the table objects
 		orderTable = new JTable();
@@ -220,13 +224,13 @@ public class CustomerAfterLoginPanel extends JPanel{
 	public DefaultTableModel createDefaultTableModel(ArrayList<MenuItem> menuItems,JTable tableToAttachTo)
 	{
 		
-		DefaultTableModel tableModel = new DefaultTableModel(new Object[][][]{},new String[]{"Item","Price"});
+		DefaultTableModel tableModel = new DefaultTableModel(new Object[][]{},new String[]{"Item","Price"});
 		tableToAttachTo.setModel(tableModel);
 		tableToAttachTo.getColumnModel().getColumn(1).setMaxWidth(45);
 		
 		for(int i = 0 ; i < menuItems.size();i++)
 		{
-			tableModel.addRow(new Object[]{menuItems.get(i).getName(),formatPrice(menuItems.get(i).getPrice()),menuItems.get(i).getID()});
+			tableModel.addRow(new Object[]{menuItems.get(i).getName(),formatPrice(menuItems.get(i).getPrice())});
 		}
 		
 		return tableModel;
@@ -268,6 +272,8 @@ public class CustomerAfterLoginPanel extends JPanel{
 		}
 		
 	}
+
+	
 	private String formatPrice(Double price)
 	{
 		String priceString = price.toString();
