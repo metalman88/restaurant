@@ -15,6 +15,8 @@ public class DatabaseInteractorTest {
 	@Test
 	public void test() {
 		DatabaseInteractor toTest = new DatabaseInteractor();
+		toTest.setServerInfo("localhost/restaurant", "postgres", "ounhuoead");
+		toTest.connect();
 		ResultSet rs = toTest.selectCommand("*", "tableInfo");
 		int index = 0;
 

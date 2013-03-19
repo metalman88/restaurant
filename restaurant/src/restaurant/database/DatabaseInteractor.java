@@ -66,24 +66,34 @@ CREATE TABLE tableInfo (
 public class DatabaseInteractor {
 	public DatabaseInteractor() {
 	
-		try {
+		
+	}
+  public static void main(String[] argv) {
+	  testDB();
+  }
+  
+  public boolean connect() {
+	  try {
 		    // The second and third arguments are the username and password,
 		    // respectively. They should be whatever is necessary to connect
 		    // to the database.
 		    databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
 		                                    "postgres", "ounhuoead");
+		    return true;
 		    
 		    // My home database: ounhuoead
 		    // Laptop database: sflhdl
 		  } catch (SQLException se) {
 		    System.out.println("Couldn't connect: print out a stack trace and exit.");
 		    se.printStackTrace();
-		    System.exit(1);
+		   	return false;
 		  }
-	}
-  public static void main(String[] argv) {
-	  testDB();
   }
+  
+  public void setServerInfo(String host, String name, String pass) {
+	  
+  }
+  
   public static void testDB() {
   System.out.println("Checking if Driver is registered with DriverManager.");
   
