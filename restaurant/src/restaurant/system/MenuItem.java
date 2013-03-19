@@ -26,7 +26,7 @@ public class MenuItem {
 	
 	public int getID(){return itemID;}
 	public String getName()	{return itemName;}
-	public String getCategory(){return category;}
+	public CATEGORYENUMS getCategory(){return category;}
 	public String getDescription(){return description;}
 	public double getPrice(){return price;}
 	public double getCookingTimeMinutes(){return cookingTimeMinutes;}
