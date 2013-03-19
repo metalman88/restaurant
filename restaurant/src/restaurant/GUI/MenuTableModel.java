@@ -27,7 +27,7 @@ public class MenuTableModel extends AbstractTableModel{
 	}
 
 	
-	public Object getValueAt(int row, int column) {
+	public MenuItem getValueAt(int row, int column) {
 		
 		return menuItems.get(row);
 	}
