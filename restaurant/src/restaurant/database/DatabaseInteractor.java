@@ -8,7 +8,9 @@ import java.sql.Statement;
 import java.util.HashMap;
 
 import restaurant.system.Menu;
+import restaurant.system.MenuItem;
 import restaurant.system.OrderChunk;
+import restaurant.system.SingleItemWithNote;
 import restaurant.system.TableInfo;
 import restuarant.enums.ZONEENUMS;
 
@@ -72,6 +74,8 @@ public class DatabaseInteractor {
 	  testDB();
   }
   
+
+  
   public boolean connect() {
 	  try {
 		    // The second and third arguments are the username and password,
@@ -91,7 +95,9 @@ public class DatabaseInteractor {
   }
   
   public void setServerInfo(String host, String name, String pass) {
-	  
+	this.host = host;
+	this.name = name;
+	this.pass = pass;
   }
   
   public static void testDB() {
@@ -154,8 +160,27 @@ public class DatabaseInteractor {
   
   Connection databaseConnection = null;
 
+public HashMap<Integer, Integer> getAllUnfinishedOrders() {
+	OrderChunk result = new OrderChunk();
+	// SELECT * FROM orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status=0;
+	ResultSet rs = selectCommand("*", "orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status=0" );
+	 try {
+		    while (rs.next()) {
+		       // System.out.println("Here's the result of row " + index++ + ":");
+		       // System.out.println(rs.getString(1));
+		    	// ZONEENUMS.valueOf(rs.getString(6))
+		        result.addItem(new SingleItemWithNote(new MenuItem(0, host, null, host, null, null, null), host));
+		    }
+		  } catch (SQLException se) {
+		    System.out.println("We got an exception while getting a result:this " +
+		                       "shouldn't happen: we've done something really bad.");
+		    se.printStackTrace();
+		    System.exit(1);
+		  }
+	return null;
+}
+  
 public HashMap<Integer, TableInfo> getTables(Menu menu) {
-	// TODO Auto-generated method stub
 	ResultSet rs = selectCommand("*", "tableInfo");
 	HashMap<Integer, TableInfo> result = new HashMap<Integer, TableInfo>();
 	int index = 0;
@@ -230,6 +255,8 @@ public HashMap<Integer,Boolean> getTableStatusIfUpdated()
 	return null;
 }
 
+
+
 public boolean loginTablet(int tableNumber,String tableName)
 {
 	if(tableNumber == -1)
@@ -301,4 +328,8 @@ public boolean loginTablet(int tableNumber,String tableName)
 }
 
 
+
+ private String host;
+ private String name;
+ private String pass;
 }

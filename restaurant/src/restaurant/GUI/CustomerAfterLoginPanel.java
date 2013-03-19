@@ -256,7 +256,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 			String name = (String) appetizerTable.getValueAt(appetizerTable.getSelectedRow(), 0);
 			String price = (String) appetizerTable.getValueAt(appetizerTable.getSelectedRow(), 1);
 			orderTableModel.addRow(new Object[]{name,price});
-			customerTable.
+			//customerTable.
 		}
 		else if(currentTabName.equals("Entree"))
 		{
