@@ -14,7 +14,7 @@ public class ServerInterface {
 	  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	  JPanel panel = new JPanel();
-	  frame.add(panel);
+	  frame.getContentPane().add(panel);
 	  JButton button = new JButton("List of Orders");
 	  panel.add(button);
 	  button.addActionListener(new showOrderList());
@@ -36,7 +36,7 @@ public class ServerInterface {
         JScrollPane scrollPane = new JScrollPane(orders);
 
         //Add the scroll pane to this panel.
-        frame2.add(scrollPane);
+        frame2.getContentPane().add(scrollPane);
         scrollPane.add(label);
 	  }
 	}   
@@ -87,7 +87,7 @@ public class ServerInterface {
         JScrollPane scrollPane = new JScrollPane(orders);
 
         //Add the scroll pane to this panel.
-        frame3.add(scrollPane);
+        frame3.getContentPane().add(scrollPane);
         scrollPane.add(label);
 	   
 	  }

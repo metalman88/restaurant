@@ -80,7 +80,8 @@ public class KitchenPanel extends JPanel{
 	private void populateKitchenTable(ArrayList<OrderChunk> orderChunks)
 	{
 		
-		DefaultTableModel defaultKitchen = new DefaultTableModel(new Object[][][][]{},new String[]{"Order ID","Dish Name","Notes","Order Status"});
+		DefaultTableModel defaultKitchen = new DefaultTableModel(new Object[][][][]{},new String[]{"Order ID","Dish Name",
+				"Notes","Order Status"});
 		
 		
 		for(OrderChunk orderChunk: orderChunks)

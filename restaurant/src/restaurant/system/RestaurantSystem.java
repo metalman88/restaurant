@@ -172,4 +172,9 @@ public class RestaurantSystem {
 	{
 		zoneLoggedIntoThisTablet = zone;
 	}
+	
+	public ZONEENUMS getTabletZone()
+	{
+		return zoneLoggedIntoThisTablet;
+	}
 }

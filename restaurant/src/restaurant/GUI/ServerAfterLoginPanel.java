@@ -2,12 +2,18 @@ package restaurant.GUI;
 
 import javax.swing.JPanel;
 
+import restaurant.system.OrderChunk;
 import restaurant.system.RestaurantSystem;
+import restaurant.system.SingleItemWithNote;
+import restaurant.system.TableInfo;
+
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JLabel;
 import java.awt.Font;
+import java.util.ArrayList;
+
 import javax.swing.JButton;
 
 public class ServerAfterLoginPanel extends JPanel 
@@ -23,19 +29,17 @@ public class ServerAfterLoginPanel extends JPanel
 		this.welcomeScreen = welcomeScreen;
 		setLayout(null);
 		
+		setUpPanel();
+	}
+	
+	public void setUpPanel()
+	{
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setBounds(10, 35, 323, 215);
 		add(scrollPane);
 		
 		tablesInZone = new JTable();
-		tablesInZone.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null},
-			},
-			new String[] {
-				"Table #", "Table Name", "Occupied", "Service Req."
-			}
-		));
+		populateTablesInZone(restaurantSystem.DBInteractor.getTablesInZone(restaurantSystem.getTabletZone()));
 		scrollPane.setViewportView(tablesInZone);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -43,14 +47,7 @@ public class ServerAfterLoginPanel extends JPanel
 		add(scrollPane_1);
 		
 		zoneOrdersOut = new JTable();
-		zoneOrdersOut.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null, null},
-			},
-			new String[] {
-				"Table #", "Table Name", "Dishes", "Status"
-			}
-		));
+		populateZoneOrdersOut(ArrayList<OrderChunk> orderChunks)
 		scrollPane_1.setViewportView(zoneOrdersOut);
 		
 		JLabel lblTables = new JLabel("Tables");
@@ -80,8 +77,35 @@ public class ServerAfterLoginPanel extends JPanel
 		add(btnUpdateOrderStatus);
 	}
 	
-	public void setUpPanel()
+	private void populateTablesInZone(ArrayList<TableInfo> tables)
 	{
+		DefaultTableModel defaultTableZone = new DefaultTableModel(new Object[][][][]{},new String[]{"Table#","Table Name",
+				"Occupied","Service Req."});
 		
+		for(TableInfo table: tables)
+		{
+			defaultTableZone.addRow(new Object[]{table.getTableNumber(),table.getTableName(), table.isTableOccupied(), null});		
+		}
+		
+		tablesInZone.setModel(defaultTableZone);
+	}
+	
+	private void populateZoneOrdersOut(ArrayList<OrderChunk> orderChunks)
+	{
+		DefaultTableModel defaultZoneOrder = new DefaultTableModel(new Object[][][][]{},new String[]{"Table#","Table Name",
+				"Dishes","Status"});
+		
+		for(OrderChunk order: orderChunks)
+		{
+			String dishes = "";
+			for(SingleItemWithNote si: order.getItems())
+			{
+				dishes += si.getItem().getName() +" ";
+			}
+			
+			defaultTableZone.addRow(new Object[]{table.getTableNumber(),table.getTableName(), table.isTableOccupied(), null});		
+		}
+		
+		zoneOrdersOut.setModel(defaultZoneOrder);
 	}
 }

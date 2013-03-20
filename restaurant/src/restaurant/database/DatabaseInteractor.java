@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import restaurant.system.Menu;
@@ -354,6 +355,11 @@ public boolean loginTablet(int tableNumber,String tableName)
 	
 }
 
+// Requried to build table in Server Interface
+public ArrayList<TableInfo> getTablesInZone(ZONEENUMS zone)
+{
+	return null;
+}
 
 
  private String host;
