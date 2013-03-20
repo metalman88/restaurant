@@ -152,13 +152,13 @@ public class ServerAfterLoginPanel extends JPanel
 	private void setTableUnoccupied(JTable selectedTable)
 	{
 		int tableID = (Integer) selectedTable.getValueAt(selectedTable.getSelectedRow(), 0);
-		restaurantSystem.DBInteractor.updateTableStatus(tableID, "UnOccupied");
+		restaurantSystem.DBInteractor.updateTableStatus(tableID, "0");
 	}
 	
 	private void updateOrderToFinished(JTable selectedTable)
 	{
 		String orderID = (String) selectedTable.getValueAt(selectedTable.getSelectedRow(), 3);
-		restaurantSystem.DBInteractor.updateOrderStatusInDB(orderID, ORDERSTATUSENUMS.FINISHED);
+		restaurantSystem.DBInteractor.updateOrderStatus(orderID, ORDERSTATUSENUMS.FINISHED);
 	}
 	
 	private void updateTableServiced(JTable selectedTable)
