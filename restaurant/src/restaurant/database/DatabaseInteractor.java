@@ -8,6 +8,7 @@ import java.sql.Statement;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import restaurant.system.Menu;
 import restaurant.system.MenuItem;
@@ -375,7 +376,26 @@ public Menu getMenuFromDB()
 	// whatever you want to do, i know database interaction stuff too. so no worries
 	
 	//menu needs many menuItems, and each menuItem needs nutrition info.
-	return null;
+	
+	//lets create a menu and not tell max, make sure not to commit this code
+	
+	HashMap<Integer,MenuItem> menuList = new HashMap<Integer,MenuItem>();
+	Random random = new Random();
+	
+	for(int i = 0; i < 1000; i++)
+	{
+		NutritionInfo nutrition = new NutritionInfo(i+"","500505","-2","5505055","-3","2112","-4");
+		CATEGORYENUMS category = CATEGORYENUMS.DRINK;
+		if(i%10==0){category= CATEGORYENUMS.APPETIZER;}
+		else if(i%9==0){category = CATEGORYENUMS.DESSERT;}
+		else if(i%7==0){category = CATEGORYENUMS.ENTREE;}
+		else if(i%12==0){category = CATEGORYENUMS.OTHER;}
+		
+		MenuItem menuItem = new MenuItem(i,"item"+i,category,"description"+i,new Double(random.nextInt(15)),new Double(random.nextInt(15)),nutrition);
+		menuList.put(i, menuItem);
+	}
+	Menu menu = new Menu(menuList);
+	return menu;
 }
 
 public HashMap<Integer,Boolean> getTableStatusIfUpdated()
