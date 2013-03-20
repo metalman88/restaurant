@@ -2,17 +2,28 @@ package restaurant.GUI;
 
 import javax.swing.JPanel;
 
+import restaurant.system.MenuItem;
+import restaurant.system.NutritionInfo;
+import restaurant.system.OrderChunk;
 import restaurant.system.RestaurantSystem;
+import restaurant.system.SingleItemWithNote;
+import restuarant.enums.CATEGORYENUMS;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+
+import java.awt.EventQueue;
 import java.awt.Font;
+import java.util.ArrayList;
+
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
 
 public class KitchenPanel extends JPanel{
-	private RestaurantSystem restaurantSystem;
+	private static RestaurantSystem restaurantSystem;
 	private JTable kitchenTable;
+	
 	
 	public KitchenPanel(RestaurantSystem restaurantSystem)
 	{
@@ -37,68 +48,34 @@ public class KitchenPanel extends JPanel{
 		add(lblKitchenInterface);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 63, 325, 226);
+		scrollPane.setBounds(10, 63, 448, 233);
 		add(scrollPane);
 		
+		
+		//Set up kitchenTable
 		kitchenTable = new JTable();
-		kitchenTable.setModel(new DefaultTableModel(
-			new Object[][] {
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-				{null, null, null},
-			},
-			new String[] {
-				"Order ID", "Order Item", "Status"
-			}
-		));
+		populateKitchenTable(restaurantSystem.getUnfinishedOrderChunksFromDB());
 		kitchenTable.setToolTipText("");
 		scrollPane.setViewportView(kitchenTable);
+	}
+	
+	private void populateKitchenTable(ArrayList<OrderChunk> orderChunks)
+	{
+		
+		DefaultTableModel defaultKitchen = new DefaultTableModel(new Object[][][][]{},new String[]{"Order ID","Dish Name","Notes","Order Status"});
+		
+		
+		for(OrderChunk orderChunk: orderChunks)
+		{
+			String chunkID = orderChunk.getOrderID();
+			String chunkStatus = orderChunk.getOrderStatus().toString();
+			
+			for (SingleItemWithNote si: orderChunk.getItems())
+			{
+				defaultKitchen.addRow(new Object[]{chunkID,si.getItem().getName(), si.getNote(), chunkStatus});
+			}		
+		}
+		
+		kitchenTable.setModel(defaultKitchen);
 	}
 }

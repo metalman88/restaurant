@@ -9,10 +9,12 @@ public class OrderChunk
 	private Menu menu;
 	private ArrayList<SingleItemWithNote> items;
 	private ORDERSTATUSENUMS orderStatus;
+	private String orderID;
 	
 	public OrderChunk()
 	{
 		orderStatus = ORDERSTATUSENUMS.PREPPING;
+		items = new ArrayList<SingleItemWithNote>();
 	}
 	
 	public ArrayList<SingleItemWithNote> getItems()
@@ -38,6 +40,16 @@ public class OrderChunk
 	public ORDERSTATUSENUMS getOrderStatus()
 	{
 		return orderStatus;
+	}
+	
+	public void setOrderID(String orderID)
+	{
+		this.orderID = orderID;
+	}
+	
+	public String getOrderID()
+	{
+		return orderID;
 	}
 }
 

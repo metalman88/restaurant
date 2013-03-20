@@ -3,7 +3,8 @@ public enum ORDERSTATUSENUMS
 {
 	OUT,
 	PREPPING,
-	COOKING;
+	COOKING,
+	FINISHED;
 	
 }
 
