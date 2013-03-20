@@ -76,7 +76,7 @@ public class DatabaseInteractor {
 	}
   public static void main(String[] argv) {
 	  testDB();
-  }
+  } 
   
 
   
@@ -159,7 +159,7 @@ public class DatabaseInteractor {
 	  }
 	  return rs;
 	  
-	  
+	   
   }
   
   Connection databaseConnection = null;
@@ -173,7 +173,11 @@ public OrderChunk getAllUnfinishedOrders() {
 		       // System.out.println("Here's the result of row " + index++ + ":");
 		       // System.out.println(rs.getString(1));
 		    	// ZONEENUMS.valueOf(rs.getString(6))
+		    	System.out.println("Found an unfinished order:"+rs.getString(4));
+		    	SingleItemWithNote toTest = new SingleItemWithNote(getMenuItem(rs.getInt(4)), rs.getString(3));
+		    	if(toTest == null) System.out.println("OOPS");
 		    	result.addItem(new SingleItemWithNote(getMenuItem(rs.getInt(4)), rs.getString(3)));
+		    	
 		    }
 		  } catch (SQLException se) {
 		    System.out.println("We got an exception while getting a result:this " +
@@ -187,7 +191,7 @@ public OrderChunk getAllUnfinishedOrders() {
 public MenuItem getMenuItem(int menuID) {
 	//public MenuItem(int itemID, String itemName, CATEGORYENUMS category, String description,
 		//    Double price, Double cookingTimeMinutes,NutritionInfo nutrition)
-	
+	System.out.println("Looking for "+menuID);
 	MenuItem result = null;
 	ResultSet rs = selectCommand("*", "menuItem WHERE menu_id="+menuID+";");
 	try {
@@ -195,6 +199,7 @@ public MenuItem getMenuItem(int menuID) {
 	       // System.out.println("Here's the result of row " + index++ + ":");
 	       // System.out.println(rs.getString(1));
 	    	// ZONEENUMS.valueOf(rs.getString(6))
+	    	System.out.println("Found this:"+rs.getString(1));
 	    	result = new MenuItem(rs.getInt(1), rs.getString(2), CATEGORYENUMS.APPETIZER, rs.getString(3), rs.getDouble(4), rs.getDouble(5), getNutrition(rs.getInt(1)));
 	    }
 	  } catch (SQLException se) {
