@@ -156,6 +156,19 @@ public class WelcomeScreen extends JFrame {
 		{
 			setContentPane(contentPane);
 		}
-		
+	}
+	
+	public void swapLoginWaiterPanelLogout()
+	{
+		if(getContentPane() == contentPane)
+		{
+
+			customerContentPane = new ServerLoginPanel(restaurantSystem,this);
+			setContentPane(customerContentPane);
+		}
+		else if(getContentPane() == customerContentPane)
+		{
+			setContentPane(contentPane);
+		}
 	}
 }

@@ -13,6 +13,7 @@ import restaurant.system.MenuItem;
 import restaurant.system.OrderChunk;
 import restaurant.system.SingleItemWithNote;
 import restaurant.system.TableInfo;
+import restuarant.enums.ORDERSTATUSENUMS;
 import restuarant.enums.ZONEENUMS;
 
 
@@ -361,6 +362,18 @@ public ArrayList<TableInfo> getTablesInZone(ZONEENUMS zone)
 	return null;
 }
 
+public ArrayList<OrderChunk> getUnfinishedOrderChunksFromDB()
+{
+	return null;
+}
+
+public void updateOrderStatusInDB(String orderID, ORDERSTATUSENUMS newStatus)
+{
+}
+
+public void setTableRequestServiceToNone(String tableID)
+{
+}
 
  private String host;
  private String name;

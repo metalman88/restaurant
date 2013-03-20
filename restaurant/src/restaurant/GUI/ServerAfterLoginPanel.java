@@ -2,10 +2,12 @@ package restaurant.GUI;
 
 import javax.swing.JPanel;
 
+import restaurant.system.CustomerTable;
 import restaurant.system.OrderChunk;
 import restaurant.system.RestaurantSystem;
 import restaurant.system.SingleItemWithNote;
 import restaurant.system.TableInfo;
+import restuarant.enums.ORDERSTATUSENUMS;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -15,6 +17,8 @@ import java.awt.Font;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ServerAfterLoginPanel extends JPanel 
 {
@@ -47,7 +51,7 @@ public class ServerAfterLoginPanel extends JPanel
 		add(scrollPane_1);
 		
 		zoneOrdersOut = new JTable();
-		populateZoneOrdersOut(ArrayList<OrderChunk> orderChunks)
+		populateZoneOrdersOut(restaurantSystem.DBInteractor.getTablesInZone(restaurantSystem.getTabletZone()));
 		scrollPane_1.setViewportView(zoneOrdersOut);
 		
 		JLabel lblTables = new JLabel("Tables");
@@ -61,18 +65,43 @@ public class ServerAfterLoginPanel extends JPanel
 		add(lblOrdersOut);
 		
 		JButton btnTableServiced = new JButton("Table Serviced");
+		btnTableServiced.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				updateTableServiced(tablesInZone);
+			}
+		});
 		btnTableServiced.setBounds(47, 272, 107, 23);
 		add(btnTableServiced);
 		
 		JButton btnSetUnoccupied = new JButton("Set Unoccupied");
+		btnSetUnoccupied.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				setTableUnoccupied(tablesInZone);
+			}
+		});
 		btnSetUnoccupied.setBounds(183, 272, 107, 23);
 		add(btnSetUnoccupied);
 		
 		JButton btnLogoutOfZone = new JButton("Logout of Zone");
+		btnLogoutOfZone.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				welcomeScreen.swapLoginWaiterPanelLogout();
+				welcomeScreen.switchToFullScreen();
+			}
+		});
 		btnLogoutOfZone.setBounds(286, 310, 116, 23);
 		add(btnLogoutOfZone);
 		
 		JButton btnUpdateOrderStatus = new JButton("Update Order Status");
+		btnUpdateOrderStatus.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				updateOrderToFinished(zoneOrdersOut);
+			}
+		});
 		btnUpdateOrderStatus.setBounds(468, 272, 148, 23);
 		add(btnUpdateOrderStatus);
 	}
@@ -90,22 +119,52 @@ public class ServerAfterLoginPanel extends JPanel
 		tablesInZone.setModel(defaultTableZone);
 	}
 	
-	private void populateZoneOrdersOut(ArrayList<OrderChunk> orderChunks)
+	//Go through every table in the zone see if they have an orderChunk with the status "OUT"
+	//if so add it to the table
+	private void populateZoneOrdersOut(ArrayList<TableInfo> tables)
 	{
-		DefaultTableModel defaultZoneOrder = new DefaultTableModel(new Object[][][][]{},new String[]{"Table#","Table Name",
-				"Dishes","Status"});
+		DefaultTableModel defaultZoneOrder = new DefaultTableModel(new Object[][][][][]{},new String[]{"Table#","Table Name",
+				"Order ID", "Dishes","Status"});
 		
-		for(OrderChunk order: orderChunks)
+		for (TableInfo table: tables)
 		{
-			String dishes = "";
-			for(SingleItemWithNote si: order.getItems())
-			{
-				dishes += si.getItem().getName() +" ";
-			}
+			ArrayList<OrderChunk> tablesOrderChunks = table.getCustomerTable().getListOfOrderChunks();
 			
-			defaultTableZone.addRow(new Object[]{table.getTableNumber(),table.getTableName(), table.isTableOccupied(), null});		
+			for (OrderChunk oc: tablesOrderChunks)
+			{
+				if (oc.getOrderStatus().equals(ORDERSTATUSENUMS.OUT))
+				{
+					String orderID = oc.getOrderID();
+					String dishes="";
+					for (SingleItemWithNote si: oc.getItems())
+					{
+						dishes += si.getItem().getName();
+					}
+					defaultZoneOrder.addRow(new Object[]{table.getTableNumber(),table.getTableName(), orderID,
+							dishes, "Out"});
+				}
+			}
 		}
 		
 		zoneOrdersOut.setModel(defaultZoneOrder);
 	}
+	
+	private void setTableUnoccupied(JTable selectedTable)
+	{
+		int tableID = (Integer) selectedTable.getValueAt(selectedTable.getSelectedRow(), 0);
+		restaurantSystem.DBInteractor.updateTableStatus(tableID, "UnOccupied");
+	}
+	
+	private void updateOrderToFinished(JTable selectedTable)
+	{
+		String orderID = (String) selectedTable.getValueAt(selectedTable.getSelectedRow(), 3);
+		restaurantSystem.DBInteractor.updateOrderStatusInDB(orderID, ORDERSTATUSENUMS.FINISHED);
+	}
+	
+	private void updateTableServiced(JTable selectedTable)
+	{
+		String tableID = (String) selectedTable.getValueAt(selectedTable.getSelectedRow(), 0);
+		restaurantSystem.DBInteractor.setTableRequestServiceToNone(tableID);
+	}
+
 }

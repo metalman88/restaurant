@@ -159,14 +159,6 @@ public class RestaurantSystem {
 		
 	}
 	
-	public ArrayList<OrderChunk> getUnfinishedOrderChunksFromDB()
-	{
-		return null;
-	}
-	
-	public void updateOrderStatusInDB(String orderID, ORDERSTATUSENUMS newStatus)
-	{
-	}
 	
 	public void setTabletToZone(ZONEENUMS zone)
 	{

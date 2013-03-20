@@ -58,7 +58,7 @@ public class KitchenPanel extends JPanel{
 		
 		//Set up kitchenTable
 		kitchenTable = new JTable();
-		populateKitchenTable(restaurantSystem.getUnfinishedOrderChunksFromDB());
+		populateKitchenTable(restaurantSystem.DBInteractor.getUnfinishedOrderChunksFromDB());
 		kitchenTable.setToolTipText("");
 		scrollPane.setViewportView(kitchenTable);
 		
@@ -105,12 +105,12 @@ public class KitchenPanel extends JPanel{
 		
 		if (status.equals(ORDERSTATUSENUMS.COOKING.toString()))
 		{
-			restaurantSystem.updateOrderStatusInDB(orderID, ORDERSTATUSENUMS.FINISHED);
+			restaurantSystem.DBInteractor.updateOrderStatusInDB(orderID, ORDERSTATUSENUMS.FINISHED);
 		}
 		
 		if (status.equals(ORDERSTATUSENUMS.PREPPING.toString()))
 		{
-			restaurantSystem.updateOrderStatusInDB(orderID, ORDERSTATUSENUMS.COOKING);
+			restaurantSystem.DBInteractor.updateOrderStatusInDB(orderID, ORDERSTATUSENUMS.COOKING);
 		}
 	}
 }
