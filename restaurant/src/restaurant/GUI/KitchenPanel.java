@@ -58,7 +58,7 @@ public class KitchenPanel extends JPanel{
 		
 		//Set up kitchenTable
 		kitchenTable = new JTable();
-		populateKitchenTable(restaurantSystem.DBInteractor.getUnfinishedOrderChunksFromDB());
+		populateKitchenTable(restaurantSystem.DBInteractor.getAllUnfinishedOrders());
 		kitchenTable.setToolTipText("");
 		scrollPane.setViewportView(kitchenTable);
 		
