@@ -29,6 +29,7 @@ public class OrderChunk
 	
 	public void addItem(SingleItemWithNote toAdd)
 	{
+		if(toAdd != null)
 		items.add(toAdd);
 	}
 	

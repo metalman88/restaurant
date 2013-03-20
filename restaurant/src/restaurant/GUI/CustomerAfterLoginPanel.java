@@ -181,6 +181,23 @@ public class CustomerAfterLoginPanel extends JPanel{
 			public void mouseClicked(MouseEvent e) {
 				PaymentVerificationDialog paymentDialog = new PaymentVerificationDialog();
 				paymentDialog.setVisible(true);
+				String tableNumber = restaurantSystem.getCurTable().getTableNumber()+"";
+				restaurantSystem.logoutTablet();
+				restaurantSystem.loginTablet(tableNumber);
+				customerTable = restaurantSystem.getCurTable().getCustomerTable();
+				receiptTextPane.setText("");
+				for(int i = 0; i<1000;i++)
+				{
+					try{
+						orderTableModel.removeRow(0);
+					}
+					catch(ArrayIndexOutOfBoundsException e1)
+					{
+						break;
+					}
+					
+				}
+				
 				
 			}
 		});
@@ -225,10 +242,21 @@ public class CustomerAfterLoginPanel extends JPanel{
 		confirmButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				orderTable.removeAll();
 				customerTable.submitOrder();
 				receiptTextPane.setText("");
 				receiptTextPane.setText(new Bill(customerTable.getListOfOrderChunks()).billInfo());
+				
+				for(int i = 0; i<1000;i++)
+				{
+					try{
+						orderTableModel.removeRow(0);
+					}
+					catch(ArrayIndexOutOfBoundsException e)
+					{
+						break;
+					}
+					
+				}
 				
 			}
 		});
@@ -252,6 +280,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				NutritionInfo nutrition = getNutritionInfoForSelectedItem();
+				new NutritionInfoDialog(nutrition);
 				
 			}
 		});
@@ -268,9 +297,11 @@ public class CustomerAfterLoginPanel extends JPanel{
 	public DefaultTableModel createDefaultTableModel(ArrayList<MenuItem> menuItems,JTable tableToAttachTo)
 	{
 		
-		DefaultTableModel tableModel = new DefaultTableModel(new Object[][][]{},new String[]{"Item","Price"});
+		DefaultTableModel tableModel = new DefaultTableModel(new Object[][][]{},new String[]{"Item","Price",""});
 		tableToAttachTo.setModel(tableModel);
 		tableToAttachTo.getColumnModel().getColumn(1).setMaxWidth(45);
+		tableToAttachTo.getColumnModel().getColumn(2).setMinWidth(0);
+		tableToAttachTo.getColumnModel().getColumn(2).setMaxWidth(0);
 		
 		for(int i = 0 ; i < menuItems.size();i++)
 		{
@@ -282,6 +313,33 @@ public class CustomerAfterLoginPanel extends JPanel{
 	
 	private NutritionInfo getNutritionInfoForSelectedItem()
 	{
+		String currentTabName = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
+		
+		if(currentTabName.equals("Appetizer"))
+		{
+			return	returnNutritionInfo(appetizerTable);
+		}
+		else if(currentTabName.equals("Entree"))
+		{
+			return returnNutritionInfo(entreeTable);
+		}
+		else if(currentTabName.equals("Dessert"))
+		{
+			return returnNutritionInfo(dessertTable);
+		}
+		else if(currentTabName.equals("Other"))
+		{
+			return returnNutritionInfo(otherTable);
+		}
+		else if(currentTabName.equals("Drinks"))
+		{
+			return returnNutritionInfo(drinksTable);
+		}
+			return new NutritionInfo("-1","-1", "-1","-1","-1","-1","-1");
+	}
+	private void addSelectedRowToOrderTable()
+	{
+		
 		String currentTabName = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
 		
 		if(currentTabName.equals("Appetizer"))
@@ -305,34 +363,6 @@ public class CustomerAfterLoginPanel extends JPanel{
 			buttonClickTableMethodThing(drinksTable);
 		}
 		
-		return new NutritionInfo("-1","-1", "-1","-1","-1","-1","-1");
-	}
-	private void addSelectedRowToOrderTable()
-	{
-		
-		String currentTabName = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
-		
-		if(currentTabName.equals("Appetizer"))
-		{
-			returnNutritionInfo(appetizerTable);
-		}
-		else if(currentTabName.equals("Entree"))
-		{
-			returnNutritionInfo(entreeTable);
-		}
-		else if(currentTabName.equals("Dessert"))
-		{
-			returnNutritionInfo(dessertTable);
-		}
-		else if(currentTabName.equals("Other"))
-		{
-			returnNutritionInfo(otherTable);
-		}
-		else if(currentTabName.equals("Drinks"))
-		{
-			returnNutritionInfo(drinksTable);
-		}
-		
 	}
 
 	private NutritionInfo returnNutritionInfo(JTable focusedTable)
@@ -353,7 +383,8 @@ public class CustomerAfterLoginPanel extends JPanel{
 		String name = (String) focusedTable.getValueAt(focusedTable.getSelectedRow(), 0);
 		String price = (String) focusedTable.getValueAt(focusedTable.getSelectedRow(), 1);
 		orderTableModel.addRow(new Object[]{name,price});
-		SingleItemWithNote singleItemWithNote = new SingleItemWithNote((MenuItem)focusedTable.getValueAt(focusedTable.getSelectedRow(),2),notesTextPane.getText());
+		MenuItem itemInRowCell = (MenuItem) focusedTable.getValueAt(focusedTable.getSelectedRow(),2);
+		SingleItemWithNote singleItemWithNote = new SingleItemWithNote(itemInRowCell,notesTextPane.getText());
 		customerTable.getCurrentOrderChunk().addItem(singleItemWithNote);
 		notesTextPane.setText("");
 	}

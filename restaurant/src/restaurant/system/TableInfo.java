@@ -24,6 +24,12 @@ public class TableInfo {
 	{
 		return customerTable;
 	}
+	
+	public void resetCustomerTable()
+	{
+		customerTable = new CustomerTable(menu,DBInteractor);
+	}
+	
 	public ZONEENUMS getZone()
 	{
 		return zone;

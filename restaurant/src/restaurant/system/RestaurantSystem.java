@@ -6,7 +6,6 @@ import java.util.Set;
 
 import restaurant.database.DatabaseInteractor;
 import restuarant.enums.ORDERSTATUSENUMS;
-import restuarant.enums.ZONEENUMS;
 
 
 public class RestaurantSystem {
@@ -16,7 +15,6 @@ public class RestaurantSystem {
 	public Menu menu;
 	public ArrayList<Party> waitList;
 	private int tableNumberLoggedIntoThisTablet;
-	private ZONEENUMS zoneLoggedIntoThisTablet;
 	
 	public RestaurantSystem()
 	{
@@ -102,12 +100,13 @@ public class RestaurantSystem {
 			Boolean wasAbleToLogin = DBInteractor.loginTablet(tableNumber, "") ;
 			if(wasAbleToLogin)
 			{
-				tableNumberLoggedIntoThisTablet = tableNumber;
-				return true;
+
+				return false;
 			}
 			else
 			{
-				return false;
+				tableNumberLoggedIntoThisTablet = tableNumber;
+				return true;
 			}
 			
 			
@@ -144,7 +143,7 @@ public class RestaurantSystem {
 	
 	public void getOrderStatusFromDatabase()
 	{
-		
+		 
 	}
 	
 	public TableInfo getCurTable()
@@ -154,19 +153,14 @@ public class RestaurantSystem {
 
 	public void logoutTablet() {
 		DBInteractor.updateTableStatus(tableNumberLoggedIntoThisTablet, "0");
+		tableHash.get(tableNumberLoggedIntoThisTablet).resetCustomerTable();
 		tableNumberLoggedIntoThisTablet = -1;
 		
 		
 	}
 	
-	
-	public void setTabletToZone(ZONEENUMS zone)
-	{
-		zoneLoggedIntoThisTablet = zone;
+	public void updateOrderStatusFromDB(String orderId, ORDERSTATUSENUMS orderstatus) {
+		DBInteractor.updateOrderStatus(orderId, orderstatus);
 	}
 	
-	public ZONEENUMS getTabletZone()
-	{
-		return zoneLoggedIntoThisTablet;
-	}
 }
