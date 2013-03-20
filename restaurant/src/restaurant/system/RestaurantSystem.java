@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import restaurant.database.DatabaseInteractor;
+import restuarant.enums.ORDERSTATUSENUMS;
 
 
 public class RestaurantSystem {
@@ -141,7 +142,7 @@ public class RestaurantSystem {
 	
 	public void getOrderStatusFromDatabase()
 	{
-		
+		 
 	}
 	
 	public TableInfo getCurTable()
@@ -154,6 +155,10 @@ public class RestaurantSystem {
 		tableNumberLoggedIntoThisTablet = -1;
 		
 		
+	}
+	
+	public void updateOrderStatusFromDB(String orderId, ORDERSTATUSENUMS orderstatus) {
+		DBInteractor.updateOrderStatus(orderId, orderstatus);
 	}
 	
 }

@@ -16,6 +16,7 @@ import restaurant.system.OrderChunk;
 import restaurant.system.SingleItemWithNote;
 import restaurant.system.TableInfo;
 import restuarant.enums.CATEGORYENUMS;
+import restuarant.enums.ORDERSTATUSENUMS;
 import restuarant.enums.ZONEENUMS;
 
 
@@ -327,6 +328,45 @@ public void serviceRequested(int tableNumber)
 public void addOrderToDB(OrderChunk curOrder)
 {
 	
+}
+
+public void updateOrderStatus(String orderId, ORDERSTATUSENUMS orderstatus) {
+	int status = 0;
+	switch(orderstatus)
+	{
+	case PREPPING:
+		status = 0;
+		break;
+	case OUT:
+		status = 2;
+		break;
+	case COOKING:
+		status = 1;
+		break;
+	}
+	Statement s = null;
+	try {
+	  s = databaseConnection.createStatement();
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while creating a statement:" +
+	                     "that probably means we're no longer connected.");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	int m = 0;
+
+	try {
+	  m = s.executeUpdate("UPDATE kitchen SET " +
+	                      "status="+status+" WHERE order_id="+orderId+";");
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while executing our query:" +
+	                     "that probably means our SQL is invalid");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	System.out.println("Successfully modified " + m + " rows.\n");
 }
 
 public Menu getMenuFromDB()
