@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import restaurant.database.DatabaseInteractor;
+import restuarant.enums.ORDERSTATUSENUMS;
 
 
 public class RestaurantSystem {
@@ -159,5 +160,9 @@ public class RestaurantSystem {
 	public ArrayList<OrderChunk> getUnfinishedOrderChunksFromDB()
 	{
 		return null;
+	}
+	
+	public void updateOrderStatusInDB(String orderID, ORDERSTATUSENUMS newStatus)
+	{
 	}
 }

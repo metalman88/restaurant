@@ -8,6 +8,7 @@ import restaurant.system.OrderChunk;
 import restaurant.system.RestaurantSystem;
 import restaurant.system.SingleItemWithNote;
 import restuarant.enums.CATEGORYENUMS;
+import restuarant.enums.ORDERSTATUSENUMS;
 
 import javax.swing.JTextField;
 import javax.swing.JLabel;
@@ -19,6 +20,9 @@ import java.util.ArrayList;
 import javax.swing.JTable;
 import javax.swing.JScrollPane;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class KitchenPanel extends JPanel{
 	private static RestaurantSystem restaurantSystem;
@@ -57,6 +61,20 @@ public class KitchenPanel extends JPanel{
 		populateKitchenTable(restaurantSystem.getUnfinishedOrderChunksFromDB());
 		kitchenTable.setToolTipText("");
 		scrollPane.setViewportView(kitchenTable);
+		
+		JButton btnUpdateOrderStatus = new JButton("Update Order Status");
+		btnUpdateOrderStatus.addMouseListener(new MouseAdapter() {
+			
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				updateOrderIDStatus(kitchenTable);
+			}
+
+
+		
+		});
+		btnUpdateOrderStatus.setBounds(169, 319, 171, 23);
+		add(btnUpdateOrderStatus);
 	}
 	
 	private void populateKitchenTable(ArrayList<OrderChunk> orderChunks)
@@ -77,5 +95,21 @@ public class KitchenPanel extends JPanel{
 		}
 		
 		kitchenTable.setModel(defaultKitchen);
+	}
+	
+	private void updateOrderIDStatus(JTable focusedTable)
+	{
+		String orderID = (String) focusedTable.getValueAt(focusedTable.getSelectedRow(), 0);
+		String status = (String) focusedTable.getValueAt(focusedTable.getSelectedRow(), 3);
+		
+		if (status.equals(ORDERSTATUSENUMS.COOKING.toString()))
+		{
+			restaurantSystem.updateOrderStatusInDB(orderID, ORDERSTATUSENUMS.FINISHED);
+		}
+		
+		if (status.equals(ORDERSTATUSENUMS.PREPPING.toString()))
+		{
+			restaurantSystem.updateOrderStatusInDB(orderID, ORDERSTATUSENUMS.COOKING);
+		}
 	}
 }
