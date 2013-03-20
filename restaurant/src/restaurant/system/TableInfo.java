@@ -48,14 +48,14 @@ public class TableInfo {
 	public void setTableToOccupied()
 	{
 		isOccupied = true;
-		DBInteractor.updateTableStatus(tableNumber, "True");
+		DBInteractor.updateTableStatus(tableNumber, "1");
 		
 	}
 	
 	public void setTableToEmpty()
 	{
 		isOccupied = false;
-		DBInteractor.updateTableStatus(tableNumber, "False");
+		DBInteractor.updateTableStatus(tableNumber, "0");
 	}
 	
 	public boolean isTableOccupied()
