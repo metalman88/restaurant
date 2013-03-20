@@ -2,6 +2,7 @@ package restaurant.GUI.tests;
 
 import java.awt.Color;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JTable;
 
@@ -23,6 +24,12 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Provider;
 
+/**
+ * @author tbo
+ *
+ */
+// need to comment out the codes in RestaurantSystem's construcotr for the tests
+// to run as those codes attempt connecting to remote database 
 public class CheckInPanelTest extends TestCase
 {
 	private Panel checkinPanel;
@@ -30,24 +37,23 @@ public class CheckInPanelTest extends TestCase
 	private RestaurantSystem fakeRestaurantSystem;
 	private Button unoccupiedBut;
 	private Button occupiedBut;
-	
+
 	protected void setUp() throws Exception
 	{
 		Injector injector = Guice.createInjector(new CheckinPanelModule());
 
 		fakeRestaurantSystem = 
 				injector.getInstance(RestaurantSystem.class);
-		fakeRestaurantSystem.updateTablesFromDB();	// call this to do the trick
-												// of initializing tablesHash
+
 		checkinPanel = new Panel(new CheckInPanel(fakeRestaurantSystem));
-		
+
 		restaurantTables = checkinPanel.getTable(CheckInPanel.RES_TABLES)
 				.getJTable();
-		
+
 		occupiedBut = checkinPanel.getButton(CheckInPanel.SET_OCCUPIED_BUT);
 		unoccupiedBut = checkinPanel.getButton(CheckInPanel.SET_UNOCCUPIED_BUT);
 	}
-	
+
 	@Override
 	protected void tearDown() throws Exception
 	{
@@ -55,7 +61,7 @@ public class CheckInPanelTest extends TestCase
 		checkinPanel = null;
 		restaurantTables = null;
 	}
-	
+
 	public void testRestaurantTables()
 	{
 		assertFalse(restaurantTables == null);
@@ -64,35 +70,35 @@ public class CheckInPanelTest extends TestCase
 		assertEquals(CheckInPanel.RestaurantTableModel.class.getName(),
 				restaurantTables.getModel().getClass().getName());
 	}
-	
+
 	@Test
 	public void testFakeRestaurantSystemHas1Table()
 	{
 		assertEquals(1, fakeRestaurantSystem.tableHash.size());
 	}
 
-	
+
 	public void testSetOccupiedBut()
 	{
 
-	
+
 		// select the first row
 		restaurantTables.setRowSelectionInterval(0, 0);
 
 		// initially status should be Unoccupied
 		String status = (String) restaurantTables.getValueAt
 				(restaurantTables.getSelectedRow(), 
-				CheckInPanel.RestaurantTableModel.STATUS_COL);
+						CheckInPanel.RestaurantTableModel.STATUS_COL);
 		assertEquals(CheckInPanel.RestaurantTableModel.UNOCCUPIED, status);
 		// click occupied 
 		occupiedBut.click();
 		// ensure status is updated
 		status = (String) restaurantTables.getValueAt
-		(restaurantTables.getSelectedRow(), 
-		CheckInPanel.RestaurantTableModel.STATUS_COL);
+				(restaurantTables.getSelectedRow(), 
+						CheckInPanel.RestaurantTableModel.STATUS_COL);
 		assertEquals(CheckInPanel.RestaurantTableModel.OCCUPIED, status);
 	}
-	
+
 	public void testSetUnOccupiedBut()
 	{		
 		// select the first row
@@ -102,29 +108,29 @@ public class CheckInPanelTest extends TestCase
 		String status;
 		// ensure status is updated
 		status = (String) restaurantTables.getValueAt
-		(restaurantTables.getSelectedRow(), 
-		CheckInPanel.RestaurantTableModel.STATUS_COL);
+				(restaurantTables.getSelectedRow(), 
+						CheckInPanel.RestaurantTableModel.STATUS_COL);
 		assertEquals(CheckInPanel.RestaurantTableModel.OCCUPIED, status);
-		
+
 		// simulate clicking unoccupied but
 		unoccupiedBut.click();
 		status = (String) restaurantTables.getValueAt
 				(restaurantTables.getSelectedRow(), 
-				CheckInPanel.RestaurantTableModel.STATUS_COL);
-				assertEquals(CheckInPanel.RestaurantTableModel.UNOCCUPIED, status);
-		
+						CheckInPanel.RestaurantTableModel.STATUS_COL);
+		assertEquals(CheckInPanel.RestaurantTableModel.UNOCCUPIED, status);
+
 	}
-	
-	
-	
-	
+
+
+
+
 	public void testTableModel()
 	{
 		assertFalse(restaurantTables == null);
 		assertEquals(1, restaurantTables.getModel().getRowCount());
-	
+
 		assertFalse(checkinPanel == null);
-	
+
 	}
 
 
@@ -139,9 +145,19 @@ public class CheckInPanelTest extends TestCase
 
 		}
 	}
-	
+
 	private static class RestaurantSystemProvider implements Provider<RestaurantSystem>
 	{	
+
+		private class MockRestaurantSystem extends RestaurantSystem
+		{
+			public MockRestaurantSystem(HashMap<Integer, TableInfo> tablesMap)
+			{
+				tableHash = tablesMap;
+			}
+
+		}
+
 		private class MockTableInfo extends TableInfo
 		{
 
@@ -152,7 +168,7 @@ public class CheckInPanelTest extends TestCase
 				super(tableName, tableNumber, maxOcc, zone, DBInteractor, menu, isTaken);
 				// TODO Auto-generated constructor stub
 			}
-			
+
 			@Override
 			public void setTableToOccupied()
 			{
@@ -166,7 +182,8 @@ public class CheckInPanelTest extends TestCase
 					e.printStackTrace();
 				}
 			}
-			
+
+
 			@Override
 			public void setTableToEmpty()
 			{
@@ -180,9 +197,9 @@ public class CheckInPanelTest extends TestCase
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
-		
+
 		@Override
 		public RestaurantSystem get() 
 		{
@@ -199,18 +216,11 @@ public class CheckInPanelTest extends TestCase
 					ZONEENUMS.BLUE, null, null, false);
 			tableMap.put(tableInfo.tableNumber,tableInfo);
 
-			return new RestaurantSystem()
-			{
-				@Override
-				public void updateTablesFromDB()
-				{
-					tableHash = tableMap;
-				}
-				
-				
+			return new MockRestaurantSystem(tableMap);
 
-			};
-		}
+		};
 	}
-
 }
+
+
+
