@@ -27,10 +27,13 @@ These commands based off of examples at http://www.faqs.org/docs/ppbook/x20921.h
 
 Thanks to them, it was incredibly easy to write this
 
+This is the database layout, run the SQL commands in your offline postgresql database to use them.
+
 CREATE TABLE kitchen (
     order_id    integer CONSTRAINT firstkey1 PRIMARY KEY,
     kitchen_id	integer,
-    status	integer
+    status	integer,
+    table_id	integer
 );
 
 CREATE TABLE orderInfo (
@@ -66,6 +69,13 @@ CREATE TABLE tableInfo (
     status	integer,
     zone	integer
 );
+
+
+INSERT INTO menuITEM VALUES (1, 'Banana', 'It is a banana.', 4, 0), (2, 'Steak', 'Mmmm, meat.', 29, 40), (3, 'Milkshake', 'The sort of thing you eat after a meal.', 3, 10);
+INSERT INTO kitchen VALUES (2, 1, 0, 2);
+INSERT INTO orderInfo VALUES (2, 'I have notes for this!', 2);
+INSERT INTO nutritionInfo VALUES (1, 2, 3, 4, 5, 6, 7, 8),  (2, 12, 31, 14, 51, 16, 17, 18),  (3, 22, 23, 42, 52, 62, 72, 82);
+INSERT INTO tableInfo VALUES (2, 'TESTMACHINE', 32, 0, 0, 0);
 
  */
 
