@@ -10,10 +10,11 @@ public class OrderChunk
 	private ArrayList<SingleItemWithNote> items;
 	private ORDERSTATUSENUMS orderStatus;
 	private String orderID;
-	
+	private String table;
 	public OrderChunk()
 	{
 		orderStatus = ORDERSTATUSENUMS.PREPPING;
+		table = "0";
 		items = new ArrayList<SingleItemWithNote>();
 	}
 	
@@ -22,8 +23,8 @@ public class OrderChunk
 		return items;
 	}
 	
-	public void removeItem(SingleItemWithNote toRemove)
-	{
+	public void removeItem(SingleItemWithNote toRemove) 
+	{ 
 		items.remove(toRemove);
 	}
 	
@@ -47,7 +48,14 @@ public class OrderChunk
 	{
 		this.orderID = orderID;
 	}
-	
+	public void setTable(String table)
+	{
+		this.table = table;
+	}
+	public String getTable()
+	{
+		return table;
+	}
 	public String getOrderID()
 	{
 		return orderID;

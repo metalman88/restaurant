@@ -401,6 +401,85 @@ public void setTableRequestServiceToNone(int tableNumber)
 public void addOrderToDB(OrderChunk curOrder)
 {
 	
+	
+	String addID = curOrder.getOrderID();
+	
+	Statement s = null;
+	try {
+	  s = databaseConnection.createStatement();
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while creating a statement:" +
+	                     "that probably means we're no longer connected.");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	int m = 0;
+
+	try {
+	  m = s.executeUpdate("INSERT INTO kitchen VALUES" +
+	                      "("+addID+", 1, 0, "+curOrder.getTable()+");");
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while executing our query:" +
+	                     "that probably means our SQL is invalid");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	System.out.println("Successfully modified " + m + " rows.\n");
+	
+	// Removes constraint that might cause issues
+	s = null;
+	try {
+	  s = databaseConnection.createStatement();
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while creating a statement:" +
+	                     "that probably means we're no longer connected.");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	m = 0;
+
+	try {
+	  m = s.executeUpdate("ALTER TABLE orderinfo DROP CONSTRAINT firstkey2;");
+	} catch (SQLException se) { 
+	  System.out.println("We got an exception while executing our query:" +
+	                     "that probably means our SQL is invalid");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	System.out.println("Successfully modified " + m + " rows.\n");
+
+	
+	for(SingleItemWithNote toAdd : curOrder.getItems())
+	{
+		s = null;
+		try {
+		  s = databaseConnection.createStatement();
+		} catch (SQLException se) {
+		  System.out.println("We got an exception while creating a statement:" +
+		                     "that probably means we're no longer connected.");
+		  se.printStackTrace();
+		  System.exit(1);
+		}
+
+		m = 0;
+
+		try {
+		  m = s.executeUpdate("INSERT INTO orderInfo VALUES" +
+		                      "("+addID+", "+toAdd.getNote()+", "+toAdd.getID()+");");
+		} catch (SQLException se) {
+		  System.out.println("We got an exception while executing our query:" +
+		                     "that probably means our SQL is invalid");
+		  se.printStackTrace();
+		  System.exit(1);
+		}
+
+		System.out.println("Successfully modified " + m + " rows.\n");
+	}
+	
 }
 
 public void updateOrderStatus(String orderId, ORDERSTATUSENUMS orderstatus) {

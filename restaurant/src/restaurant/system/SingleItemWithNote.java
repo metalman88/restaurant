@@ -5,7 +5,7 @@ public class SingleItemWithNote
 	private MenuItem item;
 	private int menuID;
 	private String note;
-	
+	 
 	public SingleItemWithNote(int menuID, String note)
 	{
 		this.menuID = menuID;

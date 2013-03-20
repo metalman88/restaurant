@@ -3,6 +3,7 @@ import static org.junit.Assert.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Map.Entry;
 
 import org.junit.Test;
@@ -21,13 +22,15 @@ public class DatabaseInteractorTest {
 		toTest.setServerInfo("localhost/restaurant", "postgres", "ounhuoead");
 		toTest.connect();
 		
-		OrderChunk result = toTest.getAllUnfinishedOrders();
+		ArrayList<OrderChunk> result = toTest.getAllUnfinishedOrders();
+		/*
 		result.getItems();
 		
 		for(SingleItemWithNote test : result.getItems()) 
 		{
 			System.out.println(test.getNote());
 		}
+		*/
 		
 	}
 	
