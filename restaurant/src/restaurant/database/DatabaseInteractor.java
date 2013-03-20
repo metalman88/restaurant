@@ -164,16 +164,16 @@ public class DatabaseInteractor {
   
   Connection databaseConnection = null;
 
-public HashMap<Integer, Integer> getAllUnfinishedOrders() {
+public OrderChunk getAllUnfinishedOrders() {
 	OrderChunk result = new OrderChunk();
 	// SELECT * FROM orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status=0;
-	ResultSet rs = selectCommand("*", "orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status=0" );
+	ResultSet rs = selectCommand("orderInfo.order_id, kitchen.status, orderInfo.notes, orderInfo.menuitem_id", "orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status=0" );
 	 try {
 		    while (rs.next()) {
 		       // System.out.println("Here's the result of row " + index++ + ":");
 		       // System.out.println(rs.getString(1));
 		    	// ZONEENUMS.valueOf(rs.getString(6))
-		        result.addItem(new SingleItemWithNote(new MenuItem(0, host, null, host, null, null, null), host));
+		    	result.addItem(new SingleItemWithNote(getMenuItem(rs.getInt(4)), rs.getString(3)));
 		    }
 		  } catch (SQLException se) {
 		    System.out.println("We got an exception while getting a result:this " +
@@ -181,7 +181,7 @@ public HashMap<Integer, Integer> getAllUnfinishedOrders() {
 		    se.printStackTrace();
 		    System.exit(1);
 		  }
-	return null;
+	return result;
 }
 
 public MenuItem getMenuItem(int menuID) {
