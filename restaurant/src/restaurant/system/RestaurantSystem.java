@@ -6,6 +6,7 @@ import java.util.Set;
 
 import restaurant.database.DatabaseInteractor;
 import restuarant.enums.ORDERSTATUSENUMS;
+import restuarant.enums.ZONEENUMS;
 
 
 public class RestaurantSystem {
@@ -15,11 +16,12 @@ public class RestaurantSystem {
 	public Menu menu;
 	public ArrayList<Party> waitList;
 	private int tableNumberLoggedIntoThisTablet;
+	private ZONEENUMS zoneLoggedIntoThisTablet;
 	
 	public RestaurantSystem()
 	{
 		
-		DBInteractor = new DatabaseInteractor();
+/*		DBInteractor = new DatabaseInteractor();
 		DBInteractor.setServerInfo("server", "username", "password");
 		
 		if (DBInteractor.connect()) {
@@ -28,7 +30,7 @@ public class RestaurantSystem {
 		}
 		else {
 			System.exit(1);
-		}
+		}*/
 	}
 	
 	public void getMenuFromDB()
@@ -164,5 +166,10 @@ public class RestaurantSystem {
 	
 	public void updateOrderStatusInDB(String orderID, ORDERSTATUSENUMS newStatus)
 	{
+	}
+	
+	public void setTabletToZone(ZONEENUMS zone)
+	{
+		zoneLoggedIntoThisTablet = zone;
 	}
 }
