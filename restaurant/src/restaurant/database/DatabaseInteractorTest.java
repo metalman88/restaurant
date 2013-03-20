@@ -7,11 +7,30 @@ import java.util.Map.Entry;
 
 import org.junit.Test;
 
+import restaurant.system.OrderChunk;
+import restaurant.system.SingleItemWithNote;
 import restaurant.system.TableInfo;
 
 
 public class DatabaseInteractorTest {
-
+ 
+	@Test
+	public void testDB() {
+		DatabaseInteractor toTest = new DatabaseInteractor();
+		
+		toTest.setServerInfo("localhost/restaurant", "postgres", "ounhuoead");
+		toTest.connect();
+		
+		OrderChunk result = toTest.getAllUnfinishedOrders();
+		result.getItems();
+		
+		for(SingleItemWithNote test : result.getItems()) 
+		{
+			System.out.println(test.getNote());
+		}
+		
+	}
+	
 	@Test
 	public void test() {
 		DatabaseInteractor toTest = new DatabaseInteractor();

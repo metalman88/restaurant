@@ -154,7 +154,7 @@ public class RestaurantSystem {
 
 
 	public void logoutTablet() {
-		DBInteractor.logoutTablet(tableNumberLoggedIntoThisTablet);
+		DBInteractor.updateTableStatus(tableNumberLoggedIntoThisTablet, "0");
 		tableNumberLoggedIntoThisTablet = -1;
 		
 		

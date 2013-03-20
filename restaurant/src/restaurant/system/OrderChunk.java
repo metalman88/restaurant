@@ -13,6 +13,7 @@ public class OrderChunk
 	public OrderChunk()
 	{
 		orderStatus = ORDERSTATUSENUMS.PREPPING;
+		items = new ArrayList<SingleItemWithNote>();
 	}
 	
 	public ArrayList<SingleItemWithNote> getItems()
@@ -27,6 +28,7 @@ public class OrderChunk
 	
 	public void addItem(SingleItemWithNote toAdd)
 	{
+		if(toAdd != null)
 		items.add(toAdd);
 	}
 	

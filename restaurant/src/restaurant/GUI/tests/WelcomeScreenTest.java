@@ -11,7 +11,7 @@ public class WelcomeScreenTest {
 
 	@Test
 	public void testFullScreen() {
-		CustomerAfterLoginPanel CALP = new CustomerAfterLoginPanel(null, null);
+		//CustomerAfterLoginPanel CALP = new CustomerAfterLoginPanel(null, null);
 		
 	}
 

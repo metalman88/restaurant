@@ -2,8 +2,10 @@ package restaurant.GUI;
 
 import javax.swing.JPanel;
 
+import restaurant.system.Bill;
 import restaurant.system.CustomerTable;
 import restaurant.system.MenuItem;
+import restaurant.system.NutritionInfo;
 import restaurant.system.RestaurantSystem;
 import restaurant.system.SingleItemWithNote;
 import restuarant.enums.CATEGORYENUMS;
@@ -41,6 +43,9 @@ public class CustomerAfterLoginPanel extends JPanel{
 							  dessertTableModel,otherTableModel,orderTableModel;
 	JTabbedPane tabbedPane;
 	CustomerTable customerTable;
+	JTextPane notesTextPane;
+	JTextPane receiptTextPane;
+	
 	
 	
 	public CustomerAfterLoginPanel(RestaurantSystem restaurantSystem,WelcomeScreen welcomeScreen,CustomerTable customerTable)
@@ -90,6 +95,13 @@ public class CustomerAfterLoginPanel extends JPanel{
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
 		drinksTab.add(scrollPane_1, BorderLayout.CENTER);
+		
+		notesTextPane = new JTextPane();
+		notesTextPane.setBounds(272, 642, 152, 104);
+		add(notesTextPane);
+		
+		receiptTextPane = new JTextPane();
+		receiptTextPane.setEditable(false);
 		
 		
 //		orderTable.setModel(new DefaultTableModel(
@@ -156,9 +168,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 		scrollPane.setBounds(711, 138, 221, 468);
 		add(scrollPane);
 		
-		JTextPane txtpnAssadf = new JTextPane();
-		scrollPane.setViewportView(txtpnAssadf);
-		txtpnAssadf.setText("assadf");
+		scrollPane.setViewportView(receiptTextPane);
 		
 		JLabel menuLabel = new JLabel("Menu");
 		menuLabel.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -166,6 +176,14 @@ public class CustomerAfterLoginPanel extends JPanel{
 		add(menuLabel);
 		
 		JButton paybillButton = new JButton("Pay Bill");
+		paybillButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				PaymentVerificationDialog paymentDialog = new PaymentVerificationDialog();
+				paymentDialog.setVisible(true);
+				
+			}
+		});
 		paybillButton.setBounds(773, 617, 89, 23);
 		add(paybillButton);
 		
@@ -174,6 +192,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				
+								
 				restaurantSystem.logoutTablet();
 				welcomeScreen.swapLoginCustomerPanel();
 				welcomeScreen.switchToRegularSizeScreen();
@@ -206,19 +225,36 @@ public class CustomerAfterLoginPanel extends JPanel{
 		confirmButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				//sends order to the database
-				//adds order to bill
-				//
+				orderTable.removeAll();
+				customerTable.submitOrder();
+				receiptTextPane.setText("");
+				receiptTextPane.setText(new Bill(customerTable.getListOfOrderChunks()).billInfo());
+				
 			}
 		});
 		confirmButton.setBounds(613, 336, 99, 23);
 		add(confirmButton);
 		
 		JButton requestServiceButton = new JButton("Request Service");
-		requestServiceButton.setBounds(439, 60, 119, 47);
+		requestServiceButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				restaurantSystem.DBInteractor.serviceRequested(restaurantSystem.getCurTable().tableNumber);
+				//test//testt
+				
+			}
+		});
+		requestServiceButton.setBounds(432, 60, 137, 47);
 		add(requestServiceButton);
 		
 		JButton nutritionInfoButton = new JButton("Nutrition Info");
+		nutritionInfoButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				NutritionInfo nutrition = getNutritionInfoForSelectedItem();
+				
+			}
+		});
 		nutritionInfoButton.setBounds(124, 617, 107, 23);
 		add(nutritionInfoButton);
 		
@@ -226,26 +262,51 @@ public class CustomerAfterLoginPanel extends JPanel{
 		lblNotesForChef.setBounds(309, 621, 110, 14);
 		add(lblNotesForChef);
 		
-		JTextPane textPane = new JTextPane();
-		textPane.setBounds(272, 642, 152, 104);
-		add(textPane);
+		
 	}
 	
 	public DefaultTableModel createDefaultTableModel(ArrayList<MenuItem> menuItems,JTable tableToAttachTo)
 	{
 		
-		DefaultTableModel tableModel = new DefaultTableModel(new Object[][]{},new String[]{"Item","Price"});
+		DefaultTableModel tableModel = new DefaultTableModel(new Object[][][]{},new String[]{"Item","Price"});
 		tableToAttachTo.setModel(tableModel);
 		tableToAttachTo.getColumnModel().getColumn(1).setMaxWidth(45);
 		
 		for(int i = 0 ; i < menuItems.size();i++)
 		{
-			tableModel.addRow(new Object[]{menuItems.get(i).getName(),formatPrice(menuItems.get(i).getPrice())});
+			tableModel.addRow(new Object[]{menuItems.get(i).getName(),formatPrice(menuItems.get(i).getPrice()),menuItems.get(i)});
 		}
 		
 		return tableModel;
 	}
 	
+	private NutritionInfo getNutritionInfoForSelectedItem()
+	{
+		String currentTabName = tabbedPane.getTitleAt(tabbedPane.getSelectedIndex());
+		
+		if(currentTabName.equals("Appetizer"))
+		{
+			buttonClickTableMethodThing(appetizerTable);
+		}
+		else if(currentTabName.equals("Entree"))
+		{
+			buttonClickTableMethodThing(entreeTable);
+		}
+		else if(currentTabName.equals("Dessert"))
+		{
+			buttonClickTableMethodThing(dessertTable);
+		}
+		else if(currentTabName.equals("Other"))
+		{
+			buttonClickTableMethodThing(otherTable);
+		}
+		else if(currentTabName.equals("Drinks"))
+		{
+			buttonClickTableMethodThing(drinksTable);
+		}
+		
+		return new NutritionInfo("-1","-1", "-1","-1","-1","-1","-1");
+	}
 	private void addSelectedRowToOrderTable()
 	{
 		
@@ -253,38 +314,49 @@ public class CustomerAfterLoginPanel extends JPanel{
 		
 		if(currentTabName.equals("Appetizer"))
 		{
-			String name = (String) appetizerTable.getValueAt(appetizerTable.getSelectedRow(), 0);
-			String price = (String) appetizerTable.getValueAt(appetizerTable.getSelectedRow(), 1);
-			orderTableModel.addRow(new Object[]{name,price});
-			customerTable.
+			returnNutritionInfo(appetizerTable);
 		}
 		else if(currentTabName.equals("Entree"))
 		{
-			String name = (String) entreeTable.getValueAt(entreeTable.getSelectedRow(), 0);
-			String price = (String) entreeTable.getValueAt(entreeTable.getSelectedRow(), 1);
-			orderTableModel.addRow(new Object[]{name,price});
+			returnNutritionInfo(entreeTable);
 		}
 		else if(currentTabName.equals("Dessert"))
 		{
-			String name = (String) dessertTable.getValueAt(dessertTable.getSelectedRow(), 0);
-			String price = (String) dessertTable.getValueAt(dessertTable.getSelectedRow(), 1);
-			orderTableModel.addRow(new Object[]{name,price});
+			returnNutritionInfo(dessertTable);
 		}
 		else if(currentTabName.equals("Other"))
 		{
-			String name = (String) otherTable.getValueAt(otherTable.getSelectedRow(), 0);
-			String price = (String) otherTable.getValueAt(otherTable.getSelectedRow(), 1);
-			orderTableModel.addRow(new Object[]{name,price});
+			returnNutritionInfo(otherTable);
 		}
 		else if(currentTabName.equals("Drinks"))
 		{
-			String name = (String) drinksTable.getValueAt(drinksTable.getSelectedRow(), 0);
-			String price = (String) drinksTable.getValueAt(drinksTable.getSelectedRow(), 1);
-			orderTableModel.addRow(new Object[]{name,price});
+			returnNutritionInfo(drinksTable);
 		}
 		
 	}
 
+	private NutritionInfo returnNutritionInfo(JTable focusedTable)
+	{
+		NutritionInfo itemGotten = ((MenuItem)focusedTable.getValueAt(focusedTable.getSelectedRow(), 2)).getNutritionInfo();
+		if(itemGotten==null)
+		{
+			return new NutritionInfo("-1","-1", "-1","-1","-1","-1","-1");
+		}
+		else
+		{
+			return itemGotten;
+		}
+	}
+	
+	private void buttonClickTableMethodThing(JTable focusedTable)
+	{
+		String name = (String) focusedTable.getValueAt(focusedTable.getSelectedRow(), 0);
+		String price = (String) focusedTable.getValueAt(focusedTable.getSelectedRow(), 1);
+		orderTableModel.addRow(new Object[]{name,price});
+		SingleItemWithNote singleItemWithNote = new SingleItemWithNote((MenuItem)focusedTable.getValueAt(focusedTable.getSelectedRow(),2),notesTextPane.getText());
+		customerTable.getCurrentOrderChunk().addItem(singleItemWithNote);
+		notesTextPane.setText("");
+	}
 	
 	private String formatPrice(Double price)
 	{
