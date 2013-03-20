@@ -11,9 +11,11 @@ import java.util.Map;
 
 import restaurant.system.Menu;
 import restaurant.system.MenuItem;
+import restaurant.system.NutritionInfo;
 import restaurant.system.OrderChunk;
 import restaurant.system.SingleItemWithNote;
 import restaurant.system.TableInfo;
+import restuarant.enums.CATEGORYENUMS;
 import restuarant.enums.ZONEENUMS;
 
 
@@ -180,6 +182,50 @@ public HashMap<Integer, Integer> getAllUnfinishedOrders() {
 		    System.exit(1);
 		  }
 	return null;
+}
+
+public MenuItem getMenuItem(int menuID) {
+	//public MenuItem(int itemID, String itemName, CATEGORYENUMS category, String description,
+		//    Double price, Double cookingTimeMinutes,NutritionInfo nutrition)
+	
+	MenuItem result = null;
+	ResultSet rs = selectCommand("*", "menuItem WHERE menu_id="+menuID+";");
+	try {
+	    while (rs.next()) {
+	       // System.out.println("Here's the result of row " + index++ + ":");
+	       // System.out.println(rs.getString(1));
+	    	// ZONEENUMS.valueOf(rs.getString(6))
+	    	result = new MenuItem(rs.getInt(1), rs.getString(2), CATEGORYENUMS.APPETIZER, rs.getString(3), rs.getDouble(4), rs.getDouble(5), getNutrition(rs.getInt(1)));
+	    }
+	  } catch (SQLException se) {
+	    System.out.println("We got an exception while getting a result:this " +
+	                       "shouldn't happen: we've done something really bad.");
+	    se.printStackTrace();
+	    System.exit(1);
+	  }
+	return result;
+}
+
+public NutritionInfo getNutrition(int menuID) {
+	//	public NutritionInfo(String calories, String totalFat, String saturatedFat, String cholesterol,
+	//String sodium, String carbohydrates, String protein)
+	
+	NutritionInfo result = null;
+	ResultSet rs = selectCommand("*", "nutritionInfo WHERE nutrition_id="+menuID+";");
+	try {
+	    while (rs.next()) {
+	       // System.out.println("Here's the result of row " + index++ + ":");
+	       // System.out.println(rs.getString(1));
+	    	// ZONEENUMS.valueOf(rs.getString(6))
+	    	result = new NutritionInfo(rs.getString(2), rs.getString(3), rs.getString(4), rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8));
+	    }
+	  } catch (SQLException se) {
+	    System.out.println("We got an exception while getting a result:this " +
+	                       "shouldn't happen: we've done something really bad.");
+	    se.printStackTrace();
+	    System.exit(1);
+	  }
+	return result;
 }
   
 public HashMap<Integer, TableInfo> getTables(Menu menu) {
