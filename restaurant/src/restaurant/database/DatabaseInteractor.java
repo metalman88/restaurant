@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -176,20 +177,27 @@ public class DatabaseInteractor {
   
   Connection databaseConnection = null;
 
-public OrderChunk getAllUnfinishedOrders() {
+public  ArrayList<OrderChunk> getAllUnfinishedOrders() {
 	OrderChunk result = new OrderChunk();
+	ArrayList<OrderChunk> fResult = new ArrayList<OrderChunk>();
 	// SELECT * FROM orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status=0;
+	int check = 0;
 	ResultSet rs = selectCommand("orderInfo.order_id, kitchen.status, orderInfo.notes, orderInfo.menuitem_id", "orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status=0" );
 	 try {
 		    while (rs.next()) {
 		       // System.out.println("Here's the result of row " + index++ + ":");
 		       // System.out.println(rs.getString(1));
 		    	// ZONEENUMS.valueOf(rs.getString(6))
+		    	if(check != 0 && check != rs.getInt(1))
+		    	{
+		    		fResult.add(result);
+		    		result = new OrderChunk();
+		    	}
 		    	System.out.println("Found an unfinished order:"+rs.getString(4));
 		    	SingleItemWithNote toTest = new SingleItemWithNote(getMenuItem(rs.getInt(4)), rs.getString(3));
 		    	if(toTest == null) System.out.println("OOPS");
 		    	result.addItem(new SingleItemWithNote(getMenuItem(rs.getInt(4)), rs.getString(3)));
-		    	
+		    	check = rs.getInt(1);
 		    }
 		  } catch (SQLException se) {
 		    System.out.println("We got an exception while getting a result:this " +
@@ -197,7 +205,7 @@ public OrderChunk getAllUnfinishedOrders() {
 		    se.printStackTrace();
 		    System.exit(1);
 		  }
-	return result;
+	return fResult;
 }
 
 public MenuItem getMenuItem(int menuID) {
