@@ -182,7 +182,7 @@ public  ArrayList<OrderChunk> getAllUnfinishedOrders() {
 	ArrayList<OrderChunk> fResult = new ArrayList<OrderChunk>();
 	// SELECT * FROM orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status=0;
 	int check = 0;
-	ResultSet rs = selectCommand("orderInfo.order_id, kitchen.status, orderInfo.notes, orderInfo.menuitem_id", "orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status=0" );
+	ResultSet rs = selectCommand("orderInfo.order_id, kitchen.status, orderInfo.notes, orderInfo.menuitem_id", "orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status<2" );
 	 try {
 		    while (rs.next()) {
 		       // System.out.println("Here's the result of row " + index++ + ":");
@@ -276,7 +276,44 @@ public HashMap<Integer, TableInfo> getTables(Menu menu) {
 	return result;
 }
 
+public ArrayList<TableInfo> getTablesInZone(ZONEENUMS zone) {
+	
+	int zoneInDB = 0;
+	switch(zone) {
+	case GOLD:
+		zoneInDB = 0;
+		break;
+	case YELLOW:
+		zoneInDB = 1;
+		break;
+	case BLUE:
+		zoneInDB = 2;
+		break;
+	case TIGER:
+		zoneInDB = 3;
+		break;
+	}
+	ResultSet rs = selectCommand("*", "tableInfo WHERE zone="+zoneInDB+";");
+	ArrayList<TableInfo> result = new ArrayList<TableInfo>();
+	int index = 0;
 
+	  try {
+	    while (rs.next()) {
+	       // System.out.println("Here's the result of row " + index++ + ":");
+	       // System.out.println(rs.getString(1));
+	    	// ZONEENUMS.valueOf(rs.getString(6))
+	    	boolean isTaken = false;
+	    	if(Integer.parseInt(rs.getString(4)) == 1) isTaken = true;
+	        result.add(new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), ZONEENUMS.BLUE, this, null, isTaken));
+	    }
+	  } catch (SQLException se) {
+	    System.out.println("We got an exception while getting a result:this " +
+	                       "shouldn't happen: we've done something really bad.");
+	    se.printStackTrace();
+	    System.exit(1);
+	  }
+	return result;
+}
 
  
 public void updateTableStatus(int tableNumber, String occupied)
@@ -334,6 +371,33 @@ public void serviceRequested(int tableNumber)
 	System.out.println("Successfully modified " + m + " rows.\n");
 }
 
+public void setTableRequestServiceToNone(int tableNumber)
+{	
+	Statement s = null;
+	try {
+	  s = databaseConnection.createStatement();
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while creating a statement:" +
+	                     "that probably means we're no longer connected.");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	int m = 0;
+
+	try {
+	  m = s.executeUpdate("UPDATE tableInfo SET " +
+	                      "status=0 WHERE table_id="+tableNumber+";");
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while executing our query:" +
+	                     "that probably means our SQL is invalid");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	System.out.println("Successfully modified " + m + " rows.\n");
+}
+
 public void addOrderToDB(OrderChunk curOrder)
 {
 	
@@ -351,6 +415,9 @@ public void updateOrderStatus(String orderId, ORDERSTATUSENUMS orderstatus) {
 		break;
 	case COOKING:
 		status = 1;
+		break;
+	case FINISHED:
+		status = 3;
 		break;
 	}
 	Statement s = null;
