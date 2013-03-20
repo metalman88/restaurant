@@ -21,7 +21,7 @@ public class RestaurantSystem {
 	public RestaurantSystem()
 	{
 		
-/*		DBInteractor = new DatabaseInteractor();
+		DBInteractor = new DatabaseInteractor();
 		DBInteractor.setServerInfo("server", "username", "password");
 		
 		if (DBInteractor.connect()) {
@@ -30,7 +30,7 @@ public class RestaurantSystem {
 		}
 		else {
 			System.exit(1);
-		}*/
+		}
 	}
 	
 	public void getMenuFromDB()
