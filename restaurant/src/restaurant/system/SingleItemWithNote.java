@@ -13,9 +13,9 @@ public class SingleItemWithNote
 		this.note = note;
 	}
 	
-	public SingleItemWithNote(MenuItem menuID, String note)
+	public SingleItemWithNote(MenuItem menuItem, String note)
 	{
-		this.item = item;
+		this.item = menuItem;
 		this.note = note;
 	}
 	

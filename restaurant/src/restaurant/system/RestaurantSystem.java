@@ -100,12 +100,13 @@ public class RestaurantSystem {
 			Boolean wasAbleToLogin = DBInteractor.loginTablet(tableNumber, "") ;
 			if(wasAbleToLogin)
 			{
-				tableNumberLoggedIntoThisTablet = tableNumber;
-				return true;
+
+				return false;
 			}
 			else
 			{
-				return false;
+				tableNumberLoggedIntoThisTablet = tableNumber;
+				return true;
 			}
 			
 			
@@ -152,6 +153,7 @@ public class RestaurantSystem {
 
 	public void logoutTablet() {
 		DBInteractor.updateTableStatus(tableNumberLoggedIntoThisTablet, "0");
+		tableHash.get(tableNumberLoggedIntoThisTablet).resetCustomerTable();
 		tableNumberLoggedIntoThisTablet = -1;
 		
 		

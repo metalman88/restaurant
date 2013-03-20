@@ -24,7 +24,7 @@ public class Menu {
 		
 		while(keySetIterator.hasNext())
 		{
-			MenuItem curItem = (MenuItem) keySetIterator.next();
+			MenuItem curItem = menuList.get(keySetIterator.next());
 			if(curItem.getCategory().equals(categoryEnum))
 			{
 				returnList.add(curItem);
