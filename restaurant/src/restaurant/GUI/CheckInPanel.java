@@ -1,6 +1,8 @@
 package restaurant.GUI;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,6 +13,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.text.TabExpander;
 
 import restaurant.system.Party;
 import restaurant.system.RestaurantSystem;
@@ -29,7 +32,29 @@ public class CheckInPanel extends javax.swing.JPanel
 		this.restaurantSytem = restaurantSystem;
 		setUpPanel();
 		configureTableList();
-		configureWaitList();
+		configureSetOccupiedBut();
+		configureUnOccupiedBut();
+	//	configureWaitList();
+	}
+	
+	private void configureUnOccupiedBut()
+	{
+		setUnoccupiedJBut.setName(SET_UNOCCUPIED_BUT);
+		setUnoccupiedJBut.setText(SET_UNOCCUPIED_BUT);
+		setUnoccupiedJBut.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				int selectedRow = restaurantTables.getSelectedRow();
+				restaurantTables.getModel().setValueAt
+				(RestaurantTableModel.UNOCCUPIED, selectedRow, 
+						RestaurantTableModel.STATUS_COL);
+				
+				
+			}
+			
+		});
 	}
 
 	private void configureTableList()
@@ -38,6 +63,25 @@ public class CheckInPanel extends javax.swing.JPanel
 		restaurantTables.setModel(new RestaurantTableModel(restaurantSytem.tableHash.values()));
 	}
 	
+	private void configureSetOccupiedBut()
+	{
+		this.setOccupiiedJBut.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				int selectedRow = restaurantTables.getSelectedRow();
+				restaurantTables.getModel().setValueAt
+				(RestaurantTableModel.OCCUPIED, selectedRow, 
+						RestaurantTableModel.STATUS_COL);
+				
+			}
+			
+		});
+	}
+	
+
 	private void configureWaitList()
 	{
 		waitList.setModel(new WaitListModel(restaurantSytem.waitList));
@@ -68,9 +112,16 @@ public class CheckInPanel extends javax.swing.JPanel
 		}
 	}
 
-	private class RestaurantTableModel extends AbstractTableModel
+	public static class RestaurantTableModel extends AbstractTableModel
 	{
-
+		public static final int TABLE_NUM_COL = 0;
+		public static final int NAME_COL = 1;
+		public static final int ZONE_COL = 2;
+		public static final int CAP_COL = 3;
+		public static final int STATUS_COL = 4;
+		public static final String OCCUPIED = "Occupied";
+		public static final String UNOCCUPIED = "Unoccupied";
+		
 		private List<TableInfo> tables;
 		
 		public RestaurantTableModel(Collection<TableInfo> tables)
@@ -80,17 +131,13 @@ public class CheckInPanel extends javax.swing.JPanel
 		
 		private void initTablesFromCollection(Collection<TableInfo> tables)
 		{
-			tables = new ArrayList<TableInfo>();
+			this.tables = new ArrayList<TableInfo>();
 
 			for (TableInfo table : tables)
-				tables.add(table);
+				this.tables.add(table);
 		}
 		
-		private static final int TABLE_NUM_COL = 0;
-		private static final int NAME_COL = 1;
-		private static final int ZONE_COL = 2;
-		private static final int CAP_COL = 3;
-		private static final int STATUS_COL = 4;
+
 
 		@Override
 		public int getRowCount() 
@@ -123,11 +170,29 @@ public class CheckInPanel extends javax.swing.JPanel
 			case CAP_COL:
 				return table.maxOcc;
 			case STATUS_COL:
-				return table.isTableOccupied() ? "Occupied" : "Unoccupied";
+				return table.isTableOccupied() ? OCCUPIED : UNOCCUPIED;
 			}
 			return null;
 		}
-
+		
+		@Override
+		public void setValueAt(Object value, int rowIndex, int columnIndex)
+		{
+			TableInfo table = tables.get(rowIndex);
+			switch (columnIndex)
+			{
+				case STATUS_COL:
+					if (value.toString().equals(OCCUPIED))
+						table.setTableToOccupied();
+					else
+						table.setTableToEmpty();
+				break;
+				default:
+					break;
+			}
+			fireTableCellUpdated(rowIndex, columnIndex);
+		}
+		
 		@Override
 		public String getColumnName(int columnIndex)
 		{
@@ -145,8 +210,11 @@ public class CheckInPanel extends javax.swing.JPanel
 				return "Status";
 			}
 			return null;
-
 		}
+		
+		
+		
+	
 	}
 
 	/**
@@ -191,11 +259,9 @@ public class CheckInPanel extends javax.swing.JPanel
 				.addGap(0, 87, Short.MAX_VALUE)
 				);
 
-		setOccupiiedJBut.setText("Set occupied");
-		setOccupiiedJBut.setName("Set Occupied But");
+		setOccupiiedJBut.setName(SET_OCCUPIED_BUT);
+		setOccupiiedJBut.setText(SET_OCCUPIED_BUT);
 
-		setUnoccupiedJBut.setText("Set unoccupied");
-		setUnoccupiedJBut.setToolTipText("");
 
 		javax.swing.GroupLayout tabelListPanelLayout = new javax.swing.GroupLayout(tabelListPanel);
 		tabelListPanelLayout.setHorizontalGroup(
@@ -233,7 +299,7 @@ public class CheckInPanel extends javax.swing.JPanel
 		tabelListPanel.setLayout(tabelListPanelLayout);
 
 		restaurantTables = new JTable();
-
+		restaurantTables.setName(RES_TABLES);
 
 
 		restaurantTables.setBackground(Color.ORANGE);
@@ -440,5 +506,10 @@ public class CheckInPanel extends javax.swing.JPanel
 
 	private RestaurantSystem restaurantSytem;
 	private JTable restaurantTables;
+	
+	// public names for unit testing
+	public static final String RES_TABLES = "Restaurant tables";
+	public static final String SET_OCCUPIED_BUT = "Set occupied";
+	public static final String SET_UNOCCUPIED_BUT = "Set unoccupied";
 }
 ////////
