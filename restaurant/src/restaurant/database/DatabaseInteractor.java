@@ -371,7 +371,7 @@ public void serviceRequested(int tableNumber)
 	System.out.println("Successfully modified " + m + " rows.\n");
 }
 
-public void setTableRequestServiceToNone(int tableNumber)
+public void setTableRequestServiceToNone(int i)
 {	
 	Statement s = null;
 	try {
@@ -387,7 +387,7 @@ public void setTableRequestServiceToNone(int tableNumber)
 
 	try {
 	  m = s.executeUpdate("UPDATE tableInfo SET " +
-	                      "status=0 WHERE table_id="+tableNumber+";");
+	                      "status=0 WHERE table_id="+i+";");
 	} catch (SQLException se) {
 	  System.out.println("We got an exception while executing our query:" +
 	                     "that probably means our SQL is invalid");
