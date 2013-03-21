@@ -70,7 +70,7 @@ public class RestaurantSystem {
 		
 		while(occupiedHashIterator.hasNext())
 		{
-			int curKey = (int) occupiedHashIterator.next();
+			int curKey = Integer.parseInt(occupiedHashIterator.next().toString());
 			if(tableHash.get(curKey).isTableOccupied() != occupiedHash.get(curKey).booleanValue())
 			{
 				//time to update local table status
@@ -124,7 +124,7 @@ public class RestaurantSystem {
 				Iterator tableHashIterator = tableHash.keySet().iterator(); 
 				while(tableHashIterator.hasNext())
 				{
-					int curKey = (int) tableHashIterator.next();
+					int curKey = Integer.parseInt(tableHashIterator.next().toString());
 					if(tableHash.get(curKey).getTableName().equals(tableNumberOrName))
 					{
 						tableNumberLoggedIntoThisTablet = tableHash.get(curKey).getTableNumber();

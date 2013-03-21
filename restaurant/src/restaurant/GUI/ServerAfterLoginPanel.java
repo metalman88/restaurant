@@ -43,7 +43,7 @@ public class ServerAfterLoginPanel extends JPanel
 		add(scrollPane);
 		
 		tablesInZone = new JTable();
-		populateTablesInZone(restaurantSystem.DBInteractor.getTablesInZone(restaurantSystem.getTabletZone()));
+		populateTablesInZone(restaurantSystem.DBInteractor.getTablesInZone(restaurantSystem.getTabletToZone()));
 		scrollPane.setViewportView(tablesInZone);
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
@@ -51,7 +51,7 @@ public class ServerAfterLoginPanel extends JPanel
 		add(scrollPane_1);
 		
 		zoneOrdersOut = new JTable();
-		populateZoneOrdersOut(restaurantSystem.DBInteractor.getTablesInZone(restaurantSystem.getTabletZone()));
+		populateZoneOrdersOut(restaurantSystem.DBInteractor.getTablesInZone(restaurantSystem.getTabletToZone()));
 		scrollPane_1.setViewportView(zoneOrdersOut);
 		
 		JLabel lblTables = new JLabel("Tables");
@@ -164,7 +164,7 @@ public class ServerAfterLoginPanel extends JPanel
 	private void updateTableServiced(JTable selectedTable)
 	{
 		String tableID = (String) selectedTable.getValueAt(selectedTable.getSelectedRow(), 0);
-		restaurantSystem.DBInteractor.setTableRequestServiceToNone(tableID);
+		restaurantSystem.DBInteractor.setTableRequestServiceToNone(Integer.parseInt(tableID));
 	}
 
 }
