@@ -131,5 +131,6 @@ public class KitchenPanel extends JPanel{
 		{
 			restaurantSystem.DBInteractor.updateOrderStatus(orderID, ORDERSTATUSENUMS.COOKING);
 		}
+		populateKitchenTable(restaurantSystem.DBInteractor.getAllUnfinishedOrders());
 	}
 }

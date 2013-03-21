@@ -69,7 +69,7 @@ public class WelcomeScreen extends JFrame {
 					       frame.letsDoARefresh();
 					       
 					    }
-					 }, 0, 1000);
+					 }, 0, 60000);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
