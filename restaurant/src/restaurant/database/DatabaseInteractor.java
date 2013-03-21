@@ -98,8 +98,11 @@ public class DatabaseInteractor {
 		    // The second and third arguments are the username and password,
 		    // respectively. They should be whatever is necessary to connect
 		    // to the database.
+		    //databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
+		      //                              "postgres", "sflhdl");
+		    
 		    databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
-		                                    "postgres", "ounhuoead");
+                    "postgres", "ounhuoead");
 		    return true;
 		    
 		    // My home database: ounhuoead
@@ -524,15 +527,17 @@ public void updateOrderStatus(String orderId, ORDERSTATUSENUMS orderstatus) {
 	System.out.println("Successfully modified " + m + " rows.\n");
 }
 
-public Menu getMenuFromDB()
+public Menu fakegetMenu()
 {
+
+	
 	// if you create get all the information and store it in variables i can create the objects.
 	// whatever you want to do, i know database interaction stuff too. so no worries
 	
 	//menu needs many menuItems, and each menuItem needs nutrition info.
 	
 	//lets create a menu and not tell max, make sure not to commit this code
-	
+	// Max here. I'm just going to borrow this code to make menu items in my database.
 	HashMap<Integer,MenuItem> menuList = new HashMap<Integer,MenuItem>();
 	Random random = new Random();
 	
@@ -550,6 +555,32 @@ public Menu getMenuFromDB()
 	}
 	Menu menu = new Menu(menuList);
 	return menu;
+}
+
+public Menu getMenuFromDB()
+{
+	HashMap<Integer,MenuItem> menuList = new HashMap<Integer,MenuItem>();
+	//Time to put the real menu in so that we have some more database interaction
+	System.out.println("Searching for data;");
+	ResultSet rs = selectCommand("*", "menuItem");
+	try {
+	    while (rs.next()) {
+	       // System.out.println("Here's the result of row " + index++ + ":");
+	       // System.out.println(rs.getString(1));
+	    	// ZONEENUMS.valueOf(rs.getString(6))
+	    	MenuItem menuItem = new MenuItem(rs.getInt(1), rs.getString(2), CATEGORYENUMS.APPETIZER, rs.getString(3), rs.getDouble(4), rs.getDouble(5), getNutrition(rs.getInt(1)));
+			menuList.put(rs.getInt(1), menuItem);
+	    	System.out.println("Now adding:"+rs.getString(1));
+	    }
+	  } catch (SQLException se) {
+	    System.out.println("We got an exception while getting a result:this " +
+	                       "shouldn't happen: we've done something really bad.");
+	    se.printStackTrace();
+	    System.exit(1);
+	  }
+	Menu menu = new Menu(menuList);
+	return menu;
+	
 }
 
 public HashMap<Integer,Boolean> getTableStatusIfUpdated()
