@@ -45,6 +45,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 	CustomerTable customerTable;
 	JTextPane notesTextPane;
 	JTextPane receiptTextPane;
+	JTextPane descriptionTextField = new JTextPane();
 	
 	
 	
@@ -61,6 +62,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 		otherTable = new JTable();
 		entreeTable = new JTable();
 		dessertTable = new JTable();
+		descriptionTextField = new JTextPane();
 		//create the table model objects
 		drinksTableModel = createDefaultTableModel(restaurantSystem.menu.getCategoryItems(CATEGORYENUMS.DRINK),drinksTable);
 		appetizerTableModel = createDefaultTableModel(restaurantSystem.menu.getCategoryItems(CATEGORYENUMS.APPETIZER),appetizerTable);
@@ -94,10 +96,12 @@ public class CustomerAfterLoginPanel extends JPanel{
 		drinksTab.setLayout(new BorderLayout(0, 0));
 		
 		JScrollPane scrollPane_1 = new JScrollPane();
+		
+		
 		drinksTab.add(scrollPane_1, BorderLayout.CENTER);
 		
 		notesTextPane = new JTextPane();
-		notesTextPane.setBounds(272, 642, 152, 104);
+		notesTextPane.setBounds(267, 642, 152, 104);
 		add(notesTextPane);
 		
 		receiptTextPane = new JTextPane();
@@ -292,9 +296,64 @@ public class CustomerAfterLoginPanel extends JPanel{
 		lblNotesForChef.setBounds(309, 621, 110, 14);
 		add(lblNotesForChef);
 		
+		JButton removeButton = new JButton("<< Remove");
+		removeButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+
+				customerTable.getCurrentOrderChunk().getItems().remove(orderTable.getSelectedRow());
+				orderTableModel.removeRow(orderTable.getSelectedRow());
+				
+			}
+		});
+		removeButton.setFont(new Font("Tahoma", Font.PLAIN, 9));
+		removeButton.setBounds(307, 379, 89, 23);
+		add(removeButton);
+		
+		
+		descriptionTextField.setBounds(77, 642, 170, 104);
+		add(descriptionTextField);
+		
+		drinksTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				displayItemDescription(drinksTable);
+			}
+		});
+		appetizerTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				displayItemDescription(appetizerTable);
+			}
+		});
+		entreeTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				displayItemDescription(entreeTable);
+			}
+		});
+		dessertTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				displayItemDescription(dessertTable);
+			}
+		});
+		otherTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				displayItemDescription(otherTable);
+			}
+		});
+		
+		
 		
 	}
 	
+	protected void displayItemDescription(JTable table) {
+		MenuItem curItem = (MenuItem)table.getValueAt(table.getSelectedRow(), 2);
+		descriptionTextField.setText(curItem.getDescription());
+	}
+
 	public DefaultTableModel createDefaultTableModel(ArrayList<MenuItem> menuItems,JTable tableToAttachTo)
 	{
 		
