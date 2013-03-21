@@ -600,19 +600,19 @@ public Menu getMenuFromDB()
 	    	// ZONEENUMS.valueOf(rs.getString(6))
 	    	CATEGORYENUMS menuItemType = CATEGORYENUMS.APPETIZER;
 	    	switch(rs.getInt(6)) {
-	    	case 3:
+	    	case 4:
 	    		menuItemType = CATEGORYENUMS.APPETIZER;
 	    		break;
-	    	case 0:
+	    	case 1:
 	    		menuItemType = CATEGORYENUMS.ENTREE;
 	    		break;
-	    	case 1:
+	    	case 2:
 	    		menuItemType = CATEGORYENUMS.DESSERT;
 	    		break;
-	    	case 4:
+	    	case 5:
 	    		menuItemType = CATEGORYENUMS.OTHER;
 	    		break;
-	    	case 2:
+	    	case 3:
 	    		menuItemType = CATEGORYENUMS.DRINK;
 	    	}
 	    	MenuItem menuItem = new MenuItem(rs.getInt(1), rs.getString(2), menuItemType, rs.getString(3), rs.getDouble(4), rs.getDouble(5), getNutrition(rs.getInt(1)));
