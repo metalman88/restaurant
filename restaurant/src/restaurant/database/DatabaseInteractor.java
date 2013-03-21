@@ -98,11 +98,11 @@ public class DatabaseInteractor {
 		    // The second and third arguments are the username and password,
 		    // respectively. They should be whatever is necessary to connect
 		    // to the database.
-		    //databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
-		      //                              "postgres", "sflhdl");
-		    
 		    databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
-                    "postgres", "ounhuoead");
+		                                  "postgres", "sflhdl");
+		    
+		    //databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
+              //      "postgres", "ounhuoead");
 		    return true;
 		    
 		    // My home database: ounhuoead
@@ -406,7 +406,7 @@ public void addOrderToDB(OrderChunk curOrder)
 	
 	
 	String addID = curOrder.getOrderID();
-	
+	if(addID == null) addID = ""+primaryKeyGenerator("kitchen");
 	Statement s = null;
 	try {
 	  s = databaseConnection.createStatement();
@@ -431,30 +431,6 @@ public void addOrderToDB(OrderChunk curOrder)
 
 	System.out.println("Successfully modified " + m + " rows.\n");
 	
-	// Removes constraint that might cause issues
-	s = null;
-	try {
-	  s = databaseConnection.createStatement();
-	} catch (SQLException se) {
-	  System.out.println("We got an exception while creating a statement:" +
-	                     "that probably means we're no longer connected.");
-	  se.printStackTrace();
-	  System.exit(1);
-	}
-
-	m = 0;
-
-	try {
-	  m = s.executeUpdate("ALTER TABLE orderinfo DROP CONSTRAINT firstkey2;");
-	} catch (SQLException se) { 
-	  System.out.println("We got an exception while executing our query:" +
-	                     "that probably means our SQL is invalid");
-	  se.printStackTrace();
-	  System.exit(1);
-	}
-
-	System.out.println("Successfully modified " + m + " rows.\n");
-
 	
 	for(SingleItemWithNote toAdd : curOrder.getItems())
 	{
@@ -472,7 +448,7 @@ public void addOrderToDB(OrderChunk curOrder)
 
 		try {
 		  m = s.executeUpdate("INSERT INTO orderInfo VALUES" +
-		                      "("+addID+", "+toAdd.getNote()+", "+toAdd.getID()+");");
+		                      "("+addID+", '"+toAdd.getNote()+"', "+toAdd.getID()+");");
 		} catch (SQLException se) {
 		  System.out.println("We got an exception while executing our query:" +
 		                     "that probably means our SQL is invalid");
