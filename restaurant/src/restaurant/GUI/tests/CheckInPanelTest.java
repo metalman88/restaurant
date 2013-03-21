@@ -37,7 +37,8 @@ public class CheckInPanelTest extends TestCase
 	private RestaurantSystem fakeRestaurantSystem;
 	private Button unoccupiedBut;
 	private Button occupiedBut;
-
+	private JTable waitList;
+	
 	protected void setUp() throws Exception
 	{
 		Injector injector = Guice.createInjector(new CheckinPanelModule());
@@ -60,6 +61,8 @@ public class CheckInPanelTest extends TestCase
 		fakeRestaurantSystem = null;
 		checkinPanel = null;
 		restaurantTables = null;
+		occupiedBut = null;
+		unoccupiedBut = null;
 	}
 
 	public void testRestaurantTables()
@@ -77,11 +80,14 @@ public class CheckInPanelTest extends TestCase
 		assertEquals(1, fakeRestaurantSystem.tableHash.size());
 	}
 
+	
+	public void testWailtList()
+	{
+		
+	}
 
 	public void testSetOccupiedBut()
 	{
-
-
 		// select the first row
 		restaurantTables.setRowSelectionInterval(0, 0);
 
