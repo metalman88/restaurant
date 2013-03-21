@@ -100,6 +100,8 @@ public class DatabaseInteractor {
 		    // to the database.
 		    databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
 		                                  "postgres", "sflhdl");
+		    deleteCommand("kitchen", ";");
+			  deleteCommand("orderInfo", ";");
 		    
 		    //databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
               //      "postgres", "ounhuoead");
@@ -177,6 +179,36 @@ public class DatabaseInteractor {
 	  
 	   
   }
+  
+  ResultSet deleteCommand(String What, String Where) {
+	  Statement s = null;
+	  try {
+	    s = databaseConnection.createStatement();
+	  } catch (SQLException se) {
+	    System.out.println("We got an exception while creating a statement:" +
+	                       "that probably means we're no longer connected.");
+	    se.printStackTrace();
+	    System.exit(1);
+	  }
+	  ResultSet rs = null;
+	  try {
+	    s.executeUpdate("DELETE FROM "+What+" "+Where+" ;");
+	  } catch (SQLException se) {
+	    System.out.println("We got an exception while executing our query:" +
+	                       "that probably means our SQL is invalid");
+	    se.printStackTrace();
+	    System.exit(1);
+	  }
+	  return rs;
+	  
+	   
+  }
+  
+  public void clearOrder(String orderID) {
+	  deleteCommand("kitchen", "order_id="+orderID+";");
+	  deleteCommand("orderInfo", "order_id="+orderID+";");
+  }
+ 
   
   Connection databaseConnection = null;
 
@@ -257,27 +289,47 @@ public NutritionInfo getNutrition(int menuID) {
 }
   
 public HashMap<Integer, TableInfo> getTables(Menu menu) {
-	ResultSet rs = selectCommand("*", "tableInfo");
-	HashMap<Integer, TableInfo> result = new HashMap<Integer, TableInfo>();
-	int index = 0;
+ResultSet rs = selectCommand("*", "tableInfo");
+HashMap<Integer, TableInfo> result = new HashMap<Integer, TableInfo>();
+int index = 0;
 
-	  try {
-	    while (rs.next()) {
-	       // System.out.println("Here's the result of row " + index++ + ":");
-	       // System.out.println(rs.getString(1));
-	    	// ZONEENUMS.valueOf(rs.getString(6))
-	    	boolean isTaken = false;
-	    	if(Integer.parseInt(rs.getString(4)) == 1) isTaken = true;
-	        result.put(Integer.parseInt(rs.getString(1)), new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), ZONEENUMS.BLUE, this, menu, isTaken));
-	    }
-	  } catch (SQLException se) {
-	    System.out.println("We got an exception while getting a result:this " +
-	                       "shouldn't happen: we've done something really bad.");
-	    se.printStackTrace();
-	    System.exit(1);
-	  }
-	return result;
+ try {
+   while (rs.next()) {
+      // System.out.println("Here's the result of row " + index++ + ":");
+      // System.out.println(rs.getString(1));
+    // ZONEENUMS.valueOf(rs.getString(6))
+    boolean isTaken = false;
+    if(Integer.parseInt(rs.getString(4)) == 1) isTaken = true;
+       result.put(Integer.parseInt(rs.getString(1)), new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), getEnum(rs.getString(6)), this, menu, isTaken));
+   }
+ } catch (SQLException se) {
+   System.out.println("We got an exception while getting a result:this " +
+                      "shouldn't happen: we've done something really bad.");
+   se.printStackTrace();
+   System.exit(1);
+ }
+return result;
 }
+
+
+
+private ZONEENUMS getEnum(String enumNum) {
+    if (enumNum.equals("0")) {
+        return ZONEENUMS.GOLD;
+    }
+    else if (enumNum.equals("1")) {
+        return ZONEENUMS.YELLOW;
+    }
+    else if (enumNum.equals("2")) {
+        return ZONEENUMS.BLUE;
+    }
+    else if (enumNum.equals("3")) {
+        return ZONEENUMS.TIGER;
+    }
+
+    return null;
+}
+
 
 public ArrayList<TableInfo> getTablesInZone(ZONEENUMS zone) {
 	
