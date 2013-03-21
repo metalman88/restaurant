@@ -11,13 +11,18 @@ import restaurant.system.SingleItemWithNote;
 import restuarant.enums.CATEGORYENUMS;
 
 import javax.swing.JTabbedPane;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+
 import javax.swing.JSplitPane;
 import javax.swing.JPasswordField;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
+
 import java.awt.Font;
+
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.JProgressBar;
@@ -27,10 +32,12 @@ import javax.swing.AbstractListModel;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Vector;
+
 import javax.swing.JTextField;
 
 //Jesse working on this class
@@ -269,13 +276,15 @@ public class CustomerAfterLoginPanel extends JPanel{
 		confirmButton.setBounds(613, 336, 99, 23);
 		add(confirmButton);
 		
-		JButton requestServiceButton = new JButton("Request Service");
+		final JButton requestServiceButton = new JButton("Request Service");
 		requestServiceButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
 				restaurantSystem.DBInteractor.serviceRequested(restaurantSystem.getCurTable().tableNumber);
 				//test//testt
-				
+				JOptionPane.showMessageDialog(requestServiceButton, 
+						"Service has been requested. "
+						+ "Someone will be with you soon");
 			}
 		});
 		requestServiceButton.setBounds(432, 60, 137, 47);
