@@ -738,46 +738,41 @@ public boolean loginTablet(int tableNumber,String tableName)
 	
 }
 
+
 public int primaryKeyGenerator(String where)
 {
-	if (dbPrimaryKeys.containsKey(where)) {
-		String primaryKey = dbPrimaryKeys.get(where);
-		int largestId = 0;
-		int countId = 0;
-		
-		ResultSet count = this.selectCommand("COUNT(" + primaryKey + ")", where);
-		
-		try {
-			
-			countId = count.getInt(1);
-			
-		} catch (SQLException e) {
-			
-			e.printStackTrace();
-			
-		}
-		
-		if (countId == 0) {
-			return 1;
-		}
-		
-		ResultSet max = this.selectCommand("MAX(" + primaryKey + ")", where);
-		try {
-			largestId = max.getInt(1);
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Could not select from database");
-			e.printStackTrace();
-		}
-		
-		if (largestId != 0) {
-			return ++largestId;
-		}
-		
-	}
-	
-	return -1;
+if (dbPrimaryKeys.containsKey(where)) {
+String primaryKey = dbPrimaryKeys.get(where);
+int largestId = 0;
+int countId = 0;
+ResultSet count = this.selectCommand("COUNT(" + primaryKey + ")", where);
+try {
+while(count.next()) {
+countId = count.getInt(1);
 }
+} catch (SQLException e) {
+e.printStackTrace();
+}
+if (countId == 0) {
+return 1;
+}
+ResultSet max = this.selectCommand("MAX(" + primaryKey + ")", where);
+try {
+while (max.next()) { 
+largestId = max.getInt(1);
+}
+} catch (SQLException e) {
+// TODO Auto-generated catch block
+System.out.println("Could not select from database");
+e.printStackTrace();
+}
+if (largestId != 0) {
+return ++largestId;
+}
+}
+return -1;
+}
+
 
 static 
 {

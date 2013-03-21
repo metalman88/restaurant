@@ -247,6 +247,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 		confirmButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				
 				customerTable.submitOrder();
 				receiptTextPane.setText("");
 				receiptTextPane.setText(new Bill(customerTable.getListOfOrderChunks()).billInfo());
@@ -446,6 +447,7 @@ public class CustomerAfterLoginPanel extends JPanel{
 		MenuItem itemInRowCell = (MenuItem) focusedTable.getValueAt(focusedTable.getSelectedRow(),2);
 		SingleItemWithNote singleItemWithNote = new SingleItemWithNote(itemInRowCell,notesTextPane.getText());
 		customerTable.getCurrentOrderChunk().addItem(singleItemWithNote);
+		System.out.println(singleItemWithNote.getID());
 		notesTextPane.setText("");
 	}
 	

@@ -36,11 +36,16 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class WelcomeScreen extends JFrame {
 
 	private JPanel contentPane;	
 	private JPanel customerContentPane;
+	private ServerLoginPanel waiterContentPane;
+	private ServerAfterLoginPanel waiterLoggedInPane;
+	private KitchenPanel kitchenContentPane;
 	private static RestaurantSystem restaurantSystem;
 	private static final int SCREEN_SIZE_X = 1024;
 	private static final int SCREEN_SIZE_Y = 720;
@@ -55,19 +60,30 @@ public class WelcomeScreen extends JFrame {
 			public void run() {
 				try {
 					restaurantSystem = new RestaurantSystem();
-					WelcomeScreen frame = new WelcomeScreen();
+					final WelcomeScreen frame = new WelcomeScreen();
 					frame.setVisible(true);
+					Timer timer = new Timer();
+					timer.schedule( new TimerTask() {
+					    public void run() {
+					       System.out.println("Lets do some timing");
+					       frame.letsDoARefresh();
+					       
+					    }
+					 }, 0, 1000);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+		
+		
 	}
 
 	/**
 	 * Create the frame.
 	 */
 	public WelcomeScreen() {
+		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, SCREEN_SIZE_X, SCREEN_SIZE_Y);
@@ -80,11 +96,12 @@ public class WelcomeScreen extends JFrame {
 		contentPane.add(tabbedPane);
 		
 		
-
+		kitchenContentPane = new KitchenPanel(restaurantSystem);
+		waiterContentPane = new ServerLoginPanel(restaurantSystem,this);
 		tabbedPane.addTab("Customer", null, new CustomerLoginPanel(restaurantSystem,this), null);
 		tabbedPane.addTab("Check In", null, new CheckInPanel(restaurantSystem), null);
 		tabbedPane.addTab("Server", null, new ServerLoginPanel(restaurantSystem,this), null);
-		tabbedPane.addTab("Kitchen", null, new KitchenPanel(restaurantSystem), null);
+		tabbedPane.addTab("Kitchen", null, kitchenContentPane, null);
 	
 		
 	}
@@ -149,8 +166,8 @@ public class WelcomeScreen extends JFrame {
 		if(getContentPane() == contentPane)
 		{
 
-			customerContentPane = new ServerAfterLoginPanel(restaurantSystem,this);
-			setContentPane(customerContentPane);
+			waiterLoggedInPane = new ServerAfterLoginPanel(restaurantSystem,this);
+			setContentPane(waiterLoggedInPane);
 		}
 		else if(getContentPane() == customerContentPane)
 		{
@@ -170,5 +187,10 @@ public class WelcomeScreen extends JFrame {
 		{
 			setContentPane(contentPane);
 		}
+	}
+	
+	public void letsDoARefresh()
+	{
+				
 	}
 }

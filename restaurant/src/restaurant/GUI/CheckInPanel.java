@@ -13,6 +13,8 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -21,6 +23,7 @@ import javax.swing.text.TabExpander;
 import restaurant.system.Party;
 import restaurant.system.RestaurantSystem;
 import restaurant.system.TableInfo;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -49,6 +52,33 @@ public class CheckInPanel extends javax.swing.JPanel
 	private void configurePartySizeSpinner()
 	{
 		partySizeSpinner.setName(PARTY_SIZE_SPINNER);
+		partySizeSpinner.getModel().setValue(1);
+		partySizeSpinner.addChangeListener(new ChangeListener()
+		{
+			@Override
+			public void stateChanged(ChangeEvent e) 
+			{
+				try
+				{
+					Integer value =  (Integer) partySizeSpinner.getModel().getValue();
+					if (value < 1)
+					{
+						partySizeSpinner.getModel().setValue(1);
+					}
+				}
+				catch (NumberFormatException ex)
+				{
+					partySizeSpinner.getModel().setValue(1);
+					
+				}
+				catch (ClassCastException classCastEx)
+				{
+					partySizeSpinner.getModel().setValue(1);
+				}
+				
+			}
+			
+		});
 	}
 	
 	private void configureAssignTableBut()
