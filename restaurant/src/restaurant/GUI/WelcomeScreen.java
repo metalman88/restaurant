@@ -83,8 +83,8 @@ public class WelcomeScreen extends JFrame {
 
 		tabbedPane.addTab("Customer", null, new CustomerLoginPanel(restaurantSystem,this), null);
 		tabbedPane.addTab("Check In", null, new CheckInPanel(restaurantSystem), null);
-		tabbedPane.addTab("Server", null, new ServerPanel(restaurantSystem), null);
-		tabbedPane.addTab("Kitchen", null, new KitchenPanel(restaurantSystem), null);
+		tabbedPane.addTab("Server", null, new ServerLoginPanel(restaurantSystem,this), null);
+	//	tabbedPane.addTab("Kitchen", null, new KitchenPanel(restaurantSystem), null);
 	
 		
 	}
@@ -142,5 +142,33 @@ public class WelcomeScreen extends JFrame {
 			setContentPane(contentPane);
 		}
 		
+	}
+	
+	public void swapLoginWaiterPanel()
+	{
+		if(getContentPane() == contentPane)
+		{
+
+			customerContentPane = new ServerAfterLoginPanel(restaurantSystem,this);
+			setContentPane(customerContentPane);
+		}
+		else if(getContentPane() == customerContentPane)
+		{
+			setContentPane(contentPane);
+		}
+	}
+	
+	public void swapLoginWaiterPanelLogout()
+	{
+		if(getContentPane() == contentPane)
+		{
+
+			customerContentPane = new ServerLoginPanel(restaurantSystem,this);
+			setContentPane(customerContentPane);
+		}
+		else if(getContentPane() == customerContentPane)
+		{
+			setContentPane(contentPane);
+		}
 	}
 }

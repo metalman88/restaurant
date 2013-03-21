@@ -5,9 +5,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 import restaurant.system.Menu;
 import restaurant.system.MenuItem;
@@ -175,20 +177,27 @@ public class DatabaseInteractor {
   
   Connection databaseConnection = null;
 
-public OrderChunk getAllUnfinishedOrders() {
+public  ArrayList<OrderChunk> getAllUnfinishedOrders() {
 	OrderChunk result = new OrderChunk();
+	ArrayList<OrderChunk> fResult = new ArrayList<OrderChunk>();
 	// SELECT * FROM orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status=0;
-	ResultSet rs = selectCommand("orderInfo.order_id, kitchen.status, orderInfo.notes, orderInfo.menuitem_id", "orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status=0" );
+	int check = 0;
+	ResultSet rs = selectCommand("orderInfo.order_id, kitchen.status, orderInfo.notes, orderInfo.menuitem_id", "orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status<2" );
 	 try {
 		    while (rs.next()) {
 		       // System.out.println("Here's the result of row " + index++ + ":");
 		       // System.out.println(rs.getString(1));
 		    	// ZONEENUMS.valueOf(rs.getString(6))
+		    	if(check != 0 && check != rs.getInt(1))
+		    	{
+		    		fResult.add(result);
+		    		result = new OrderChunk();
+		    	}
 		    	System.out.println("Found an unfinished order:"+rs.getString(4));
 		    	SingleItemWithNote toTest = new SingleItemWithNote(getMenuItem(rs.getInt(4)), rs.getString(3));
 		    	if(toTest == null) System.out.println("OOPS");
 		    	result.addItem(new SingleItemWithNote(getMenuItem(rs.getInt(4)), rs.getString(3)));
-		    	
+		    	check = rs.getInt(1);
 		    }
 		  } catch (SQLException se) {
 		    System.out.println("We got an exception while getting a result:this " +
@@ -196,7 +205,7 @@ public OrderChunk getAllUnfinishedOrders() {
 		    se.printStackTrace();
 		    System.exit(1);
 		  }
-	return result;
+	return fResult;
 }
 
 public MenuItem getMenuItem(int menuID) {
@@ -267,7 +276,44 @@ public HashMap<Integer, TableInfo> getTables(Menu menu) {
 	return result;
 }
 
+public ArrayList<TableInfo> getTablesInZone(ZONEENUMS zone) {
+	
+	int zoneInDB = 0;
+	switch(zone) {
+	case GOLD:
+		zoneInDB = 0;
+		break;
+	case YELLOW:
+		zoneInDB = 1;
+		break;
+	case BLUE:
+		zoneInDB = 2;
+		break;
+	case TIGER:
+		zoneInDB = 3;
+		break;
+	}
+	ResultSet rs = selectCommand("*", "tableInfo WHERE zone="+zoneInDB+";");
+	ArrayList<TableInfo> result = new ArrayList<TableInfo>();
+	int index = 0;
 
+	  try {
+	    while (rs.next()) {
+	       // System.out.println("Here's the result of row " + index++ + ":");
+	       // System.out.println(rs.getString(1));
+	    	// ZONEENUMS.valueOf(rs.getString(6))
+	    	boolean isTaken = false;
+	    	if(Integer.parseInt(rs.getString(4)) == 1) isTaken = true;
+	        result.add(new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), ZONEENUMS.BLUE, this, null, isTaken));
+	    }
+	  } catch (SQLException se) {
+	    System.out.println("We got an exception while getting a result:this " +
+	                       "shouldn't happen: we've done something really bad.");
+	    se.printStackTrace();
+	    System.exit(1);
+	  }
+	return result;
+}
 
  
 public void updateTableStatus(int tableNumber, String occupied)
@@ -325,8 +371,114 @@ public void serviceRequested(int tableNumber)
 	System.out.println("Successfully modified " + m + " rows.\n");
 }
 
+public void setTableRequestServiceToNone(int tableNumber)
+{	
+	Statement s = null;
+	try {
+	  s = databaseConnection.createStatement();
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while creating a statement:" +
+	                     "that probably means we're no longer connected.");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	int m = 0;
+
+	try {
+	  m = s.executeUpdate("UPDATE tableInfo SET " +
+	                      "status=0 WHERE table_id="+tableNumber+";");
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while executing our query:" +
+	                     "that probably means our SQL is invalid");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	System.out.println("Successfully modified " + m + " rows.\n");
+}
+
 public void addOrderToDB(OrderChunk curOrder)
 {
+	
+	
+	String addID = curOrder.getOrderID();
+	
+	Statement s = null;
+	try {
+	  s = databaseConnection.createStatement();
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while creating a statement:" +
+	                     "that probably means we're no longer connected.");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	int m = 0;
+
+	try {
+	  m = s.executeUpdate("INSERT INTO kitchen VALUES" +
+	                      "("+addID+", 1, 0, "+curOrder.getTable()+");");
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while executing our query:" +
+	                     "that probably means our SQL is invalid");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	System.out.println("Successfully modified " + m + " rows.\n");
+	
+	// Removes constraint that might cause issues
+	s = null;
+	try {
+	  s = databaseConnection.createStatement();
+	} catch (SQLException se) {
+	  System.out.println("We got an exception while creating a statement:" +
+	                     "that probably means we're no longer connected.");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	m = 0;
+
+	try {
+	  m = s.executeUpdate("ALTER TABLE orderinfo DROP CONSTRAINT firstkey2;");
+	} catch (SQLException se) { 
+	  System.out.println("We got an exception while executing our query:" +
+	                     "that probably means our SQL is invalid");
+	  se.printStackTrace();
+	  System.exit(1);
+	}
+
+	System.out.println("Successfully modified " + m + " rows.\n");
+
+	
+	for(SingleItemWithNote toAdd : curOrder.getItems())
+	{
+		s = null;
+		try {
+		  s = databaseConnection.createStatement();
+		} catch (SQLException se) {
+		  System.out.println("We got an exception while creating a statement:" +
+		                     "that probably means we're no longer connected.");
+		  se.printStackTrace();
+		  System.exit(1);
+		}
+
+		m = 0;
+
+		try {
+		  m = s.executeUpdate("INSERT INTO orderInfo VALUES" +
+		                      "("+addID+", "+toAdd.getNote()+", "+toAdd.getID()+");");
+		} catch (SQLException se) {
+		  System.out.println("We got an exception while executing our query:" +
+		                     "that probably means our SQL is invalid");
+		  se.printStackTrace();
+		  System.exit(1);
+		}
+
+		System.out.println("Successfully modified " + m + " rows.\n");
+	}
 	
 }
 
@@ -342,6 +494,9 @@ public void updateOrderStatus(String orderId, ORDERSTATUSENUMS orderstatus) {
 		break;
 	case COOKING:
 		status = 1;
+		break;
+	case FINISHED:
+		status = 3;
 		break;
 	}
 	Statement s = null;
@@ -375,7 +530,26 @@ public Menu getMenuFromDB()
 	// whatever you want to do, i know database interaction stuff too. so no worries
 	
 	//menu needs many menuItems, and each menuItem needs nutrition info.
-	return null;
+	
+	//lets create a menu and not tell max, make sure not to commit this code
+	
+	HashMap<Integer,MenuItem> menuList = new HashMap<Integer,MenuItem>();
+	Random random = new Random();
+	
+	for(int i = 0; i < 1000; i++)
+	{
+		NutritionInfo nutrition = new NutritionInfo(i+"","500505","-2","5505055","-3","2112","-4");
+		CATEGORYENUMS category = CATEGORYENUMS.DRINK;
+		if(i%10==0){category= CATEGORYENUMS.APPETIZER;}
+		else if(i%9==0){category = CATEGORYENUMS.DESSERT;}
+		else if(i%7==0){category = CATEGORYENUMS.ENTREE;}
+		else if(i%12==0){category = CATEGORYENUMS.OTHER;}
+		
+		MenuItem menuItem = new MenuItem(i,"item"+i,category,"description"+i,new Double(random.nextInt(15)),new Double(random.nextInt(15)),nutrition);
+		menuList.put(i, menuItem);
+	}
+	Menu menu = new Menu(menuList);
+	return menu;
 }
 
 public HashMap<Integer,Boolean> getTableStatusIfUpdated()

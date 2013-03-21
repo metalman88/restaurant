@@ -107,13 +107,12 @@ public class CustomerLoginPanel extends JPanel {
 					if(restaurantSystem.loginTablet(tableNameField.getText().trim()))
 					{
 						errorLabel.setText("");
-						//
 						welcomeScreen.swapLoginCustomerPanel();
 						welcomeScreen.switchToFullScreen();
 					}
 					else
 					{
-						errorLabel.setText("No Such Customer Table # Exist");
+						errorLabel.setText("No Such Customer Table Exist Or Taken");
 					}
 				}
 				else if(!tableNumberField.getText().isEmpty()&&tableNameField.getText().isEmpty())
@@ -128,7 +127,7 @@ public class CustomerLoginPanel extends JPanel {
 					}
 					else
 					{
-						errorLabel.setText("");
+						errorLabel.setText("No Such Customer Table # Exists Or Taken");
 					}
 				}
 				else
