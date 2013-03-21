@@ -69,7 +69,7 @@ public class WelcomeScreen extends JFrame {
 					       frame.letsDoARefresh();
 					       
 					    }
-					 }, 0, 60000);
+					 }, 0, 10000);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -191,6 +191,8 @@ public class WelcomeScreen extends JFrame {
 	
 	public void letsDoARefresh()
 	{
-			kitchenContentPane.refreshMyData();	
+			kitchenContentPane.refreshMyData();
+			waiterLoggedInPane.populateTablesInZone(restaurantSystem.DBInteractor.getTablesInZone(restaurantSystem.getTabletToZone()));
+			waiterLoggedInPane.populateOutOrders(restaurantSystem.DBInteractor.getOutOrders(restaurantSystem.getTabletToZone()));
 	}
 }
