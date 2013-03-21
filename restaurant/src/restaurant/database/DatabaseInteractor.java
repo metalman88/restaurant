@@ -273,6 +273,80 @@ public  ArrayList<OrderChunk> getAllUnfinishedOrders() {
 	return fResult;
 }
 
+
+public  ArrayList<OrderChunk> getOutOrders(ZONEENUMS zone) {
+	int zoneInDB = 0;
+	switch(zone) {
+	case GOLD:
+		zoneInDB = 0;
+		break;
+	case YELLOW:
+		zoneInDB = 1;
+		break;
+	case BLUE:
+		zoneInDB = 2;
+		break;
+	case TIGER:
+		zoneInDB = 3;
+		break;
+	}
+	
+	OrderChunk result = new OrderChunk();
+	ArrayList<OrderChunk> fResult = new ArrayList<OrderChunk>();
+	int check = 0;
+	ResultSet rs = selectCommand("orderInfo.order_id, kitchen.status, orderInfo.notes, orderInfo.menuitem_id, tableInfo.table_id", "orderInfo, kitchen, tableInfo WHERE kitchen.order_id=orderInfo.order_id AND kitchen.table_id = tableInfo.table_id AND kitchen.status=2 AND tableInfo.zone="+zoneInDB+"" );
+	 try {
+		    while (rs.next()) {
+		       // System.out.println("Here's the result of row " + index++ + ":");
+		       // System.out.println(rs.getString(1));
+		    	// ZONEENUMS.valueOf(rs.getString(6))
+		    	//result.updateOrderStatus();
+		    	System.out.println(rs.getString(1)+" is the out order");
+		    	if(check != 0 && check != rs.getInt(1))
+		    	{
+		    		
+		    		fResult.add(result);
+		    		
+		    		result = new OrderChunk();
+		    	}
+		    	result.setOrderID(rs.getString(1));
+		    	result.setTable(rs.getString(5));
+		    	ORDERSTATUSENUMS newStatus = null;
+		    	switch(rs.getInt(2))
+		    	{
+		    	case 0:
+		    		newStatus = ORDERSTATUSENUMS.PREPPING;
+		    		break;
+		    	case 1:
+		    		newStatus = ORDERSTATUSENUMS.COOKING;
+		    		break;
+		    	case 2:
+		    		newStatus = ORDERSTATUSENUMS.OUT;
+		    		break;
+		    	case 3:
+		    		newStatus = ORDERSTATUSENUMS.FINISHED;
+		    		break;
+		    	
+		    	
+		    	}
+		    	
+		    	result.updateOrderStatus(newStatus);
+		    	result.addItem(new SingleItemWithNote(getMenuItem(rs.getInt(4)), rs.getString(3)));
+	
+		    	
+		    	check = rs.getInt(1);
+		    }
+		  } catch (SQLException se) {
+		    System.out.println("We got an exception while getting a result:this " +
+		                       "shouldn't happen: we've done something really bad.");
+		    se.printStackTrace();
+		    System.exit(1);
+		  }
+	 fResult.add(result);
+	 System.out.println("Size is"+fResult.size());
+	return fResult;
+}
+
 public MenuItem getMenuItem(int menuID) {
 	//public MenuItem(int itemID, String itemName, CATEGORYENUMS category, String description,
 		//    Double price, Double cookingTimeMinutes,NutritionInfo nutrition)
@@ -579,6 +653,7 @@ public void updateOrderStatus(String orderId, ORDERSTATUSENUMS orderstatus) {
 	int m = 0;
 
 	try {
+		System.out.println("status="+status+" WHERE order_id="+orderId+";");
 	  m = s.executeUpdate("UPDATE kitchen SET " +
 	                      "status="+status+" WHERE order_id="+orderId+";");
 	} catch (SQLException se) {
