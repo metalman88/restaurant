@@ -124,7 +124,7 @@ public class KitchenPanel extends JPanel{
 		
 		if (status.equals(ORDERSTATUSENUMS.COOKING.toString()))
 		{
-			restaurantSystem.DBInteractor.updateOrderStatus(orderID, ORDERSTATUSENUMS.FINISHED);
+			restaurantSystem.DBInteractor.updateOrderStatus(orderID, ORDERSTATUSENUMS.OUT);
 		}
 		
 		if (status.equals(ORDERSTATUSENUMS.PREPPING.toString()))
