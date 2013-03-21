@@ -114,7 +114,7 @@ public class CheckInPanel extends javax.swing.JPanel
 			public void actionPerformed(ActionEvent e) 
 			{
 				String name = nameTextField.getText();
-				int partySize = (int) partySizeSpinner.getValue();
+				int partySize =  Integer.parseInt(partySizeSpinner.getValue().toString());
 				restaurantSytem.getWaitList().add(new Party(name, partySize));
 				AbstractTableModel model = (AbstractTableModel) 
 						waitList.getModel();

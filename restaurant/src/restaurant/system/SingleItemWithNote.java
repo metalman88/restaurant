@@ -26,7 +26,7 @@ public class SingleItemWithNote
 	
 	public int getID()
 	{
-		return menuID;
+		return item.getID();
 	}
 	
 	public String getNote()

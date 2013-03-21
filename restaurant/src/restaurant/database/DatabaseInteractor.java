@@ -98,15 +98,15 @@ public class DatabaseInteractor {
 		    // The second and third arguments are the username and password,
 		    // respectively. They should be whatever is necessary to connect
 		    // to the database.
-		   // databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
-		     //                             "postgres", "sflhdl");
-		    
-		    
 		    databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
-                   "postgres", "ounhuoead");
+		                                  "postgres", "sflhdl");
 		    
-		    deleteCommand("kitchen", ";");
-			  deleteCommand("orderInfo", ";");
+		    
+		    //databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
+              //     "postgres", "ounhuoead");
+		    
+		  //  deleteCommand("kitchen", ";");
+		 //  deleteCommand("orderInfo", ";");
 		    return true;
 		    
 		    // My home database: ounhuoead
@@ -214,9 +214,11 @@ public class DatabaseInteractor {
   
   Connection databaseConnection = null;
 
+  
 public  ArrayList<OrderChunk> getAllUnfinishedOrders() {
 	OrderChunk result = new OrderChunk();
 	ArrayList<OrderChunk> fResult = new ArrayList<OrderChunk>();
+	System.out.println("Unfinishedorder checking on");
 	// SELECT * FROM orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status=0;
 	int check = 0;
 	ResultSet rs = selectCommand("orderInfo.order_id, kitchen.status, orderInfo.notes, orderInfo.menuitem_id", "orderInfo, kitchen WHERE kitchen.order_id=orderInfo.order_id AND kitchen.status<2" );
@@ -225,15 +227,39 @@ public  ArrayList<OrderChunk> getAllUnfinishedOrders() {
 		       // System.out.println("Here's the result of row " + index++ + ":");
 		       // System.out.println(rs.getString(1));
 		    	// ZONEENUMS.valueOf(rs.getString(6))
+		    	//result.updateOrderStatus();
 		    	if(check != 0 && check != rs.getInt(1))
 		    	{
 		    		fResult.add(result);
+		    	
 		    		result = new OrderChunk();
 		    	}
+		    	result.setOrderID(rs.getString(1));
+		    	ORDERSTATUSENUMS newStatus = null;
+		    	switch(rs.getInt(2))
+		    	{
+		    	case 0:
+		    		newStatus = ORDERSTATUSENUMS.PREPPING;
+		    		break;
+		    	case 1:
+		    		newStatus = ORDERSTATUSENUMS.COOKING;
+		    		break;
+		    	case 2:
+		    		newStatus = ORDERSTATUSENUMS.OUT;
+		    		break;
+		    	case 3:
+		    		newStatus = ORDERSTATUSENUMS.FINISHED;
+		    		break;
+		    	
+		    	
+		    	}
+		    	
+		    	result.updateOrderStatus(newStatus);
 		    	System.out.println("Found an unfinished order:"+rs.getString(4));
 		    	SingleItemWithNote toTest = new SingleItemWithNote(getMenuItem(rs.getInt(4)), rs.getString(3));
-		    	if(toTest == null) System.out.println("OOPS");
 		    	result.addItem(new SingleItemWithNote(getMenuItem(rs.getInt(4)), rs.getString(3)));
+	
+		    	
 		    	check = rs.getInt(1);
 		    }
 		  } catch (SQLException se) {
@@ -242,6 +268,8 @@ public  ArrayList<OrderChunk> getAllUnfinishedOrders() {
 		    se.printStackTrace();
 		    System.exit(1);
 		  }
+	 fResult.add(result);
+	 System.out.println("Size is"+fResult.size());
 	return fResult;
 }
 
@@ -503,6 +531,7 @@ public void addOrderToDB(OrderChunk curOrder)
 		try {
 		  m = s.executeUpdate("INSERT INTO orderInfo VALUES" +
 		                      "("+addID+", '"+toAdd.getNote()+"', "+toAdd.getID()+");");
+		  System.out.println("ID:"+toAdd.getID());
 		} catch (SQLException se) {
 		  System.out.println("We got an exception while executing our query:" +
 		                     "that probably means our SQL is invalid");

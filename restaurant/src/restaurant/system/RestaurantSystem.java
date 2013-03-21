@@ -2,6 +2,7 @@ package restaurant.system;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import restaurant.database.DatabaseInteractor;
@@ -26,6 +27,11 @@ public class RestaurantSystem {
 		
 		if (DBInteractor.connect()) {
 			menu = DBInteractor.getMenuFromDB();
+			
+			for(Entry<Integer, MenuItem> test:  menu.getAllItems().entrySet())
+			{
+				System.out.println("THIS IS "+test.getValue().getID());
+			}
 			tableHash = DBInteractor.getTables(menu);
 			waitList = new ArrayList<Party>();
 		}

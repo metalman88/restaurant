@@ -27,6 +27,7 @@ public class Menu {
 			MenuItem curItem = menuList.get(keySetIterator.next());
 			if(curItem.getCategory().equals(categoryEnum))
 			{
+				System.out.println("Testing in getcategory"+curItem.getName()+curItem.getID());
 				returnList.add(curItem);
 			}
 		}

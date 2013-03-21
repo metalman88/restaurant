@@ -88,7 +88,7 @@ public class KitchenPanel extends JPanel{
 		{
 			String chunkID = orderChunk.getOrderID();
 			String chunkStatus = orderChunk.getOrderStatus().toString();
-			
+			System.out.println("The orderchunk's id is"+orderChunk.getOrderID());
 			for (SingleItemWithNote si: orderChunk.getItems())
 			{
 				defaultKitchen.addRow(new Object[]{chunkID,si.getItem().getName(), si.getNote(), chunkStatus});

@@ -36,6 +36,7 @@ public class Bill
 				
 				builder.append(name);
 				builder.append(item.getItem().getPrice());
+				System.out.println("The Bill ID: "+item.getItem().getID());
 				builder.append("\n");
 				total += item.getItem().getPrice();
 			}
