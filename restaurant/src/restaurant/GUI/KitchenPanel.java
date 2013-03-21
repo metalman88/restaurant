@@ -27,6 +27,7 @@ import java.awt.event.MouseEvent;
 public class KitchenPanel extends JPanel{
 	private static RestaurantSystem restaurantSystem;
 	private JTable kitchenTable;
+	DefaultTableModel defaultKitchen;
 	
 	
 	public KitchenPanel(RestaurantSystem restaurantSystem)
@@ -77,10 +78,28 @@ public class KitchenPanel extends JPanel{
 		add(btnUpdateOrderStatus);
 	}
 	
+	public void refreshMyData()
+	{
+		for(int i = 0; i<1000;i++)
+		{
+			try{
+				defaultKitchen.removeRow(0);
+			}
+			catch(ArrayIndexOutOfBoundsException e)
+			{
+				break;
+			}
+			
+		}
+		
+		populateKitchenTable(restaurantSystem.DBInteractor.getAllUnfinishedOrders());
+		
+	}
+	
 	private void populateKitchenTable(ArrayList<OrderChunk> orderChunks)
 	{
 		
-		DefaultTableModel defaultKitchen = new DefaultTableModel(new Object[][][][]{},new String[]{"Order ID","Dish Name",
+		defaultKitchen = new DefaultTableModel(new Object[][][][]{},new String[]{"Order ID","Dish Name",
 				"Notes","Order Status"});
 		
 		

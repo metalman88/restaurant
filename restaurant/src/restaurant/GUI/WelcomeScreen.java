@@ -180,10 +180,10 @@ public class WelcomeScreen extends JFrame {
 		if(getContentPane() == contentPane)
 		{
 
-			customerContentPane = new ServerLoginPanel(restaurantSystem,this);
-			setContentPane(customerContentPane);
+			waiterContentPane = new ServerLoginPanel(restaurantSystem,this);
+			setContentPane(waiterContentPane);
 		}
-		else if(getContentPane() == customerContentPane)
+		else if(getContentPane() == waiterLoggedInPane)
 		{
 			setContentPane(contentPane);
 		}
@@ -191,6 +191,6 @@ public class WelcomeScreen extends JFrame {
 	
 	public void letsDoARefresh()
 	{
-				
+			kitchenContentPane.refreshMyData();	
 	}
 }
