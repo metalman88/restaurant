@@ -12,12 +12,17 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JTable;
 import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.text.TabExpander;
 
 import restaurant.system.Party;
 import restaurant.system.RestaurantSystem;
 import restaurant.system.TableInfo;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  *
@@ -26,7 +31,7 @@ import restaurant.system.TableInfo;
 public class CheckInPanel extends javax.swing.JPanel 
 {
 
-
+	
 	public CheckInPanel(RestaurantSystem restaurantSystem) 
 	{
 		this.restaurantSytem = restaurantSystem;
@@ -34,11 +39,173 @@ public class CheckInPanel extends javax.swing.JPanel
 		configureTableList();
 		configureSetOccupiedBut();
 		configureUnOccupiedBut();
-	//	configureWaitList();
+		configureAddBut();
+		configureRemoveBut();
+		configureWaitList();
+		configureAssignTableBut();
+		configurePartySizeSpinner();
+	}
+	
+	private void configurePartySizeSpinner()
+	{
+		partySizeSpinner.setName(PARTY_SIZE_SPINNER);
+	}
+	
+	private void configureAssignTableBut()
+	{
+		assignTableBut.setEnabled(false);
+		assignTableBut.setName(ASSIGN_TABLE_BUT);
+		assignTableBut.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				assignPartyToTable();
+			}
+			
+			private void assignPartyToTable()
+			{
+				restaurantTables.getModel().setValueAt
+				(RestaurantTableModel.OCCUPIED, 
+					restaurantTables.getSelectedRow(),
+					RestaurantTableModel.STATUS_COL);
+				
+				restaurantSytem.getWaitList().remove(waitList.getSelectedRow());
+				refreshWaitListTable();
+			}
+		
+		});
+	}
+	
+	private void refreshWaitListTable()
+	{
+		AbstractTableModel model = (AbstractTableModel) waitList.getModel();
+		model.fireTableDataChanged();
+	}
+	
+
+	private void configureRemoveBut()
+	{
+		remBut.setName(REM_BUT);
+		remBut.setEnabled(false);
+		remBut.addActionListener(new ActionListener()
+		{
+
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				int selectedRow = waitList.getSelectedRow();
+				restaurantSytem.getWaitList().remove(selectedRow);
+				AbstractTableModel model = (AbstractTableModel)
+						waitList.getModel();
+				model.fireTableDataChanged();
+			}
+			
+		});
+	}
+	
+	private void configureAddBut()
+	{
+		addBut.setName(ADD_BUT);
+		addBut.addActionListener(new ActionListener()
+		{
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				String name = nameTextField.getText();
+				int partySize = (int) partySizeSpinner.getValue();
+				restaurantSytem.getWaitList().add(new Party(name, partySize));
+				AbstractTableModel model = (AbstractTableModel) 
+						waitList.getModel();
+				model.fireTableDataChanged();
+			}
+			
+		});
+	}
+	
+	private void configureWaitList()
+	{
+		waitList.setName(WAIT_LIST_TABLE);
+		waitList.setColumnSelectionAllowed(false);
+		waitList.getSelectionModel()
+			.addListSelectionListener(new ListSelectionListener()
+			{
+
+				@Override
+				public void valueChanged(ListSelectionEvent e) 
+				{
+					if (selectedAParty())
+					{
+						remBut.setEnabled(true);
+						if (selectedATable())
+							assignTableBut.setEnabled(true);
+					}
+					else
+					{
+						remBut.setEnabled(false);
+						assignTableBut.setEnabled(false);
+					}
+				}
+				
+			});
+		waitList.setModel(new AbstractTableModel()
+		{
+			private static final int NAME_COL = 0;
+			private static final int SIZE_COL = 1;
+			
+			ArrayList<Party> partyList = restaurantSytem.getWaitList();
+			
+			@Override
+			public int getRowCount() 
+			{
+				// TODO Auto-generated method stub
+				return partyList.size();
+			}
+
+			@Override
+			public int getColumnCount() 
+			{
+				// TODO Auto-generated method stub
+				return 2;
+			}
+			
+			@Override
+			public String getColumnName(int columnIndex)
+			{
+				switch (columnIndex)
+				{
+				case 0:
+					return "Name";
+				case 1:
+					return "Party Size";
+				}
+				
+				return null;
+			}
+
+			@Override
+			public Object getValueAt(int rowIndex, int columnIndex) 
+			{
+				// TODO Auto-generated method stub
+				Party party = partyList.get(rowIndex);
+				switch (columnIndex)
+				{
+				case NAME_COL:
+					return party.getPartyName();
+				case SIZE_COL:
+					return party.getPartySize();
+				default:
+					return null;
+				}
+			}
+			
+		});
 	}
 	
 	private void configureUnOccupiedBut()
 	{
+		setUnoccupiedJBut.setEnabled(false);
 		setUnoccupiedJBut.setName(SET_UNOCCUPIED_BUT);
 		setUnoccupiedJBut.setText(SET_UNOCCUPIED_BUT);
 		setUnoccupiedJBut.addActionListener(new ActionListener()
@@ -60,11 +227,46 @@ public class CheckInPanel extends javax.swing.JPanel
 	private void configureTableList()
 	{
 		
-		restaurantTables.setModel(new RestaurantTableModel(restaurantSytem.tableHash.values()));
+		restaurantTables.setModel
+			(new RestaurantTableModel(restaurantSytem.tableHash.values()));
+		restaurantTables.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		restaurantTables.setColumnSelectionAllowed(false);
+		restaurantTables.getSelectionModel()
+			.addListSelectionListener(new ListSelectionListener()
+			{
+				
+				@Override
+				public void valueChanged(ListSelectionEvent e) 
+				{
+					if (selectedATable())
+					{
+						CheckInPanel.this.setOccupiiedJBut.setEnabled(true);
+						CheckInPanel.this.setUnoccupiedJBut.setEnabled(true);
+						if (selectedAParty())
+							assignTableBut.setEnabled(true);
+					}
+					else
+					{
+						CheckInPanel.this.setOccupiiedJBut.setEnabled(false);
+						CheckInPanel.this.setUnoccupiedJBut.setEnabled(false);
+						assignTableBut.setEnabled(false);
+					}
+				}	
+			});
+	}
+	
+	private boolean selectedAParty()
+	{
+		return waitList.getSelectedRow() != -1;
+	}
+	private boolean selectedATable()
+	{
+		return restaurantTables.getSelectedRow() != -1;
 	}
 	
 	private void configureSetOccupiedBut()
 	{
+		setOccupiiedJBut.setEnabled(false);
 		this.setOccupiiedJBut.addActionListener(new ActionListener()
 		{
 
@@ -82,35 +284,7 @@ public class CheckInPanel extends javax.swing.JPanel
 	}
 	
 
-	private void configureWaitList()
-	{
-		waitList.setModel(new WaitListModel(restaurantSytem.waitList));
-	}
-	
-	private class WaitListModel extends AbstractListModel
-	{
-		private List<Party> waitList;
-		
-		public WaitListModel(List<Party> waitList)
-		{
-			this.waitList = waitList;
-		}
 
-		
-		@Override
-		public int getSize() 
-		{
-			
-			return waitList.size();
-		}
-
-		@Override
-		public Object getElementAt(int index) 
-		{
-			// TODO Auto-generated method stub
-			return waitList.get(index);
-		}
-	}
 
 	public static class RestaurantTableModel extends AbstractTableModel
 	{
@@ -229,15 +403,29 @@ public class CheckInPanel extends javax.swing.JPanel
 
 		tableInfo = new javax.swing.JPanel();
 		tabelListPanel = new java.awt.Panel();
+		tabelListPanel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				restaurantTables.clearSelection();
+			}
+		});
 		tableControlPanel = new java.awt.Panel();
 		tableListScrollPane = new javax.swing.JScrollPane();
 		setOccupiiedJBut = new javax.swing.JButton();
-		occupiedSizeSpinner = new javax.swing.JSpinner();
 		setUnoccupiedJBut = new javax.swing.JButton();
 		waitListLabel = new java.awt.Label();
 		waitListPanel = new java.awt.Panel();
+		waitListPanel.addMouseListener(new MouseAdapter() 
+		{
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				waitList.clearSelection();
+			}
+		});
 		waitListControlPanel = new java.awt.Panel();
-		jTextField1 = new javax.swing.JTextField();
+		nameTextField = new javax.swing.JTextField();
 		partySizeSpinner = new javax.swing.JSpinner();
 		paryNameLabel = new javax.swing.JLabel();
 		partySizeLabel = new javax.swing.JLabel();
@@ -245,7 +433,7 @@ public class CheckInPanel extends javax.swing.JPanel
 		addBut = new javax.swing.JButton();
 		remBut = new javax.swing.JButton();
 		waitListScrollPane = new javax.swing.JScrollPane();
-		waitList = new javax.swing.JList();
+		waitList = new javax.swing.JTable();
 		tableInfo.setForeground(java.awt.SystemColor.windowBorder);
 
 		javax.swing.GroupLayout tableControlPanelLayout = new javax.swing.GroupLayout(tableControlPanel);
@@ -261,7 +449,7 @@ public class CheckInPanel extends javax.swing.JPanel
 
 		setOccupiiedJBut.setName(SET_OCCUPIED_BUT);
 		setOccupiiedJBut.setText(SET_OCCUPIED_BUT);
-
+		
 
 		javax.swing.GroupLayout tabelListPanelLayout = new javax.swing.GroupLayout(tabelListPanel);
 		tabelListPanelLayout.setHorizontalGroup(
@@ -275,7 +463,6 @@ public class CheckInPanel extends javax.swing.JPanel
 										.addGroup(tabelListPanelLayout.createSequentialGroup()
 												.addComponent(setOccupiiedJBut, GroupLayout.PREFERRED_SIZE, 169, GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED)
-												.addComponent(occupiedSizeSpinner, GroupLayout.PREFERRED_SIZE, 56, GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED)
 												.addComponent(setUnoccupiedJBut, GroupLayout.PREFERRED_SIZE, 144, GroupLayout.PREFERRED_SIZE)
 												.addPreferredGap(ComponentPlacement.RELATED)
@@ -292,7 +479,6 @@ public class CheckInPanel extends javax.swing.JPanel
 								.addComponent(tableControlPanel, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addGroup(tabelListPanelLayout.createParallelGroup(Alignment.BASELINE)
 										.addComponent(setOccupiiedJBut)
-										.addComponent(occupiedSizeSpinner, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 										.addComponent(setUnoccupiedJBut)))
 										.addGap(195))
 				);
@@ -300,9 +486,7 @@ public class CheckInPanel extends javax.swing.JPanel
 
 		restaurantTables = new JTable();
 		restaurantTables.setName(RES_TABLES);
-
-
-		restaurantTables.setBackground(Color.ORANGE);
+		
 		tableListScrollPane.setViewportView(restaurantTables);
 
 		javax.swing.GroupLayout tableInfoLayout = new javax.swing.GroupLayout(tableInfo);
@@ -324,25 +508,16 @@ public class CheckInPanel extends javax.swing.JPanel
 
 		waitListLabel.setText("Wait List");
 
-		jTextField1.setText("name");
-		jTextField1.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				jTextField1ActionPerformed(evt);
-			}
-		});
+		nameTextField.setText("name");
+		
 
 		paryNameLabel.setText("Name:");
 
 		partySizeLabel.setText("Party size:");
 
 		assignTableBut.setText("Assign Table");
-
 		addBut.setText("Add");
-		addBut.addActionListener(new java.awt.event.ActionListener() {
-			public void actionPerformed(java.awt.event.ActionEvent evt) {
-				addButActionPerformed(evt);
-			}
-		});
+	
 
 		remBut.setText("Remove");
 
@@ -355,7 +530,7 @@ public class CheckInPanel extends javax.swing.JPanel
 								.addGroup(waitListControlPanelLayout.createSequentialGroup()
 										.addComponent(paryNameLabel)
 										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-										.addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+										.addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
 										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
 										.addComponent(partySizeLabel)
 										.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -373,7 +548,7 @@ public class CheckInPanel extends javax.swing.JPanel
 				.addGroup(waitListControlPanelLayout.createSequentialGroup()
 						.addContainerGap()
 						.addGroup(waitListControlPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-								.addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+								.addComponent(nameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
 								.addComponent(paryNameLabel)
 								.addComponent(partySizeLabel)
 								.addComponent(partySizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -385,12 +560,8 @@ public class CheckInPanel extends javax.swing.JPanel
 										.addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
 				);
 
-		waitList.setModel(new javax.swing.AbstractListModel() {
-			String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-			public int getSize() { return strings.length; }
-			public Object getElementAt(int i) { return strings[i]; }
-		});
-		waitList.setVisibleRowCount(-1);
+		
+
 		waitListScrollPane.setViewportView(waitList);
 
 		javax.swing.GroupLayout waitListPanelLayout = new javax.swing.GroupLayout(waitListPanel);
@@ -446,14 +617,8 @@ public class CheckInPanel extends javax.swing.JPanel
 
 	}// </editor-fold>//GEN-END:initComponents
 
-	private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
-		// TODO add your handling code here:
-	}//GEN-LAST:event_jTextField1ActionPerformed
-
-	private void addButActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addButActionPerformed
-		// TODO add your handling code here:
-	}//GEN-LAST:event_addButActionPerformed
-
+	
+	
 	/**
 	 * @param args the command line arguments
 	 */
@@ -486,8 +651,7 @@ public class CheckInPanel extends javax.swing.JPanel
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private javax.swing.JButton addBut;
 	private javax.swing.JButton assignTableBut;
-	private javax.swing.JTextField jTextField1;
-	private javax.swing.JSpinner occupiedSizeSpinner;
+	private javax.swing.JTextField nameTextField;
 	private javax.swing.JLabel partySizeLabel;
 	private javax.swing.JSpinner partySizeSpinner;
 	private javax.swing.JLabel paryNameLabel;
@@ -498,7 +662,7 @@ public class CheckInPanel extends javax.swing.JPanel
 	private java.awt.Panel tableControlPanel;
 	private javax.swing.JPanel tableInfo;
 	private javax.swing.JScrollPane tableListScrollPane;
-	private javax.swing.JList waitList;
+	private JTable waitList;
 	private java.awt.Panel waitListControlPanel;
 	private java.awt.Label waitListLabel;
 	private java.awt.Panel waitListPanel;
@@ -511,5 +675,12 @@ public class CheckInPanel extends javax.swing.JPanel
 	public static final String RES_TABLES = "Restaurant tables";
 	public static final String SET_OCCUPIED_BUT = "Set occupied";
 	public static final String SET_UNOCCUPIED_BUT = "Set unoccupied";
+	public static final String WAIT_LIST_TABLE = "Wait List";
+	public static final String NAME_TEXT_FIELD = "Name";
+	public static final String PARTY_SIZE_SPINNER = "Party size";
+	public static final String ADD_BUT = "Add";
+	public static final String REM_BUT = "Remove";
+	public static final String ASSIGN_TABLE_BUT = "Assign Table";
+
 }
 ////////
