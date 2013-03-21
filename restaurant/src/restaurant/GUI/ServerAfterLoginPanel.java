@@ -113,7 +113,7 @@ public class ServerAfterLoginPanel extends JPanel
 		
 		for(TableInfo table: tables)
 		{
-			defaultTableZone.addRow(new Object[]{table.getTableNumber(),table.getTableName(), table.isTableOccupied(), null});		
+			defaultTableZone.addRow(new Object[]{table.getTableNumber(),table.getTableName(), table.isTableOccupied(), table.getServiceStatus()});		
 		}
 		
 		tablesInZone.setModel(defaultTableZone);
@@ -163,8 +163,9 @@ public class ServerAfterLoginPanel extends JPanel
 	
 	private void updateTableServiced(JTable selectedTable)
 	{
-		String tableID = (String) selectedTable.getValueAt(selectedTable.getSelectedRow(), 0);
+		String tableID = ""+selectedTable.getValueAt(selectedTable.getSelectedRow(), 0);
 		restaurantSystem.DBInteractor.setTableRequestServiceToNone(Integer.parseInt(tableID));
+		populateTablesInZone(restaurantSystem.DBInteractor.getTablesInZone(restaurantSystem.getTabletToZone()));
 	}
 
 }

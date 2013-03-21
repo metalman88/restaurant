@@ -25,6 +25,7 @@ public class TableInfo {
 		return customerTable;
 	}
 	
+	
 	public void resetCustomerTable()
 	{
 		customerTable = new CustomerTable(menu,DBInteractor);
@@ -63,6 +64,22 @@ public class TableInfo {
 		return isOccupied;
 	}
 	
+	public boolean getServiceStatus()
+	{
+		if(servStatus) System.out.println("This is true");
+		else System.out.println("FALSE");
+		return servStatus;
+	}
+	
+	public void setServiceStatus(boolean stat)
+	{
+		if(stat) System.out.println("This thing is true");
+		else System.out.println("WTF");
+		this.servStatus = stat;
+		if(servStatus) System.out.println("This thing is true");
+		else System.out.println("WTF");
+	}
+	
 	public String tablename;
 	public int tableNumber;
 	public int maxOcc;
@@ -70,5 +87,6 @@ public class TableInfo {
 	private DatabaseInteractor DBInteractor;
 	private Menu menu;
 	private boolean isOccupied;
+	private boolean servStatus;
 	private CustomerTable customerTable;
 }

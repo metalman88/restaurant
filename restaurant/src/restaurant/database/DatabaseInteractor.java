@@ -330,7 +330,10 @@ int index = 0;
     // ZONEENUMS.valueOf(rs.getString(6))
     boolean isTaken = false;
     if(Integer.parseInt(rs.getString(4)) == 1) isTaken = true;
-       result.put(Integer.parseInt(rs.getString(1)), new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), getEnum(rs.getString(6)), this, menu, isTaken));
+    TableInfo toAdd = new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), getEnum(rs.getString(6)), this, menu, isTaken);
+
+    toAdd.setServiceStatus(rs.getBoolean(5));
+       result.put(Integer.parseInt(rs.getString(1)), toAdd );
    }
  } catch (SQLException se) {
    System.out.println("We got an exception while getting a result:this " +
@@ -389,7 +392,9 @@ public ArrayList<TableInfo> getTablesInZone(ZONEENUMS zone) {
 	    	// ZONEENUMS.valueOf(rs.getString(6))
 	    	boolean isTaken = false;
 	    	if(Integer.parseInt(rs.getString(4)) == 1) isTaken = true;
-	        result.add(new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), ZONEENUMS.BLUE, this, null, isTaken));
+	    	TableInfo toAdd = new TableInfo(rs.getString(2), Integer.parseInt(rs.getString(1)), Integer.parseInt(rs.getString(3)), ZONEENUMS.BLUE, this, null, isTaken);
+	        toAdd.setServiceStatus(rs.getBoolean(5));
+	    	result.add(toAdd);
 	    }
 	  } catch (SQLException se) {
 	    System.out.println("We got an exception while getting a result:this " +
