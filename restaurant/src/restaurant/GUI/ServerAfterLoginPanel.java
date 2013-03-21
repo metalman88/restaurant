@@ -146,7 +146,7 @@ public class ServerAfterLoginPanel extends JPanel
 	
 	private void updateOrderToFinished(JTable selectedTable)
 	{
-		String orderID = (String) selectedTable.getValueAt(selectedTable.getSelectedRow(), 3);
+		String orderID = (String) selectedTable.getValueAt(selectedTable.getSelectedRow(), 1);
 		restaurantSystem.DBInteractor.updateOrderStatus(orderID, ORDERSTATUSENUMS.FINISHED);
 		populateOutOrders(restaurantSystem.DBInteractor.getOutOrders(restaurantSystem.getTabletToZone()));
 		
