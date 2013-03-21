@@ -18,7 +18,7 @@ public class TableInfo {
 		this.DBInteractor = DBInteractor;
 		this.menu = menu;
 		isOccupied = isTaken;
-		customerTable = new CustomerTable(menu,DBInteractor);
+		customerTable = new CustomerTable(menu,DBInteractor, tableNumber);
 	}
 	public CustomerTable getCustomerTable()
 	{
@@ -28,7 +28,7 @@ public class TableInfo {
 	
 	public void resetCustomerTable()
 	{
-		customerTable = new CustomerTable(menu,DBInteractor);
+		customerTable = new CustomerTable(menu,DBInteractor, tableNumber);
 	}
 	
 	public ZONEENUMS getZone()

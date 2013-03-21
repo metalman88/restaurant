@@ -10,9 +10,11 @@ public class CustomerTable
 	private DatabaseInteractor db;
 	private OrderChunk curChunk;
 	private ArrayList<OrderChunk> listOfOrders;
+	private int tableID = 200;
 	
-	public CustomerTable(Menu menu, DatabaseInteractor db)
+	public CustomerTable(Menu menu, DatabaseInteractor db, int tableID)
 	{
+		this.tableID = tableID;
 		this.menu = menu;
 		this.db = db;
 		curChunk = new OrderChunk();
@@ -21,6 +23,7 @@ public class CustomerTable
 	
 	public void submitOrder()
 	{
+		curChunk.setTable(""+this.tableID);
 		db.addOrderToDB(curChunk);
 		listOfOrders.add(curChunk);
 		curChunk = new OrderChunk();
