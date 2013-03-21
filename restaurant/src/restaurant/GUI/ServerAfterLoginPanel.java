@@ -142,6 +142,9 @@ public class ServerAfterLoginPanel extends JPanel
 	{
 		int tableID = (Integer) selectedTable.getValueAt(selectedTable.getSelectedRow(), 0);
 		restaurantSystem.DBInteractor.updateTableStatus(tableID, "0");
+		populateTablesInZone(restaurantSystem.DBInteractor.getTablesInZone(restaurantSystem.getTabletToZone()));
+
+		
 	}
 	
 	private void updateOrderToFinished(JTable selectedTable)
