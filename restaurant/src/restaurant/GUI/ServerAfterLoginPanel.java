@@ -51,7 +51,7 @@ public class ServerAfterLoginPanel extends JPanel
 		add(scrollPane_1);
 		
 		zoneOrdersOut = new JTable();
-		populateZoneOrdersOut(restaurantSystem.DBInteractor.getTablesInZone(restaurantSystem.getTabletToZone()));
+		populateOutOrders(restaurantSystem.DBInteractor.getOutOrders(restaurantSystem.getTabletToZone()));	
 		scrollPane_1.setViewportView(zoneOrdersOut);
 		
 		JLabel lblTables = new JLabel("Tables");
@@ -106,11 +106,10 @@ public class ServerAfterLoginPanel extends JPanel
 		add(btnUpdateOrderStatus);
 	}
 	
-	private void populateTablesInZone(ArrayList<TableInfo> tables)
+	public void populateTablesInZone(ArrayList<TableInfo> tables)
 	{
 		DefaultTableModel defaultTableZone = new DefaultTableModel(new Object[][][][]{},new String[]{"Table#","Table Name",
 				"Occupied","Service Req."});
-		
 		for(TableInfo table: tables)
 		{
 			defaultTableZone.addRow(new Object[]{table.getTableNumber(),table.getTableName(), table.isTableOccupied(), table.getServiceStatus()});		
@@ -119,35 +118,25 @@ public class ServerAfterLoginPanel extends JPanel
 		tablesInZone.setModel(defaultTableZone);
 	}
 	
-	//Go through every table in the zone see if they have an orderChunk with the status "OUT"
-	//if so add it to the table
-	private void populateZoneOrdersOut(ArrayList<TableInfo> tables)
-	{
-		DefaultTableModel defaultZoneOrder = new DefaultTableModel(new Object[][][][][]{},new String[]{"Table#","Table Name",
-				"Order ID", "Dishes","Status"});
-		
-		for (TableInfo table: tables)
+	public void populateOutOrders(ArrayList<OrderChunk> chunks)
+{
+		DefaultTableModel defaultZoneOrder = new DefaultTableModel(new Object[][][][]{},new String[]{"Table#",
+		"Order ID", "Dishes","Status"});
+		if(chunks.size() > 0)
+		for (OrderChunk orderChunk: chunks)
 		{
-			ArrayList<OrderChunk> tablesOrderChunks = table.getCustomerTable().getListOfOrderChunks();
-			
-			for (OrderChunk oc: tablesOrderChunks)
-			{
-				if (oc.getOrderStatus().equals(ORDERSTATUSENUMS.OUT))
-				{
-					String orderID = oc.getOrderID();
-					String dishes="";
-					for (SingleItemWithNote si: oc.getItems())
-					{
-						dishes += si.getItem().getName();
-					}
-					defaultZoneOrder.addRow(new Object[]{table.getTableNumber(),table.getTableName(), orderID,
-							dishes, "Out"});
-				}
-			}
+		String dishes = "";
+		for (SingleItemWithNote si: orderChunk.getItems())
+		{
+		dishes += si.getItem().getName() + ", ";
 		}
-		
+		defaultZoneOrder.addRow(new Object[]{orderChunk.getTable(),orderChunk.getOrderID(),
+		dishes, "Out"});
+		}
 		zoneOrdersOut.setModel(defaultZoneOrder);
-	}
+}
+
+
 	
 	private void setTableUnoccupied(JTable selectedTable)
 	{
@@ -159,6 +148,8 @@ public class ServerAfterLoginPanel extends JPanel
 	{
 		String orderID = (String) selectedTable.getValueAt(selectedTable.getSelectedRow(), 3);
 		restaurantSystem.DBInteractor.updateOrderStatus(orderID, ORDERSTATUSENUMS.FINISHED);
+		populateOutOrders(restaurantSystem.DBInteractor.getOutOrders(restaurantSystem.getTabletToZone()));
+		
 	}
 	
 	private void updateTableServiced(JTable selectedTable)
