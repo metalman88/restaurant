@@ -544,7 +544,24 @@ public Menu getMenuFromDB()
 	       // System.out.println("Here's the result of row " + index++ + ":");
 	       // System.out.println(rs.getString(1));
 	    	// ZONEENUMS.valueOf(rs.getString(6))
-	    	MenuItem menuItem = new MenuItem(rs.getInt(1), rs.getString(2), CATEGORYENUMS.APPETIZER, rs.getString(3), rs.getDouble(4), rs.getDouble(5), getNutrition(rs.getInt(1)));
+	    	CATEGORYENUMS menuItemType = CATEGORYENUMS.APPETIZER;
+	    	switch(rs.getInt(6)) {
+	    	case 0:
+	    		menuItemType = CATEGORYENUMS.APPETIZER;
+	    		break;
+	    	case 1:
+	    		menuItemType = CATEGORYENUMS.ENTREE;
+	    		break;
+	    	case 2:
+	    		menuItemType = CATEGORYENUMS.DESSERT;
+	    		break;
+	    	case 3:
+	    		menuItemType = CATEGORYENUMS.OTHER;
+	    		break;
+	    	case 4:
+	    		menuItemType = CATEGORYENUMS.DRINK;
+	    	}
+	    	MenuItem menuItem = new MenuItem(rs.getInt(1), rs.getString(2), menuItemType, rs.getString(3), rs.getDouble(4), rs.getDouble(5), getNutrition(rs.getInt(1)));
 			menuList.put(rs.getInt(1), menuItem);
 	    	System.out.println("Now adding:"+rs.getString(1));
 	    }
