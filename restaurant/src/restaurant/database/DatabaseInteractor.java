@@ -98,13 +98,15 @@ public class DatabaseInteractor {
 		    // The second and third arguments are the username and password,
 		    // respectively. They should be whatever is necessary to connect
 		    // to the database.
+		   // databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
+		     //                             "postgres", "sflhdl");
+		    
+		    
 		    databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
-		                                  "postgres", "sflhdl");
+                   "postgres", "ounhuoead");
+		    
 		    deleteCommand("kitchen", ";");
 			  deleteCommand("orderInfo", ";");
-		    
-		    //databaseConnection = DriverManager.getConnection("jdbc:postgresql://localhost/restaurant",
-              //      "postgres", "ounhuoead");
 		    return true;
 		    
 		    // My home database: ounhuoead
