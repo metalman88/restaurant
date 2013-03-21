@@ -27,6 +27,7 @@ public class RestaurantSystem {
 		if (DBInteractor.connect()) {
 			menu = DBInteractor.getMenuFromDB();
 			tableHash = DBInteractor.getTables(menu);
+			waitList = new ArrayList<Party>();
 		}
 		else {
 			System.exit(1);
@@ -173,6 +174,11 @@ public class RestaurantSystem {
 	public ZONEENUMS getTabletToZone()
 	{
 		return zoneTabletLoggedInto;
+	}
+	
+	public ArrayList<Party> getWaitList()
+	{
+		return waitList;
 	}
 	
 }
